@@ -43,7 +43,7 @@ public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginReques
 
     ResponseCookie cookie = ResponseCookie.from("jwt", token)
             .httpOnly(true)
-            .secure(true)
+            // .secure(true)
             .path("/")
             .maxAge(24 * 60 * 60)
             .sameSite("Strict")

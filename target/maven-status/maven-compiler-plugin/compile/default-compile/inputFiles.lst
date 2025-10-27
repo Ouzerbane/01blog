@@ -1,4 +1,6 @@
 /home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/Application.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/config/DataInitializer.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/config/SecurityConfig.java
 /home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/controller/Auth.java
 /home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/ApiResponse.java
 /home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/ErrorItem.java

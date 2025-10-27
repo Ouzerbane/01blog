@@ -12,7 +12,7 @@ import com._blog._blog.model.entity.AuthEntity;
 public interface EmpRepo extends JpaRepository<AuthEntity, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-
+    boolean existsByType(String type);
     Optional<AuthEntity> findByUsernameOrEmail(String username, String email);
 }
 
