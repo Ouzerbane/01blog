@@ -1,0 +1,12 @@
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/Application.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/controller/Auth.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/ApiResponse.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/ErrorItem.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/LoginRequest.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/dto/RegisterRequest.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/exception/CustomException.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/exception/GlobalExceptionHandler.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/model/entity/AuthEntity.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/model/repository/EmpRepo.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/service/EmptyService.java
+/home/oyoussef/Desktop/gitia01blog/src/main/java/com/_blog/_blog/util/jwt/JwtUtil.java
