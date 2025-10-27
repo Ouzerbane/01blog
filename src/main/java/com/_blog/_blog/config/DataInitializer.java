@@ -1,12 +1,14 @@
 package com._blog._blog.config;
 
-import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.model.repository.EmpRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import com._blog._blog.model.entity.AuthEntity;
+import com._blog._blog.model.repository.EmpRepo;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -40,9 +42,9 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
 
             empRepo.save(admin);
-            System.out.println("✅ Admin account created successfully: " + adminEmail);
+            System.out.println("Admin account created successfully: " + adminEmail);
         } else {
-            System.out.println("ℹ️ Admin account already exists.");
+            System.out.println("Admin account already exists.");
         }
     }
 }
