@@ -9,7 +9,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule]  // hna khas tdir import dyal kolchi li katst3ml
+  imports: [FormsModule, CommonModule, HttpClientModule] 
 })
 export class Login {
   usernameOrEmail: string = '';

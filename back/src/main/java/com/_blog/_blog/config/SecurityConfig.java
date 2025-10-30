@@ -12,11 +12,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // disable CSRF 3la endpoints dyal API
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login").permitAll() // had endpoints ma kayt7tajush login
-                        .anyRequest().authenticated() // kolchi akhor kayt7taj authentication
-                );
+        http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/register", "/login", "/add-post").permitAll() // اسمح مؤقتاً بهاد المسار
+                .anyRequest().authenticated()
+            );
 
         return http.build();
     }

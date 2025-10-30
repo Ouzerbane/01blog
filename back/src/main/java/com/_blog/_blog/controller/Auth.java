@@ -17,7 +17,7 @@ import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.dto.RegisterRequest;
 import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.service.EmptyService;
+import com._blog._blog.service.AuthService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,14 +27,14 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(
-    origins = "http://localhost:4200", // frontend origin
-    allowCredentials = "true",          // ✅ important for cookies
-    allowedHeaders = "*",               // li katb9a request
+    origins = "http://localhost:4200", 
+    allowCredentials = "true",         
+    allowedHeaders = "*",              
     methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS }
 )
 public class Auth {
     @Autowired
-    private EmptyService emptyService;
+    private AuthService emptyService;
 
 
   @PostMapping("/register")
@@ -49,23 +49,17 @@ public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
 public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
     String token = emptyService.login(request.getUsernameOrEmail(), request.getPassword());
 
-    ResponseCookie cookie = ResponseCookie.from("jwt", token)
-            .httpOnly(true)
-            // .secure(true)
-            .path("/")
-            .maxAge(24 * 60 * 60)
-            .sameSite("Strict")
-            .build();
+   ResponseCookie cookie = ResponseCookie.from("jwt", token)
+    .httpOnly(true)
+    .path("/")
+    .maxAge(24 * 60 * 60)
+    .sameSite("None")
+    .secure(false)
+    .build();
 
     response.addHeader("Set-Cookie", cookie.toString());
 
     return ResponseEntity.ok(new ApiResponse<>(true, null, null));
 }
 
-
-    // @GetMapping("/delet")
-    // public ResponseEntity<?> deletuser(@RequestParam int id) {
-    //     emptyService.deletusres(id) ;
-    //     return ResponseEntity.ok("ok");
-    // }
 }

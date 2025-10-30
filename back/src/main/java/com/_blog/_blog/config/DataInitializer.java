@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.model.repository.EmpRepo;
+import com._blog._blog.model.repository.AuthRepo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
-    private final EmpRepo empRepo;
+    private final AuthRepo authRepo;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Value("${app.admin.username}")
@@ -31,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        boolean adminExists = empRepo.existsByType(adminType);
+        boolean adminExists = authRepo.existsByType(adminType);
 
         if (!adminExists) {
             AuthEntity admin = AuthEntity.builder()
@@ -41,7 +41,7 @@ public class DataInitializer implements CommandLineRunner {
                     .type(adminType)
                     .build();
 
-            empRepo.save(admin);
+            authRepo.save(admin);
             System.out.println("Admin account created successfully: " + adminEmail);
         } else {
             System.out.println("Admin account already exists.");
