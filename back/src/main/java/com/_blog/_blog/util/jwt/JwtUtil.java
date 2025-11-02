@@ -24,14 +24,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // --- extract token mn request header
-    // public String extractToken(HttpServletRequest request) {
-    //     String authHeader = request.getHeader("Authorization");
-    //     if (authHeader != null && authHeader.startsWith("Bearer ")) {
-    //         return authHeader.substring(7); // t7id "Bearer "
-    //     }
-    //     return null;
-    // }
+ 
 
     public static String extractTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -66,8 +59,19 @@ public class JwtUtil {
             return null;
         }
 
-        return (Long) userId ;
-        // return Long.parseLong(userId.toString());
+        // return (Long) userId ;
+        return Long.valueOf(userId.toString());
     }
+
+
+    public boolean isTokenValid(String token) {
+    try {
+        extractClaims(token);
+        return true;
+    } catch (Exception e) {
+        return false;
+    }
+}
+
 
 }
