@@ -26,9 +26,9 @@ public class AuthService {
     public String login(String usernameOrEmail, String rawPassword) {////for login
 
         AuthEntity user = empRepo.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CustomException("user","User not found"));
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new CustomException("password","Invalid password");
         }
         return jwtUtil.generateToken(user.getId(),user.getUsername());
     }

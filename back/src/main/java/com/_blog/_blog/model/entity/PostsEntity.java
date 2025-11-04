@@ -2,6 +2,8 @@ package com._blog._blog.model.entity;
 
 import java.time.LocalDateTime;
 
+import com._blog._blog.dto.PostsResponseDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,5 +49,20 @@ public class PostsEntity {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+      public static PostsResponseDto toPostsResponseDto(PostsEntity post) {
+          return PostsResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .imageUrl(post.getImageUrl())
+                .createdAt(post.getCreatedAt())
+                .author(PostsResponseDto.AuthorDto.builder()
+                        .id(post.getAuthor().getId())
+                        .username(post.getAuthor().getUsername())
+                        .email(post.getAuthor().getEmail())
+                        .build())
+                .build();
     }
 }

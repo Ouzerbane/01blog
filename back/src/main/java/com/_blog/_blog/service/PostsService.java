@@ -1,5 +1,8 @@
 package com._blog._blog.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,16 +11,26 @@ import org.springframework.stereotype.Service;
 
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.PostsDto;
+import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
+import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.PostsRepo;
 
 @Service
 public class PostsService {
+    // @Autowired
+    // private final AuthRepo authRepo;
 
     @Autowired
+    private FollowerRepo followerRepo;
+    @Autowired
     private PostsRepo postsRepo;
+
+    // PostsService(AuthRepo authRepo) {
+    // this.authRepo = authRepo;
+    // }
 
     public PostsEntity savePost(PostsDto postsDto, AuthEntity currentUser) {
 
@@ -43,15 +56,37 @@ public class PostsService {
     public void deletePost(IdDto idDto, AuthEntity currentUser) {
         PostsEntity post = postsRepo.findById(idDto.getId())
                 .orElseThrow(() -> new CustomException("post", "Post not found"));
+        if (currentUser.getType().toLowerCase().equals("admin")) {
+            postsRepo.delete(post);
+            return;
+        }
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new CustomException("authorization", "You are not the author of this post");
         }
         postsRepo.delete(post);
     }
 
-    public Page<PostsEntity> getPosts(int page, int size) {
+    public Page<PostsResponseDto> getPosts(int page, int size, AuthEntity currentUser) {
         Pageable pageable = PageRequest.of(page, size);
-        return postsRepo.findAllByOrderByCreatedAtDesc(pageable);
+
+        if (currentUser.getType().equalsIgnoreCase("admin")) {
+            return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
+                    .map(PostsEntity::toPostsResponseDto);
+        }
+
+        List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
+                .stream()
+                .map(f -> f.getFollowing().getId())
+                .collect(Collectors.toList());
+
+        followingIds.add(currentUser.getId());
+
+        if (followingIds.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        return postsRepo.findByAuthorIdInOrderByCreatedAtDesc(followingIds, pageable)
+                .map(PostsEntity::toPostsResponseDto);
     }
 
 }

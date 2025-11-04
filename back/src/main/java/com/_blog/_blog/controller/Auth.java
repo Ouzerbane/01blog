@@ -1,5 +1,4 @@
 
-
 package com._blog._blog.controller;
 
 import java.util.List;
@@ -26,40 +25,37 @@ import jakarta.validation.Valid;
 // @NoArgsConstructor
 
 @RestController
-@CrossOrigin(
-    origins = "http://localhost:4200", 
-    allowCredentials = "true",         
-    allowedHeaders = "*",              
-    methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS }
-)
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*", methods = {
+        RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 public class Auth {
     @Autowired
     private AuthService emptyService;
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
+        AuthEntity savedUser = emptyService.registerservece(req.toAuthEntity());
 
-  @PostMapping("/register")
-public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
-    AuthEntity savedUser = emptyService.registerservece(req.toAuthEntity());
+        return ResponseEntity.ok(new ApiResponse<>(true, null, List.of()));
+    }
 
-    return ResponseEntity.ok(new ApiResponse<>(true, null, List.of()));
-}
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequest request,
+            HttpServletResponse response) {
+        String token = emptyService.login(request.getUsernameOrEmail(), request.getPassword());
+
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("None")
+                .secure(false)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, null));
+    }
 
 
-   @PostMapping("/login")
-public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-    String token = emptyService.login(request.getUsernameOrEmail(), request.getPassword());
-
-   ResponseCookie cookie = ResponseCookie.from("jwt", token)
-    .httpOnly(true)
-    .path("/")
-    .maxAge(24 * 60 * 60)
-    .sameSite("None")
-    .secure(false)
-    .build();
-
-    response.addHeader("Set-Cookie", cookie.toString());
-
-    return ResponseEntity.ok(new ApiResponse<>(true, null, null));
-}
 
 }
