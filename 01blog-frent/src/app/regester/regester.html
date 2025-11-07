@@ -1,0 +1,32 @@
+<div class="register-container">
+    <h2>Register</h2>
+
+    <form (ngSubmit)="sendRequest()">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" [(ngModel)]="info.username" name="username" id="username" name="username">
+            <p class="text-danger" *ngIf="errusername">{{ errusername }}</p>
+
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input [(ngModel)]="info.email" name="email" type="email" id="email" name="email">
+            <p class="text-danger" *ngIf="erremail">{{ erremail }}</p>
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input [(ngModel)]="info.password" name="password" type="password" id="password" name="password">
+            <p class="text-danger" *ngIf="errpassword">{{ errpassword }}</p>
+
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>
+    Do have an account? 
+    <i style="cursor:pointer; color:#10b981;" (click)="login()">login here</i>
+  </p>
+</div>

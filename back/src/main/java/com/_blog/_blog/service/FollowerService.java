@@ -47,10 +47,6 @@ public class FollowerService {
         return existingFollow.get();
     }
 
-  
-
-   
-
     public List<UserFollowDto> getUsersWithFollowStatus(Long currentUserId) {
 
         List<AuthEntity> users = authRepo.findAll()
@@ -63,4 +59,42 @@ public class FollowerService {
             return new UserFollowDto(user.getId(), user.getUsername(), isFollowed);
         }).collect(Collectors.toList());
     }
+
+    public Long getCountFollowers(Long currentUserId) {
+
+        return followerRepo.countByFollowingId(currentUserId);
+    }
+
+    public Long getCountFollowing(Long currentUserId) {
+
+        return followerRepo.countByFollowerId(currentUserId);
+    }
+
+  public List<UserFollowDto> getUsersSuggested(Long currentUserId) {
+    // جيب جميع المستخدمين باستثناء نفسك
+    List<AuthEntity> allUsers = authRepo.findAll()
+            .stream()
+            .filter(user -> !user.getId().equals(currentUserId))
+            .collect(Collectors.toList());
+
+    // جيب الناس اللي تابعهم current user
+    List<FollowerEntity> followingList = followerRepo.findByFollowerId(currentUserId);
+
+    // دير لائحة بالـ IDs ديال الناس اللي تابعهم
+    List<Long> followingIds = followingList.stream()
+            .map(f -> f.getFollowing().getId())
+            .collect(Collectors.toList());
+
+    // رجع فقط الناس اللي ما كاينينش فهاد اللائحة
+    List<AuthEntity> suggestedUsers = allUsers.stream()
+            .filter(user -> !followingIds.contains(user.getId()))
+            .collect(Collectors.toList());
+
+    // رجعهم فـ DTO format
+    return suggestedUsers.stream()
+            .map(user -> new UserFollowDto(user.getId(), user.getUsername(), false))
+            .collect(Collectors.toList());
+}
+
+
 }

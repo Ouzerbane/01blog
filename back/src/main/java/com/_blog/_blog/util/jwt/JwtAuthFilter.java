@@ -36,13 +36,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+                System.out.print("d6aaaaallll");
 
         String token = extractTokenFromCookie(request);
         String path = request.getRequestURI();
 
         // boolean checkValidationJwt = jwtUtil.isTokenValid(token) && token != null;
 
-        if (path.startsWith("/register") || path.startsWith("/login")) {
+        if (path.startsWith("/regester") || path.startsWith("/login")) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -31,7 +31,7 @@ public class Auth {
     @Autowired
     private AuthService emptyService;
 
-    @PostMapping("/register")
+    @PostMapping("/regester")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
         AuthEntity savedUser = emptyService.registerservece(req.toAuthEntity());
 
@@ -47,7 +47,7 @@ public class Auth {
                 .httpOnly(true)
                 .path("/")
                 .maxAge(24 * 60 * 60)
-                .sameSite("None")
+                // .sameSite("None")
                 .secure(false)
                 .build();
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.dto.ApiResponse;
+import com._blog._blog.dto.FollowCountDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.UserFollowDto;
 import com._blog._blog.model.entity.AuthEntity;
@@ -50,6 +51,25 @@ public class Follower {
         return ResponseEntity.ok(new ApiResponse<>(true, null, users));
     }
 
-    
+    @GetMapping("/follow-counts")
+    public ResponseEntity<ApiResponse<FollowCountDto>> getFollowCounts() {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long followers = followerService.getCountFollowers(currentUser.getId());
+        Long following = followerService.getCountFollowing(currentUser.getId());
+
+        FollowCountDto counts = new FollowCountDto(followers, following);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, counts));
+    }
+
+    @GetMapping("/suggested")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getSuggestedUsers() {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<UserFollowDto> suggestions = followerService.getUsersSuggested(currentUser.getId());
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
+    }
 
 }
