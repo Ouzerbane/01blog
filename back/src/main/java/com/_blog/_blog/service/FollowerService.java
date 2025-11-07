@@ -24,7 +24,7 @@ public class FollowerService {
     @Autowired
     private AuthRepo authRepo;
 
-    public FollowerEntity followUser(IdDto followId, AuthEntity currentUser) {
+    public UserFollowDto followUser(IdDto followId, AuthEntity currentUser) {
         AuthEntity otherUser = authRepo.findById(followId.getId())
                 .orElseThrow(() -> new CustomException("user", "User not found"));
 
@@ -36,15 +36,28 @@ public class FollowerService {
                 otherUser.getId());
 
         if (existingFollow.isEmpty()) {
+
             FollowerEntity followerObject = FollowerEntity.builder()
                     .follower(currentUser)
                     .following(otherUser)
                     .build();
-            return followerRepo.save(followerObject);
-        }
+            followerRepo.save(followerObject);
 
-        followerRepo.delete(existingFollow.get());
-        return existingFollow.get();
+            return UserFollowDto.builder()
+                    .id(followerObject.getId())
+                    .username(otherUser.getUsername())
+                    .followed(true)
+                    .build();
+        } else {
+
+            followerRepo.delete(existingFollow.get());
+
+            return UserFollowDto.builder()
+                    .id(existingFollow.get().getId())
+                    .username(otherUser.getUsername())
+                    .followed(false)
+                    .build();
+        }
     }
 
     public List<UserFollowDto> getUsersWithFollowStatus(Long currentUserId) {
@@ -70,31 +83,51 @@ public class FollowerService {
         return followerRepo.countByFollowerId(currentUserId);
     }
 
-  public List<UserFollowDto> getUsersSuggested(Long currentUserId) {
-    // جيب جميع المستخدمين باستثناء نفسك
-    List<AuthEntity> allUsers = authRepo.findAll()
-            .stream()
-            .filter(user -> !user.getId().equals(currentUserId))
-            .collect(Collectors.toList());
+    public List<UserFollowDto> getUsersSuggested(Long currentUserId) {
 
-    // جيب الناس اللي تابعهم current user
-    List<FollowerEntity> followingList = followerRepo.findByFollowerId(currentUserId);
+        List<AuthEntity> allUsers = authRepo.findAll()
+                .stream()
+                .filter(user -> !user.getId().equals(currentUserId))
+                .collect(Collectors.toList());
 
-    // دير لائحة بالـ IDs ديال الناس اللي تابعهم
-    List<Long> followingIds = followingList.stream()
-            .map(f -> f.getFollowing().getId())
-            .collect(Collectors.toList());
+        List<FollowerEntity> followingList = followerRepo.findByFollowerId(currentUserId);
 
-    // رجع فقط الناس اللي ما كاينينش فهاد اللائحة
-    List<AuthEntity> suggestedUsers = allUsers.stream()
-            .filter(user -> !followingIds.contains(user.getId()))
-            .collect(Collectors.toList());
+        List<Long> followingIds = followingList.stream()
+                .map(f -> f.getFollowing().getId())
+                .collect(Collectors.toList());
 
-    // رجعهم فـ DTO format
-    return suggestedUsers.stream()
-            .map(user -> new UserFollowDto(user.getId(), user.getUsername(), false))
-            .collect(Collectors.toList());
-}
+        List<AuthEntity> suggestedUsers = allUsers.stream()
+                .filter(user -> !followingIds.contains(user.getId()))
+                .collect(Collectors.toList());
 
+        return suggestedUsers.stream()
+                .map(user -> new UserFollowDto(user.getId(), user.getUsername(), false))
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFollowDto> getFollowersService(Long currentUserId) {
+        List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUserId);
+
+        return followers.stream()
+                .map(f -> {
+                    boolean isFollowed = followerRepo.existsByFollowerIdAndFollowingId(currentUserId,f.getFollower().getId());
+                    return new UserFollowDto(
+                            f.getFollower().getId(),
+                            f.getFollower().getUsername(),
+                            isFollowed);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFollowDto> getFollowingService(Long userId) {
+        List<FollowerEntity> followingList = followerRepo.findAllByFollowerId(userId);
+
+        return followingList.stream()
+                .map(f -> new UserFollowDto(
+                        f.getFollowing().getId(),
+                        f.getFollowing().getUsername(),
+                        true))
+                .collect(Collectors.toList());
+    }
 
 }

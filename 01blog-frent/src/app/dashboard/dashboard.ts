@@ -91,13 +91,38 @@ export class Dashboard implements OnInit {
   toggleFollow(user: Suggested) {
     user.followed = !user.followed;
     const followUrl = `http://localhost:8080/follow`;
-    this.http.post<FollowResponse>(followUrl, { withCredentials: true }).subscribe({
+    this.http.post<FollowuserResponse>(followUrl, { id: user.id }, { withCredentials: true }).subscribe({
       next: (res) => {
-        this.followers = res.data.followers;
-        this.following = res.data.following;
+        user = res.data;
+        this.getfollow();
       },
       error: (err) => console.error('Error fetching follow counts', err),
     });
 
   }
+
+
+  followersList: Suggested[] = [];  // li ghadi tshow f modal
+  followingList: Suggested[] = [];
+
+  getFollowers() {
+    const followUrl = `http://localhost:8080/get-Followers`;
+    this.http.get<SuggestedResponse>(followUrl, { withCredentials: true }).subscribe({
+      next: (res) => {
+       this.followersList = res.data;
+      },
+      error: (err) => console.error('Error fetching follow counts', err),
+    });
+  }
+
+  getFollowing() {
+     const followUrl = `http://localhost:8080/get-Followers`;
+    this.http.get<SuggestedResponse>(followUrl, { withCredentials: true }).subscribe({
+      next: (res) => {
+       this.followingList = res.data;
+      },
+      error: (err) => console.error('Error fetching follow counts', err),
+    });
+  }
+
 }

@@ -17,7 +17,6 @@ import com._blog._blog.dto.FollowCountDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.UserFollowDto;
 import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.model.entity.FollowerEntity;
 import com._blog._blog.service.FollowerService;
 
 import jakarta.validation.Valid;
@@ -38,7 +37,7 @@ public class Follower {
                 .getAuthentication()
                 .getPrincipal();
 
-        FollowerEntity result = followerService.followUser(dto, currentUser);
+        UserFollowDto result = followerService.followUser(dto, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, result));
     }
@@ -68,6 +67,23 @@ public class Follower {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<UserFollowDto> suggestions = followerService.getUsersSuggested(currentUser.getId());
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
+    }
+
+    @GetMapping("/get-Followers")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers() {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<UserFollowDto> suggestions = followerService.getFollowersService(currentUser.getId());
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
+    }
+
+    @GetMapping("/get-Following")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing() {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserFollowDto> suggestions = followerService.getFollowingService(currentUser.getId());
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
     }

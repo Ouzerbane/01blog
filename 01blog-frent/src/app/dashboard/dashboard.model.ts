@@ -31,6 +31,12 @@ interface SuggestedResponse {
   data: Suggested[];
 }
 
+interface FollowuserResponse {
+  success: boolean;
+  errors: any;
+  data: Suggested;
+}
+
 interface FollowResponse {
   success: boolean;
   errors: any;

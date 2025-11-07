@@ -15,18 +15,15 @@ public interface FollowerRepo extends JpaRepository<FollowerEntity, Long> {
 
     boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId);
 
-    List<FollowerEntity> findAllByFollowerId(Long followerId);
-
     Long countByFollowingId(Long followingId);
 
     Long countByFollowerId(Long followingId);
 
     List<FollowerEntity> findByFollowerId(Long followerId);
 
+    List<FollowerEntity> findAllByFollowerId(Long followerId);
 
-    // List<FollowerEntity> findAllByFollowingId(Long followingId);
-
-    // List<FollowerEntity> findAllByFollowerId(Long followerId);
+    List<FollowerEntity> findAllByFollowingId(Long followingId);
 
     // void deleteByFollowerIdAndFollowingId(Long followerId, Long followingId);
 }

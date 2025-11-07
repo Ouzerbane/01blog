@@ -268,3 +268,39 @@ main {
 .follow-btn.following:hover {
   background-color: #e11d48;
 }
+
+
+
+
+
+
+/* Post actions (like & comment) */
+.post-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.action-btn:hover {
+  color: #10b981; /* green color like Instagram theme */
+}
+
+.action-btn .icon {
+  font-size: 1.2rem;
+}
+
+.action-btn .count {
+  font-weight: 500;
+}
