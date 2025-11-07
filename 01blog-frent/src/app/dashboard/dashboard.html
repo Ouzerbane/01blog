@@ -12,18 +12,25 @@
 
   <main>
     <section class="stats">
+       <!-- 🔹 Cards row (followers, following, create post) -->
       <div class="stats-header">
-        <div class="card" (click)="getFollowers()">
+        <div class="card" (click)="openFollowers()">
           <h3>Followers</h3>
           <p>{{ followers }}</p>
         </div>
 
-        <div class="card" (click)="getFollowing()">
+        <div class="card" (click)="openFollowing()">
           <h3>Following</h3>
           <p>{{ following }}</p>
         </div>
+
+        <!-- 🟢 New Create Post Card -->
+        <div class="card create-post" (click)="PopatPost()">
+          <h3>➕ Create Post</h3>
+        </div>
       </div>
 
+      <!-- 🔹 Posts section -->
       <div *ngFor="let post of posts" class="post-card">
         <p><small>By {{ post.author.username }} ({{ post.author.email }})</small></p>
         <p><small>{{ post.createdAt | date: 'short' }}</small></p>
@@ -43,6 +50,7 @@
         </div>
       </div>
 
+      <!-- 🔹 Pagination -->
       <div class="pagination">
         <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
         <span>Page {{ page + 1 }}</span>
@@ -50,6 +58,7 @@
       </div>
     </section>
 
+    <!-- 🔹 Suggested users -->
     <section class="recent-activity">
       <h2>Suggested for you</h2>
       <div class="suggested-list">
@@ -66,21 +75,41 @@
     </section>
   </main>
 
-  <!-- Followers Modal -->
- <div class="modal" *ngIf="showFollowing">
-  <div class="modal-content">
-    <h3>Following</h3>
-    <div class="suggested-list">
-      <div *ngFor="let user of followingList" class="suggested-user">
-        <div class="user-info">
-          <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
-          <span>{{ user.username }}</span>
+  <!-- 🔹 Followers Modal -->
+  <div class="modal" *ngIf="showFollowers">
+    <div class="modal-content">
+      <h3>Followers</h3>
+      <div class="suggested-list">
+        <div *ngFor="let user of followersList" class="suggested-user">
+          <div class="user-info">
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span>{{ user.username }}</span>
+          </div>
+          <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
+            {{ user.followed ? 'Following' : 'Follow' }}
+          </button>
         </div>
-        <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
-          {{ user.followed ? 'Following' : 'Follow' }}
-        </button>
       </div>
+      <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
-    <button class="close-btn" (click)="closeModal()">Close</button>
+  </div>
+
+  <!-- 🔹 Following Modal -->
+  <div class="modal" *ngIf="showFollowing">
+    <div class="modal-content">
+      <h3>Following</h3>
+      <div class="suggested-list">
+        <div *ngFor="let user of followingList" class="suggested-user">
+          <div class="user-info">
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span>{{ user.username }}</span>
+          </div>
+          <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
+            {{ user.followed ? 'Following' : 'Follow' }}
+          </button>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeModal()">Close</button>
+    </div>
   </div>
 </div>

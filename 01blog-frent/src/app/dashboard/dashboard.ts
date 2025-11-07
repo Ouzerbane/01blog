@@ -26,6 +26,7 @@ export class Dashboard implements OnInit {
   followingList: Suggested[] = [];
   showFollowers = false;
   showFollowing = false;
+  showPopatPost = false ;
 
   constructor(
     private http: HttpClient,
@@ -142,5 +143,9 @@ export class Dashboard implements OnInit {
   openFollowing() {
     this.getFollowing();
     this.showFollowing = true;
+  }
+
+  PopatPost(){
+    this.showPopatPost = !this.showPopatPost ;
   }
 }
