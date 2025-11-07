@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
-/* ================== Interfaces ================== */
-
-/* ================== Component ================== */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, CommonModule],
+  imports: [HttpClientModule, FormsModule, CommonModule, DatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
@@ -23,6 +20,12 @@ export class Dashboard implements OnInit {
   following: number = 0;
   areIsFirstTime: boolean = false;
   suggested: Suggested[] = [];
+
+  // 🧩 Lists for modal
+  followersList: Suggested[] = [];
+  followingList: Suggested[] = [];
+  showFollowers = false;
+  showFollowing = false;
 
   constructor(
     private http: HttpClient,
@@ -38,46 +41,85 @@ export class Dashboard implements OnInit {
   }
 
   getPosts() {
-    // 🧩 Fetch posts
     const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
     this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.posts = res.data;
-      },
+      next: (res) => (this.posts = res.data),
       error: (err) => console.error('Error fetching posts', err),
     });
 
     if (!this.areIsFirstTime) {
       this.areIsFirstTime = true;
       this.getSuggested();
-      this.getfollow();
+      this.getFollowCounts();
     }
   }
 
   getSuggested() {
     const suggestedUrl = `http://localhost:8080/suggested`;
-    this.http.get<SuggestedResponse>(suggestedUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.suggested = res.data;
-        console.log("suggested data:", this.suggested);
-      },
-      error: (err) => console.error('Error fetching suggested users', err),
-    });
+    this.http
+      .get<SuggestedResponse>(suggestedUrl, { withCredentials: true })
+      .subscribe({
+        next: (res) => (this.suggested = res.data),
+        error: (err) => console.error('Error fetching suggested users', err),
+      });
   }
 
-  getfollow() {
+  getFollowCounts() {
     const followUrl = `http://localhost:8080/follow-counts`;
-    this.http.get<FollowResponse>(followUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.followers = res.data.followers;
-        this.following = res.data.following;
-      },
-      error: (err) => console.error('Error fetching follow counts', err),
-    });
+    this.http
+      .get<FollowResponse>(followUrl, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.followers = res.data.followers;
+          this.following = res.data.following;
+        },
+        error: (err) => console.error('Error fetching follow counts', err),
+      });
   }
 
+  toggleFollow(user: Suggested) {
+    user.followed = !user.followed;
+    const followUrl = `http://localhost:8080/follow`;
+    this.http
+      .post<FollowuserResponse>(
+        followUrl,
+        { id: user.id },
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: () => this.getFollowCounts(),
+        error: (err) => console.error('Error toggling follow', err),
+      });
+  }
 
-  // 🟡 Change page without full reload
+  getFollowers() {
+    const url = `http://localhost:8080/get-Followers`;
+    this.http
+      .get<SuggestedResponse>(url, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.followersList = res.data;
+          this.showFollowers = true;
+          this.showFollowing = false;
+        },
+        error: (err) => console.error('Error fetching followers', err),
+      });
+  }
+
+  getFollowing() {
+    const url = `http://localhost:8080/get-Following`;
+    this.http
+      .get<SuggestedResponse>(url, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.followingList = res.data;
+          this.showFollowing = true;
+          this.showFollowers = false;
+        },
+        error: (err) => console.error('Error fetching following', err),
+      });
+  }
+
   changePage(newPage: number) {
     if (newPage < 0) return;
     this.router.navigate([], {
@@ -87,42 +129,18 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // 🟢 Toggle follow/unfollow suggested user
-  toggleFollow(user: Suggested) {
-    user.followed = !user.followed;
-    const followUrl = `http://localhost:8080/follow`;
-    this.http.post<FollowuserResponse>(followUrl, { id: user.id }, { withCredentials: true }).subscribe({
-      next: (res) => {
-        user = res.data;
-        this.getfollow();
-      },
-      error: (err) => console.error('Error fetching follow counts', err),
-    });
-
+  closeModal() {
+    this.showFollowers = false;
+    this.showFollowing = false;
   }
 
-
-  followersList: Suggested[] = [];  // li ghadi tshow f modal
-  followingList: Suggested[] = [];
-
-  getFollowers() {
-    const followUrl = `http://localhost:8080/get-Followers`;
-    this.http.get<SuggestedResponse>(followUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-       this.followersList = res.data;
-      },
-      error: (err) => console.error('Error fetching follow counts', err),
-    });
+  openFollowers() {
+    this.getFollowers();
+    this.showFollowers = true;
   }
 
-  getFollowing() {
-     const followUrl = `http://localhost:8080/get-Followers`;
-    this.http.get<SuggestedResponse>(followUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-       this.followingList = res.data;
-      },
-      error: (err) => console.error('Error fetching follow counts', err),
-    });
+  openFollowing() {
+    this.getFollowing();
+    this.showFollowing = true;
   }
-
 }

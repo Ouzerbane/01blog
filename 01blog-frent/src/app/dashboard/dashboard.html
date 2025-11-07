@@ -3,9 +3,9 @@
     <h1>Dashboard</h1>
     <nav>
       <ul>
-        <li><i>Home</i></li>
-        <li><i>Profile</i></li>
-        <li><i>Logout</i></li>
+        <li>Home</li>
+        <li>Profile</li>
+        <li>Logout</li>
       </ul>
     </nav>
   </header>
@@ -13,55 +13,45 @@
   <main>
     <section class="stats">
       <div class="stats-header">
-        <div class="card">
+        <div class="card" (click)="getFollowers()">
           <h3>Followers</h3>
           <p>{{ followers }}</p>
         </div>
 
-        <div class="stats-header">
-          <div class="card" (click)="getFollowers()">
-            <h3>Followers</h3>
-            <p>{{ followers }}</p>
-          </div>
-
-          <div class="card" (click)="getFollowing()">
-            <h3>Following</h3>
-            <p>{{ following }}</p>
-          </div>
+        <div class="card" (click)="getFollowing()">
+          <h3>Following</h3>
+          <p>{{ following }}</p>
         </div>
+      </div>
 
+      <div *ngFor="let post of posts" class="post-card">
+        <p><small>By {{ post.author.username }} ({{ post.author.email }})</small></p>
+        <p><small>{{ post.createdAt | date: 'short' }}</small></p>
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content }}</p>
+        <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
 
-        <div *ngFor="let post of posts" class="post-card">
-          <p><small>By {{ post.author.username }} ({{ post.author.email }})</small></p>
-          <p><small>{{ post.createdAt | date:'short' }}</small></p>
-          <h4>{{ post.title }}</h4>
-          <p>{{ post.content }}</p>
-          <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
-
-          <div class="post-actions">
-            <button class="action-btn">
-              <span class="icon">❤️</span>
-              <span class="count">12</span>
-            </button>
-            <button class="action-btn">
-              <span class="icon">💬</span>
-              <span class="count">3</span>
-            </button>
-          </div>
+        <div class="post-actions">
+          <button class="action-btn">
+            <span class="icon">❤️</span>
+            <span class="count">12</span>
+          </button>
+          <button class="action-btn">
+            <span class="icon">💬</span>
+            <span class="count">3</span>
+          </button>
         </div>
+      </div>
 
-        <!-- ✅ Pagination -->
-        <div class="pagination">
-          <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
-          <span>Page {{ page + 1 }}</span>
-          <button (click)="changePage(page + 1)">Next ➡</button>
-        </div>
+      <div class="pagination">
+        <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
+        <span>Page {{ page + 1 }}</span>
+        <button (click)="changePage(page + 1)">Next ➡</button>
+      </div>
     </section>
 
-    <!-- ✅ Suggested users section -->
     <section class="recent-activity">
       <h2>Suggested for you</h2>
-
       <div class="suggested-list">
         <div *ngFor="let user of suggested" class="suggested-user">
           <div class="user-info">
@@ -75,4 +65,22 @@
       </div>
     </section>
   </main>
+
+  <!-- Followers Modal -->
+ <div class="modal" *ngIf="showFollowing">
+  <div class="modal-content">
+    <h3>Following</h3>
+    <div class="suggested-list">
+      <div *ngFor="let user of followingList" class="suggested-user">
+        <div class="user-info">
+          <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+          <span>{{ user.username }}</span>
+        </div>
+        <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
+          {{ user.followed ? 'Following' : 'Follow' }}
+        </button>
+      </div>
+    </div>
+    <button class="close-btn" (click)="closeModal()">Close</button>
+  </div>
 </div>
