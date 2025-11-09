@@ -10,8 +10,29 @@ interface Post {
   content: string;
   imageUrl: string;
   createdAt: string;
+  canEditAndDelet: string;
+  count: number;
+  like: boolean;
   author: AuthorDto;
+  showComment : boolean ;
+
+  isEditing?: boolean;
+  editTitle?: string;
+  editContent?: string;
+
 }
+
+
+interface Comment {
+  id: number;            
+  postId: number;        
+  userId: number;        
+  username: string;    
+  content: string;      
+  createdAt: string;
+
+}
+
 
 interface PostsResponse {
   success: boolean;

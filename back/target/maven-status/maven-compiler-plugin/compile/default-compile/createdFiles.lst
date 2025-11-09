@@ -25,6 +25,8 @@ com/_blog/_blog/model/entity/AuthEntity.class
 com/_blog/_blog/dto/UserFollowDto$UserFollowDtoBuilder.class
 com/_blog/_blog/dto/PostsResponseDto.class
 com/_blog/_blog/service/CommentsService.class
+com/_blog/_blog/dto/LikeDto.class
+com/_blog/_blog/dto/LikeDto$LikeDtoBuilder.class
 com/_blog/_blog/model/entity/LikesEntity$LikesEntityBuilder.class
 com/_blog/_blog/model/repository/FollowerRepo.class
 com/_blog/_blog/model/entity/AuthEntity$AuthEntityBuilder.class
@@ -32,6 +34,7 @@ com/_blog/_blog/model/entity/CommentsEntity.class
 com/_blog/_blog/exception/GlobalExceptionHandler.class
 com/_blog/_blog/controller/Posts.class
 com/_blog/_blog/model/repository/AuthRepo.class
+com/_blog/_blog/dto/ResponsCommetDto.class
 com/_blog/_blog/model/entity/CommentsEntity$CommentsEntityBuilder.class
 com/_blog/_blog/dto/ApiResponse.class
 com/_blog/_blog/service/AuthService.class
@@ -40,6 +43,7 @@ com/_blog/_blog/model/repository/CommentsRepo.class
 com/_blog/_blog/Application.class
 com/_blog/_blog/service/FollowerService.class
 com/_blog/_blog/dto/UserFollowDto.class
+com/_blog/_blog/dto/ResponsCommetDto$ResponsCommetDtoBuilder.class
 com/_blog/_blog/model/entity/ReportEntity$ReportEntityBuilder.class
 com/_blog/_blog/model/entity/LikesEntity.class
 com/_blog/_blog/controller/Adminpermetion.class

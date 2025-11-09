@@ -12,11 +12,13 @@
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/ErrorItem.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/FollowCountDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/IdDto.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/LikeDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/LoginRequest.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsResponseDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/RegisterRequest.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/ReportDto.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/ResponsCommetDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/ReturnCommentDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/UserFollowDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/exception/CustomException.java

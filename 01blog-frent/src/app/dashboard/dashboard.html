@@ -1,18 +1,7 @@
 <div class="dashboard-container">
-  <header>
-    <h1>Dashboard</h1>
-    <nav>
-      <ul>
-        <li>Home</li>
-        <li>Profile</li>
-        <li>Logout</li>
-      </ul>
-    </nav>
-  </header>
-
   <main>
+    <!-- 🔹 الإحصائيات و البوستات -->
     <section class="stats">
-       <!-- 🔹 Cards row (followers, following, create post) -->
       <div class="stats-header">
         <div class="card" (click)="openFollowers()">
           <h3>Followers</h3>
@@ -24,33 +13,53 @@
           <p>{{ following }}</p>
         </div>
 
-        <!-- 🟢 New Create Post Card -->
         <div class="card create-post" (click)="PopatPost()">
           <h3>➕ Create Post</h3>
         </div>
       </div>
 
-      <!-- 🔹 Posts section -->
       <div *ngFor="let post of posts" class="post-card">
         <p><small>By {{ post.author.username }} ({{ post.author.email }})</small></p>
         <p><small>{{ post.createdAt | date: 'short' }}</small></p>
-        <h4>{{ post.title }}</h4>
-        <p>{{ post.content }}</p>
-        <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
 
-        <div class="post-actions">
-          <button class="action-btn">
-            <span class="icon">❤️</span>
-            <span class="count">12</span>
-          </button>
-          <button class="action-btn">
-            <span class="icon">💬</span>
-            <span class="count">3</span>
-          </button>
+        <!-- 🔹 وضع التعديل -->
+        <div *ngIf="!post.isEditing; else editMode">
+          <h4>{{ post.title }}</h4>
+          <p>{{ post.content }}</p>
+          <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
+
+          <div class="post-actions">
+            <button class="action-btn" (click)="likePost(post)">
+              <span class="icon" [class.like]="post.like">❤️</span>
+              <span class="count">{{ post.count || 0 }}</span>
+            </button>
+            <button class="action-btn" (click)="getComment(post)">
+              <span class="icon">💬</span>
+              <span class="count">0</span>
+            </button>
+          </div>
+
+          <div class="owner-actions" *ngIf="post.canEditAndDelet">
+            <button class="edit-btn" (click)="startEditing(post)">✏️ Edit</button>
+            <button class="delete-btn" (click)="deletePost(post)">🗑️ Delete</button>
+          </div>
         </div>
+
+        <!-- 🔹 وضع الإدخال (Edit Mode) -->
+        <ng-template #editMode>
+          <div class="edit-form">
+            <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
+            <textarea [(ngModel)]="post.editContent" rows="4" placeholder="Edit content"></textarea>
+            <div class="edit-actions">
+              <button class="save-btn" (click)="savePost(post)">💾 Save</button>
+              <button class="cancel-btn" (click)="cancelEditing(post)">❌ Cancel</button>
+            </div>
+          </div>
+        </ng-template>
       </div>
 
-      <!-- 🔹 Pagination -->
+
+
       <div class="pagination">
         <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
         <span>Page {{ page + 1 }}</span>

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostsDto {
-
+    
     private Long id;
 
     @NotBlank(message = "title is required")

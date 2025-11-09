@@ -1,0 +1,56 @@
+/* --- Base Reset and Layout --- */
+:root {
+    --primary-color: #10B981; /* Green-600 for accents */
+    --secondary-color: #3B82F6; /* Blue for avatar */
+    --bg-light: #F9FAFB; /* Soft Gray Background */
+    --card-bg: #FFFFFF;
+    --text-dark: #1F2937;
+    --text-muted: #6B7280;
+    --border-color: #E5E7EB;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+/* [Immersive content redacted for brevity.] */
+
+/* --- Header Style (Assuming it's outside the container) --- */
+header {
+    background-color: var(--card-bg);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+header nav ul li {
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+header nav ul li:hover,
+header nav ul li.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+
+/* [Immersive content redacted for brevity.] */

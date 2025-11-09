@@ -40,6 +40,7 @@ public class PostsEntity {
 
     private LocalDateTime createdAt;
 
+
     // relation m3a l user li ktb l post
     @ManyToOne ///
     @JoinColumn(name = "author_id")
@@ -51,8 +52,9 @@ public class PostsEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-      public static PostsResponseDto toPostsResponseDto(PostsEntity post) {
-          return PostsResponseDto.builder()
+      public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId , Long countLikes , boolean islike) {
+        boolean canEdit = post.getAuthor() != null && post.getAuthor().getId().equals(currentUserId);
+        return PostsResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -63,6 +65,9 @@ public class PostsEntity {
                         .username(post.getAuthor().getUsername())
                         .email(post.getAuthor().getEmail())
                         .build())
+                .canEditAndDelet(canEdit)
+                .like(islike)
+                .count(countLikes)
                 .build();
     }
 }

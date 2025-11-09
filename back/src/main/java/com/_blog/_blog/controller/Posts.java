@@ -1,12 +1,16 @@
 package com._blog._blog.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.CommentsDto;
 import com._blog._blog.dto.IdDto;
+import com._blog._blog.dto.LikeDto;
 import com._blog._blog.dto.PostsDto;
 import com._blog._blog.dto.PostsResponseDto;
+import com._blog._blog.dto.ResponsCommetDto;
 import com._blog._blog.dto.ReturnCommentDto;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
@@ -45,17 +51,17 @@ public class Posts {
     public ResponseEntity<ApiResponse<?>> addPost(@Valid @RequestBody PostsDto dto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PostsEntity saved = emptyService.savePost(dto, currentUser);
-        return ResponseEntity.ok(new ApiResponse<>(true, null, saved));
+        return ResponseEntity.ok(new ApiResponse<>(true, null, null));
     }
 
-    @PostMapping("/edit-post")
+    @PutMapping("/edit-post")
     public ResponseEntity<ApiResponse<?>> editPost(@Valid @RequestBody PostsDto dto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PostsEntity edit = emptyService.editPost(dto, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 
-    @PostMapping("/delete-post")
+    @DeleteMapping("/delete-post")
     public ResponseEntity<ApiResponse<?>> deletePost(@RequestBody IdDto iddto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         emptyService.deletePost(iddto, currentUser);
@@ -68,14 +74,15 @@ public class Posts {
             @RequestParam(defaultValue = "10") int size) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
        Page<PostsResponseDto> posts = emptyService.getPosts(page, size, currentUser);
+    //    System.out.print("ppppppppp"+posts.getContent());
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts.getContent()));
     }
 
     @PostMapping("/like-post")
     public ResponseEntity<ApiResponse<?>> likePost(@RequestBody IdDto iddto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long count = likesservice.toggleLike(iddto, currentUser);
-        return ResponseEntity.ok(new ApiResponse<>(true, null, count));
+        LikeDto LikeDto = likesservice.toggleLike(iddto, currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, LikeDto));
     }
 
     @PostMapping("/add-comments")
@@ -84,4 +91,11 @@ public class Posts {
         ReturnCommentDto count = commentsService.addComment(comment, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, count));
     }
+
+@GetMapping("/get-comments")
+public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") Long postId) {
+    List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
+    return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
+}
+
 }

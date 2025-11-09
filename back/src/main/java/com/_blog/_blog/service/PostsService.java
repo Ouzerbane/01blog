@@ -16,6 +16,7 @@ import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.FollowerRepo;
+import com._blog._blog.model.repository.LikesRepo;
 import com._blog._blog.model.repository.PostsRepo;
 
 @Service
@@ -27,6 +28,8 @@ public class PostsService {
     private FollowerRepo followerRepo;
     @Autowired
     private PostsRepo postsRepo;
+    @Autowired
+    private LikesRepo likesRepo;
 
     // PostsService(AuthRepo authRepo) {
     // this.authRepo = authRepo;
@@ -71,7 +74,9 @@ public class PostsService {
 
         if (currentUser.getType().equalsIgnoreCase("admin")) {
             return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
-                    .map(PostsEntity::toPostsResponseDto);
+                    .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
+                            likesRepo.countByPostId(post.getId()),
+                            likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId())));
         }
 
         List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
@@ -86,7 +91,10 @@ public class PostsService {
         }
 
         return postsRepo.findByAuthorIdInOrderByCreatedAtDesc(followingIds, pageable)
-                .map(PostsEntity::toPostsResponseDto);
+                .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
+                        likesRepo.countByPostId(post.getId()),
+                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId())));
+        // ::
     }
 
 }

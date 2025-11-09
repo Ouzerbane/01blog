@@ -1,9 +1,14 @@
 package com._blog._blog.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com._blog._blog.dto.CommentsDto;
+import com._blog._blog.dto.IdDto;
+import com._blog._blog.dto.ResponsCommetDto;
 import com._blog._blog.dto.ReturnCommentDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
@@ -42,5 +47,20 @@ public class CommentsService {
                 .craetAt(savedComment.getCreatedAt().toString())
                 .count(count)
                 .build();
+    }
+
+     public List<ResponsCommetDto> getComment(IdDto postId) {
+         return commentsRepo.findAllByPostIdOrderByCreatedAtAsc(postId.getId())
+                .stream()
+                .map(comment -> new ResponsCommetDto(
+                        comment.getId(),
+                        comment.getPost().getId(),
+                        comment.getUser().getId(),
+                        comment.getUser().getUsername(),
+                        comment.getContent(),
+                        comment.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    
     }
 }

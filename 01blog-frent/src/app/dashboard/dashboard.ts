@@ -16,6 +16,9 @@ export class Dashboard implements OnInit {
   page: number = 0;
   size: number = 5;
 
+  comments: Comment[] = [];
+  // like?: Like;
+
   followers: number = 0;
   following: number = 0;
   areIsFirstTime: boolean = false;
@@ -26,7 +29,7 @@ export class Dashboard implements OnInit {
   followingList: Suggested[] = [];
   showFollowers = false;
   showFollowing = false;
-  showPopatPost = false ;
+  showPopatPost = false;
 
   constructor(
     private http: HttpClient,
@@ -54,6 +57,22 @@ export class Dashboard implements OnInit {
       this.getFollowCounts();
     }
   }
+
+
+getComment(post: any) {
+  const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
+  this.http.get<{ data: Comment[] }>(url, { withCredentials: true }).subscribe({
+    next: (res) => {
+      // katdir showComment default false
+      this.comments = res.data;
+      console.log(this.comments);
+    },
+    error: (err) => console.error('Error fetching comments', err),
+  });
+}
+
+
+  
 
   getSuggested() {
     const suggestedUrl = `http://localhost:8080/suggested`;
@@ -145,7 +164,75 @@ export class Dashboard implements OnInit {
     this.showFollowing = true;
   }
 
-  PopatPost(){
-    this.showPopatPost = !this.showPopatPost ;
+  PopatPost() {
+    this.router.navigate(['/post'])
   }
+
+
+
+  startEditing(post: any) {
+    post.isEditing = true;
+    post.editTitle = post.title;
+    post.editContent = post.content;
+  }
+
+  cancelEditing(post: any) {
+    post.isEditing = false;
+  }
+
+  savePost(post: any) {
+    const url = `http://localhost:8080/post/edit-post`;
+    const updatedPost = {
+      id: post.id,
+      title: post.editTitle,
+      content: post.editContent,
+      imageUrl: post.imageUrl,
+    };
+
+    this.http.put(url, updatedPost, { withCredentials: true }).subscribe({
+      next: () => {
+        post.title = post.editTitle;
+        post.content = post.editContent;
+        post.isEditing = false;
+      },
+      error: (err) => console.error('Error updating post', err),
+    });
+  }
+
+  deletePost(post: any) {
+    const url = `http://localhost:8080/post/delete-post`;
+
+    const options = {
+      body: { id: post.id },
+      withCredentials: true // quest
+    };
+
+    this.http.delete(url, options).subscribe({
+      next: () => {
+        this.posts = this.posts.filter(p => p.id !== post.id);
+        console.log('✅ Post deleted successfully');
+      },
+      error: (err) => console.error('❌ Error deleting post', err),
+    });
+  }
+
+
+  likePost(post: any) {
+    const url = `http://localhost:8080/post/like-post`;
+    const body = { id: post.id };
+
+    this.http.post<any>(url, body, { withCredentials: true }).subscribe({
+      next: (res) => {
+        post.count = res.data.count;
+        post.like = res.data.like;
+
+        console.log(`👍 Like updated: ${post.liked}, total: ${post.likesCount}`);
+      },
+      error: (err) => console.error('❌ Error liking post', err),
+    });
+  }
+
+
+
+
 }

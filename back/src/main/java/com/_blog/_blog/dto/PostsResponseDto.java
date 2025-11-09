@@ -18,6 +18,9 @@ public class PostsResponseDto {
     private String imageUrl;
     private LocalDateTime createdAt;
     private AuthorDto author;
+    private boolean canEditAndDelet;
+    private Long count;
+    private boolean like ;
 
     @Data
     @Builder
@@ -28,20 +31,5 @@ public class PostsResponseDto {
         private String username;
         private String email;
     }
-
-    // public static PostsResponseDto toPostsResponseDto(PostsEntity post) {
-    //       return PostsResponseDto.builder()
-    //             .id(post.getId())
-    //             .title(post.getTitle())
-    //             .content(post.getContent())
-    //             .imageUrl(post.getImageUrl())
-    //             .createdAt(post.getCreatedAt())
-    //             .author(PostsResponseDto.AuthorDto.builder()
-    //                     .id(post.getAuthor().getId())
-    //                     .username(post.getAuthor().getUsername())
-    //                     .email(post.getAuthor().getEmail())
-    //                     .build())
-    //             .build();
-    // }
 
 }
