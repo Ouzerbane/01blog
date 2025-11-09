@@ -16,13 +16,15 @@ export class Dashboard implements OnInit {
   page: number = 0;
   size: number = 5;
 
-  comments: Comment[] = [];
+  // comments: Comment[] = [];
+  newComment:string="";
   // like?: Like;
 
   followers: number = 0;
   following: number = 0;
   areIsFirstTime: boolean = false;
   suggested: Suggested[] = [];
+
 
   // 🧩 Lists for modal
   followersList: Suggested[] = [];
@@ -58,17 +60,43 @@ export class Dashboard implements OnInit {
     }
   }
 
+  toggleComments(post: Post) {
+  post.showComment = !post.showComment;
 
-getComment(post: any) {
+  if (post.showComment) {
+    this.getComment(post);
+  }
+}
+
+getComment(post: Post) {
   const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
   this.http.get<{ data: Comment[] }>(url, { withCredentials: true }).subscribe({
     next: (res) => {
-      // katdir showComment default false
-      this.comments = res.data;
-      console.log(this.comments);
+      post.comment = res.data;
+      console.log('Comments for post', post.id, post.comment);
     },
     error: (err) => console.error('Error fetching comments', err),
   });
+}
+
+
+addComment(post: Post) {
+  if (!post.newComment || post.newComment.trim() === '') return;
+
+  const payload = {
+    id: post.id,
+    content: post.newComment
+  };
+
+  this.http.post<{ data: Comment }>(`http://localhost:8080/post/add-comments`, payload, { withCredentials: true })
+    .subscribe({
+      next: (res) => {
+        post.comment.push(res.data);
+        post.countCommets++ ;
+        post.newComment = '';
+      },
+      error: (err) => console.error('Error adding comment', err)
+    });
 }
 
 
@@ -223,7 +251,7 @@ getComment(post: any) {
 
     this.http.post<any>(url, body, { withCredentials: true }).subscribe({
       next: (res) => {
-        post.count = res.data.count;
+        post.countLike = res.data.count;
         post.like = res.data.like;
 
         console.log(`👍 Like updated: ${post.liked}, total: ${post.likesCount}`);

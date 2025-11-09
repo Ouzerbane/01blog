@@ -19,7 +19,8 @@ public class PostsResponseDto {
     private LocalDateTime createdAt;
     private AuthorDto author;
     private boolean canEditAndDelet;
-    private Long count;
+    private Long countLike;
+     private Long countCommets;
     private boolean like ;
 
     @Data

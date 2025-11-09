@@ -18,34 +18,55 @@
         </div>
       </div>
 
+      <!-- ✅ بوست واحد -->
       <div *ngFor="let post of posts" class="post-card">
         <p><small>By {{ post.author.username }} ({{ post.author.email }})</small></p>
         <p><small>{{ post.createdAt | date: 'short' }}</small></p>
 
-        <!-- 🔹 وضع التعديل -->
+        <!-- 🔹 وضع العرض -->
         <div *ngIf="!post.isEditing; else editMode">
           <h4>{{ post.title }}</h4>
           <p>{{ post.content }}</p>
           <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
 
+          <!-- 🔹 أزرار التفاعل -->
           <div class="post-actions">
             <button class="action-btn" (click)="likePost(post)">
               <span class="icon" [class.like]="post.like">❤️</span>
-              <span class="count">{{ post.count || 0 }}</span>
+              <span class="count">{{ post.countLike}}</span>
             </button>
-            <button class="action-btn" (click)="getComment(post)">
+
+            <button class="action-btn" (click)="toggleComments(post)">
               <span class="icon">💬</span>
-              <span class="count">0</span>
+              <span class="count">{{ post.countCommets}}</span>
             </button>
           </div>
 
+          <!-- 🔹 أزرار المالك -->
           <div class="owner-actions" *ngIf="post.canEditAndDelet">
             <button class="edit-btn" (click)="startEditing(post)">✏️ Edit</button>
             <button class="delete-btn" (click)="deletePost(post)">🗑️ Delete</button>
           </div>
+
+          <!-- 🔹 قسم الكومنت -->
+          <div *ngIf="post.showComment" class="comment-section">
+            <div *ngFor="let comment of post.comment" class="comment-card">
+              <p>
+                <strong>{{ comment.username }}</strong>
+                <small>{{ comment.createdAt | date: 'short' }}</small>
+              </p>
+              <p>{{ comment.content }}</p>
+            </div>
+
+            <!-- 🔹 إضافة كومنت جديد -->
+            <div class="add-comment">
+              <input type="text" [(ngModel)]="post.newComment" placeholder="Write a comment..." />
+              <button (click)="addComment(post)">💬 Post</button>
+            </div>
+          </div>
         </div>
 
-        <!-- 🔹 وضع الإدخال (Edit Mode) -->
+        <!-- 🔹 وضع التعديل -->
         <ng-template #editMode>
           <div class="edit-form">
             <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
@@ -58,8 +79,7 @@
         </ng-template>
       </div>
 
-
-
+      <!-- 🔹 Pagination -->
       <div class="pagination">
         <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
         <span>Page {{ page + 1 }}</span>

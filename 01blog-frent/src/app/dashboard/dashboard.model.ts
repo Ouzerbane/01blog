@@ -11,14 +11,16 @@ interface Post {
   imageUrl: string;
   createdAt: string;
   canEditAndDelet: string;
-  count: number;
+  countLike: number;
+  countCommets: number;
   like: boolean;
   author: AuthorDto;
   showComment : boolean ;
-
+  comment : Comment [];
   isEditing?: boolean;
   editTitle?: string;
   editContent?: string;
+  newComment?: string; 
 
 }
 

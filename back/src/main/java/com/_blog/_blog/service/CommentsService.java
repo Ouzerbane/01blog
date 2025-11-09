@@ -26,7 +26,7 @@ public class CommentsService {
     @Autowired
     private PostsRepo postsRepo;
 
-    public ReturnCommentDto addComment(CommentsDto commentsDto, AuthEntity authEntity) {
+    public ResponsCommetDto addComment(CommentsDto commentsDto, AuthEntity authEntity) {
         PostsEntity post = postsRepo.findById(commentsDto.getId())
                 .orElseThrow(() -> new CustomException("post", "Post not found"));
 
@@ -38,15 +38,16 @@ public class CommentsService {
                         .build()
         );
 
-        long count = commentsRepo.countByPostId(post.getId());
+        // long count = commentsRepo.countByPostId(post.getId());
+        return  new ResponsCommetDto(savedComment.getId(),commentsDto.getId(),authEntity.getId(),authEntity.getUsername(),savedComment.getContent(),savedComment.getCreatedAt());
 
-        return ReturnCommentDto.builder()
-                .id(savedComment.getId())
-                .user(authEntity.getId())
-                .content(savedComment.getContent())
-                .craetAt(savedComment.getCreatedAt().toString())
-                .count(count)
-                .build();
+        // return ReturnCommentDto.builder()
+        //         .id(savedComment.getId())
+        //         .user(authEntity.getId())
+        //         .content(savedComment.getContent())
+        //         .craetAt(savedComment.getCreatedAt().toString())
+        //         .count(count)
+        //         .build();
     }
 
      public List<ResponsCommetDto> getComment(IdDto postId) {

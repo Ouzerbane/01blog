@@ -52,7 +52,7 @@ public class PostsEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-      public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId , Long countLikes , boolean islike) {
+      public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId , Long countLikes , boolean islike , Long countLike) {
         boolean canEdit = post.getAuthor() != null && post.getAuthor().getId().equals(currentUserId);
         return PostsResponseDto.builder()
                 .id(post.getId())
@@ -67,7 +67,8 @@ public class PostsEntity {
                         .build())
                 .canEditAndDelet(canEdit)
                 .like(islike)
-                .count(countLikes)
+                .countLike(countLikes)
+                .countCommets(countLike)
                 .build();
     }
 }

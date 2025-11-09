@@ -18,4 +18,5 @@ public class ResponsCommetDto {
     private String username;
     private String content;
     private LocalDateTime createdAt;
+    // private Long count ;
 }

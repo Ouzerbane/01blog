@@ -88,7 +88,7 @@ public class Posts {
     @PostMapping("/add-comments")
     public ResponseEntity<ApiResponse<?>> commentPost(@RequestBody CommentsDto comment) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ReturnCommentDto count = commentsService.addComment(comment, currentUser);
+         ResponsCommetDto count = commentsService.addComment(comment, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, count));
     }
 
