@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class Dashboard implements OnInit {
   posts: Post[] = [];
   page: number = 0;
-  size: number = 5;
+  size: number = 10;
 
   // comments: Comment[] = [];
   newComment:string="";
@@ -259,8 +259,5 @@ addComment(post: Post) {
       error: (err) => console.error('❌ Error liking post', err),
     });
   }
-
-
-
 
 }
