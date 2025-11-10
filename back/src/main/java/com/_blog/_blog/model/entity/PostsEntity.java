@@ -1,9 +1,12 @@
 package com._blog._blog.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com._blog._blog.dto.PostsResponseDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,13 +14,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Table(name = "posts")
@@ -40,11 +43,18 @@ public class PostsEntity {
 
     private LocalDateTime createdAt;
 
-
     // relation m3a l user li ktb l post
-    @ManyToOne ///
+    @ManyToOne
+    
+    ///
     @JoinColumn(name = "author_id")
     private AuthEntity author;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikesEntity> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentsEntity> comments = new ArrayList<>();
 
     // bach kol ma ttsjjel post, ttsjjel b date jdida
     @PrePersist
@@ -52,7 +62,7 @@ public class PostsEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-      public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId , Long countLikes , boolean islike , Long countLike) {
+    public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId, Long countLikes, boolean islike, Long countLike) {
         boolean canEdit = post.getAuthor() != null && post.getAuthor().getId().equals(currentUserId);
         return PostsResponseDto.builder()
                 .id(post.getId())

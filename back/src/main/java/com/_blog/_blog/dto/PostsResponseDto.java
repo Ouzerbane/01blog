@@ -20,7 +20,7 @@ public class PostsResponseDto {
     private AuthorDto author;
     private boolean canEditAndDelet;
     private Long countLike;
-     private Long countCommets;
+    private Long countCommets;
     private boolean like ;
 
     @Data
