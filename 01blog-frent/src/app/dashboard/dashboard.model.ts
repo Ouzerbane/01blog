@@ -4,7 +4,7 @@ interface AuthorDto {
   email: string;
 }
 
-interface Post {
+export interface Post {
   id: number;
   title: string;
   content: string;
@@ -25,7 +25,7 @@ interface Post {
 }
 
 
-interface Comment {
+export interface Comment {
   id: number;            
   postId: number;        
   userId: number;        
@@ -36,31 +36,31 @@ interface Comment {
 }
 
 
-interface PostsResponse {
+export interface PostsResponse {
   success: boolean;
   errors: any;
   data: Post[];
 }
 
-interface Suggested {
+export interface Suggested {
   id: number;
   followed: boolean;
   username: string;
 }
 
-interface SuggestedResponse {
+export interface SuggestedResponse {
   success: boolean;
   errors: any;
   data: Suggested[];
 }
 
-interface FollowuserResponse {
+export interface FollowuserResponse {
   success: boolean;
   errors: any;
   data: Suggested;
 }
 
-interface FollowResponse {
+export interface FollowResponse {
   success: boolean;
   errors: any;
   data: {

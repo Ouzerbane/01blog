@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FollowResponse, FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from './dashboard.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,7 @@ export class Dashboard implements OnInit {
   suggested: Suggested[] = [];
 
 
-  // 🧩 Lists for modal
+  // Lists for modal
   followersList: Suggested[] = [];
   followingList: Suggested[] = [];
   showFollowers = false;
@@ -70,7 +71,7 @@ export class Dashboard implements OnInit {
 
 getComment(post: Post) {
   const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
-  this.http.get<{ data: Comment[] }>(url, { withCredentials: true }).subscribe({
+  this.http.get<any>(url, { withCredentials: true }).subscribe({
     next: (res) => {
       post.comment = res.data;
       console.log('Comments for post', post.id, post.comment);
@@ -88,7 +89,7 @@ addComment(post: Post) {
     content: post.newComment
   };
 
-  this.http.post<{ data: Comment }>(`http://localhost:8080/post/add-comments`, payload, { withCredentials: true })
+  this.http.post<any>(`http://localhost:8080/post/add-comments`, payload, { withCredentials: true })
     .subscribe({
       next: (res) => {
         post.comment.push(res.data);

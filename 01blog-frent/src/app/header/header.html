@@ -3,10 +3,13 @@
   <nav>
     <ul>
       <li routerLink="/" routerLinkActive="active">Home</li>
-      <li routerLink="/profile" routerLinkActive="active">Profile</li>
-      <!-- <li routerLink="/posts" routerLinkActive="active">Posts</li> -->
-      <li >Logout</li>
+
+      <!-- Profile link dyal user -->
+      <li [routerLink]="['/profile', userId]" routerLinkActive="active">
+        Profile
+      </li>
+
+      <li>Logout</li>
     </ul>
   </nav>
 </header>
-<!-- (click)="logout()" -->

@@ -1,6 +1,5 @@
 <div class="dashboard-container">
   <main>
-    <!-- 🔹 الإحصائيات و البوستات -->
     <section class="stats">
       <div class="stats-header">
         <div class="card" (click)="openFollowers()">
@@ -18,23 +17,29 @@
         </div>
       </div>
 
-      <!-- ✅ بوست واحد -->
       <div *ngFor="let post of posts" class="post-card">
         <p><strong>{{ post.author.username }}</strong></p>
         <p><small>{{ post.createdAt | date: 'short' }}</small></p>
 
-        <!-- 🔹 وضع العرض -->
         <div *ngIf="!post.isEditing; else editMode">
           <h4>{{ post.title }}</h4>
           <p>{{ post.content }}</p>
           <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
 
-          <!-- 🔹 أزرار التفاعل -->
           <div class="post-actions">
             <button class="action-btn" (click)="likePost(post)">
-              <span class="icon" [class.like]="post.like">❤️</span>
+              <span class="icon" [class.like]="post.like"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  width="30" height="30" role="img" aria-label="Like (heart)" fill="none" stroke="currentColor"
+                  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <title>Like (heart)</title>
+                  <path
+                    d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3 1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z" />
+                </svg></span>
               <span class="count">{{ post.countLike}}</span>
             </button>
+
+
+
 
             <button class="action-btn" (click)="toggleComments(post)">
               <span class="icon">💬</span>
@@ -42,23 +47,24 @@
             </button>
           </div>
 
-          <!-- 🔹 أزرار المالك -->
+
+          
           <div class="owner-actions" *ngIf="post.canEditAndDelet">
             <button class="edit-btn" (click)="startEditing(post)">✏️ Edit</button>
             <button class="delete-btn" (click)="deletePost(post)">🗑️ Delete</button>
           </div>
 
-          <!-- 🔹 قسم الكومنت -->
+          
           <div *ngIf="post.showComment" class="comment-section">
             <div *ngFor="let comment of post.comment" class="comment-card">
               <p>
                 <strong>{{ comment.username }}</strong>
-               <small>{{ comment.createdAt | date: 'short' }}</small>
+                <small>{{ comment.createdAt | date: 'short' }}</small>
               </p>
               <p>{{ comment.content }}</p>
             </div>
 
-            <!-- 🔹 إضافة كومنت جديد -->
+            
             <div class="add-comment">
               <input type="text" [(ngModel)]="post.newComment" placeholder="Write a comment..." />
               <button (click)="addComment(post)">💬 Post</button>
@@ -66,7 +72,7 @@
           </div>
         </div>
 
-        <!-- 🔹 وضع التعديل -->
+       
         <ng-template #editMode>
           <div class="edit-form">
             <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
@@ -79,7 +85,7 @@
         </ng-template>
       </div>
 
-      <!-- 🔹 Pagination -->
+    
       <div class="pagination">
         <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
         <span>Page {{ page + 1 }}</span>
@@ -87,7 +93,7 @@
       </div>
     </section>
 
-    <!-- 🔹 Suggested users -->
+   
     <section class="recent-activity">
       <h2>Suggested for you</h2>
       <div class="suggested-list">
@@ -104,7 +110,7 @@
     </section>
   </main>
 
-  <!-- 🔹 Followers Modal -->
+
   <div class="modal" *ngIf="showFollowers">
     <div class="modal-content">
       <h3>Followers</h3>
@@ -123,7 +129,7 @@
     </div>
   </div>
 
-  <!-- 🔹 Following Modal -->
+
   <div class="modal" *ngIf="showFollowing">
     <div class="modal-content">
       <h3>Following</h3>
