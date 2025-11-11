@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com._blog._blog.dto.PostsResponseDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,12 +49,15 @@ public class PostsEntity {
     
     ///
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private AuthEntity author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<LikesEntity> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<CommentsEntity> comments = new ArrayList<>();
 
     // bach kol ma ttsjjel post, ttsjjel b date jdida

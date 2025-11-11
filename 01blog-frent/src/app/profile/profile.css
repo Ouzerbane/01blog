@@ -1,165 +1,469 @@
+/* ================= Profile Container ================= */
 .profile-container {
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   padding: 2rem;
   background-color: #f9fafb;
   min-height: 100vh;
-  color: #2e2e2e;
 }
 
-/* 🧑‍💼 Profile Header */
+/* ================= Profile Header ================= */
 .profile-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 2rem;
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  gap: 1.5rem;
 }
 
 .avatar-large {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: #10b981;
+  width: 80px;
+  height: 80px;
+  background-color: #10b981;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 2rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .profile-info h2 {
   margin: 0;
-  font-size: 1.6rem;
-  color: #047857;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
 }
 
 .profile-info .email {
-  color: #6b7280;
+  margin: 0.2rem 0 0.5rem 0;
   font-size: 0.95rem;
-  margin: 0.3rem 0;
+  color: #6b7280;
 }
 
 .follow-stats {
   display: flex;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+}
+
+.follow-stats span {
+  cursor: pointer;
   font-size: 0.95rem;
-  color: #065f46;
+  color: #111827;
+  transition: color 0.2s ease;
+}
+
+.follow-stats span:hover {
+  color: #10b981;
 }
 
 .edit-profile-btn {
-  margin-left: auto;
   background-color: #10b981;
   color: white;
   border: none;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.25s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .edit-profile-btn:hover {
   background-color: #059669;
-  transform: scale(1.05);
+  transform: translateY(-1px);
 }
 
-/* 📝 About Section */
-.profile-details {
-  margin-top: 2rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.profile-details h3 {
-  margin-bottom: 1rem;
-  color: #047857;
-}
-
-.info-grid {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.info-card {
-  flex: 1;
-  background: #ecfdf5;
-  padding: 1rem;
-  border-radius: 10px;
-  text-align: center;
-  border: 1px solid #a7f3d0;
-}
-
-/* 🧩 User Posts */
+/* ================= User Posts ================= */
 .user-posts {
-  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .user-posts h3 {
-  color: #047857;
   margin-bottom: 1rem;
+  color: #10b981;
+  font-size: 1.2rem;
 }
 
-.post-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+/* ================= Empty Posts ================= */
+.empty {
+  text-align: center;
   padding: 1rem;
-  margin-bottom: 1rem;
-  border-top: 4px solid #10b981;
+  color: #6b7280;
+}
+
+/* ================= Post Card ================= */
+.post-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 1rem 1.2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
 .post-card h4 {
-  margin-bottom: 0.5rem;
-  color: #064e3b;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #111827;
+}
+
+.post-card p {
+  color: #374151;
+  font-size: 0.95rem;
+  margin: 0.3rem 0;
 }
 
 .post-card img {
   width: 100%;
-  height: 180px;
+  max-height: 200px;
   object-fit: cover;
   border-radius: 8px;
-  margin: 0.5rem 0;
+  margin-top: 0.5rem;
 }
 
+/* ================= Post Actions ================= */
 .post-actions {
   display: flex;
   gap: 1rem;
-  border-top: 1px solid #eee;
+  margin-top: 0.8rem;
+  border-top: 1px solid #e5e7eb;
   padding-top: 0.5rem;
 }
 
 .action-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #047857;
-  font-weight: 500;
-  transition: transform 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.4rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  transform: scale(1.1);
-  color: #065f46;
+  color: #10b981;
 }
 
-.icon {
-  font-size: 1.1rem;
+.action-btn .icon {
+  font-size: 1.3rem;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 
-/* 🪶 Empty State */
-.empty {
-  text-align: center;
+.action-btn:hover .icon {
+  transform: scale(1.3);
+}
+
+.action-btn .count {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* ================= Comment Section ================= */
+.comment-section {
+  margin-top: 0.8rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.8rem;
+}
+
+.comment-card {
+  background-color: #f9fafb;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.comment-card strong {
+  color: #10b981;
+}
+
+.comment-card small {
   color: #6b7280;
-  background: #ecfdf5;
-  padding: 2rem;
-  border-radius: 10px;
 }
+
+.add-comment {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.add-comment input {
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.add-comment input:focus {
+  border-color: #10b981;
+}
+
+.add-comment button {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.add-comment button:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+/* ================= Edit Form ================= */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: #fdf8f3;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.edit-form input,
+.edit-form textarea {
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus {
+  border-color: #c5a880;
+}
+
+/* ================= Followers / Following Modal ================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-btn {
+  background-color: #f43f5e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  float: right;
+  margin-top: 0.5rem;
+}
+
+.close-btn:hover {
+  background-color: #e11d48;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= Modal Overlay ================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.5); /* semi-transparent dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ================= Modal Content ================= */
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+.modal-content h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  color: #10b981;
+  text-align: center;
+}
+
+/* ================= Suggested Users List ================= */
+.suggested-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.suggested-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9fafb;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.suggested-user:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ================= User Info ================= */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.user-info .avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #10b981;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= Follow Button ================= */
+.follow-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.follow-btn:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.follow-btn.following {
+  background-color: #f43f5e;
+}
+
+.follow-btn.following:hover {
+  background-color: #e11d48;
+}
+
+/* ================= Close Button ================= */
+.close-btn {
+  align-self: flex-end;
+  margin-top: 1rem;
+  background-color: #f43f5e;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #e11d48;
+}
+
+/* ================= Animations ================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+
+  .user-info .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .follow-btn {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+

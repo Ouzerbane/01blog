@@ -105,28 +105,39 @@ public class FollowerService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFollowDto> getFollowersService(Long currentUserId) {
-        List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUserId);
+    public List<UserFollowDto> getFollowersService(Long profileUserId, AuthEntity loginUser) {
+        authRepo.findById(profileUserId)
+                .orElseThrow(() -> new CustomException("user", "User not found"));
+
+        List<FollowerEntity> followers = followerRepo.findAllByFollowingId(profileUserId);
 
         return followers.stream()
                 .map(f -> {
-                    boolean isFollowed = followerRepo.existsByFollowerIdAndFollowingId(currentUserId,f.getFollower().getId());
+                    boolean isFollowed = followerRepo.existsByFollowerIdAndFollowingId(loginUser.getId(), f.getFollower().getId());
                     return new UserFollowDto(
                             f.getFollower().getId(),
                             f.getFollower().getUsername(),
-                            isFollowed);
+                            isFollowed
+                    );
                 })
                 .collect(Collectors.toList());
     }
 
-    public List<UserFollowDto> getFollowingService(Long userId) {
-        List<FollowerEntity> followingList = followerRepo.findAllByFollowerId(userId);
+    public List<UserFollowDto> getFollowingService(Long profileUserId, AuthEntity loginUser) {
+        authRepo.findById(profileUserId)
+                .orElseThrow(() -> new CustomException("user", "User not found"));
+
+        List<FollowerEntity> followingList = followerRepo.findAllByFollowerId(profileUserId);
 
         return followingList.stream()
-                .map(f -> new UserFollowDto(
-                        f.getFollowing().getId(),
-                        f.getFollowing().getUsername(),
-                        true))
+                .map(f -> {
+                    boolean isFollowed = followerRepo.existsByFollowerIdAndFollowingId(loginUser.getId(), f.getFollowing().getId());
+                    return new UserFollowDto(
+                            f.getFollowing().getId(),
+                            f.getFollowing().getUsername(),
+                            isFollowed
+                    );
+                })
                 .collect(Collectors.toList());
     }
 

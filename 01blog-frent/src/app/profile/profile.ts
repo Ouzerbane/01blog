@@ -1,33 +1,49 @@
 import { Component, OnInit } from '@angular/core';
-import { Post, PostsResponse } from '../dashboard/dashboard.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-
+import { CommonModule, DatePipe } from '@angular/common';
+import { Post, PostsResponse, Suggested, SuggestedResponse } from '../dashboard/dashboard.model';
+import { FormsModule } from '@angular/forms';
 
 export interface UserDto {
+  id: number;
   username: string;
   email: string;
-  imagUrl: string;
+  imageUrl?: string;
   followers: number;
   following: number;
 }
 
+// export interface Suggested {
+//   id: number;
+//   username: string;
+//   followed: boolean;
+// }
+
+// export interface SuggestedResponse {
+//   success: boolean;
+//   data: Suggested[];
+// }
+
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, HttpClientModule],
+  standalone: true,
+  imports: [CommonModule, HttpClientModule, DatePipe, FormsModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.css',
+  styleUrls: ['./profile.css'],
 })
 export class Profile implements OnInit {
   posts: Post[] = [];
   userId = 0;
   user?: UserDto;
 
-  constructor(
-    private http: HttpClient,
-    private route: ActivatedRoute
-  ) {}
+  // followers modal
+  followersList: Suggested[] = [];
+  followingList: Suggested[] = [];
+  showFollowers = false;
+  showFollowing = false;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.userId = Number(this.route.snapshot.paramMap.get('id'));
@@ -35,29 +51,146 @@ export class Profile implements OnInit {
     this.getPosts(this.userId);
   }
 
-  getPosts(id: number) {
-    const postsUrl = `http://localhost:8080/get-post-profile/${id}`;
-    this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.posts = res.data;
-        console.log('Posts:', this.posts);
-      },
-      error: (err) => console.error('Error fetching posts', err),
-    });
-  }
-
+  // 🧩 Get user info
   getUser(id: number) {
-    const userUrl = `http://localhost:8080/get-userInfo/${id}`;
-    this.http.get<any>(userUrl, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.user = res.data;
-        console.log('User info:', res);
-      },
+    const url = `http://localhost:8080/get-userInfo/${id}`;
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => (this.user = res.data),
       error: (err) => console.error('Error fetching user', err),
     });
   }
 
-  editProfile() {
-    console.log('Edit profile clicked!');
+  // 📬 Get user posts
+  getPosts(id: number) {
+    const url = `http://localhost:8080/get-post-profile/${id}`;
+    this.http.get<PostsResponse>(url, { withCredentials: true }).subscribe({
+      next: (res) => (this.posts = res.data),
+      error: (err) => console.error('Error fetching posts', err),
+    });
+  }
+
+  // 🧍‍♂️ Followers & Following
+  openFollowers() {
+    console.log("oppwnFollowers");
+    
+    const url = `http://localhost:8080/get-Followers/${this.userId}`;
+    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        console.log(res);
+        
+        this.followersList = res.data;
+        this.showFollowers = true;
+        this.showFollowing = false;
+      },
+      error: (err) => console.error('Error fetching followers', err),
+    });
+  }
+
+  openFollowing() {
+        console.log("oppwnFollowing");
+
+    const url = `http://localhost:8080/get-Following/${this.userId}`;
+    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        console.log(res);
+        
+        this.followingList = res.data;
+        this.showFollowing = true;
+        this.showFollowers = false;
+      },
+      error: (err) => console.error('Error fetching following', err),
+    });
+  }
+
+  closeModal() {
+    this.showFollowers = false;
+    this.showFollowing = false;
+  }
+
+  // 💬 Comments
+  toggleComments(post: Post) {
+    post.showComment = !post.showComment;
+    if (post.showComment) this.getComments(post);
+  }
+
+  getComments(post: Post) {
+    const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => (post.comment = res.data),
+      error: (err) => console.error('Error fetching comments', err),
+    });
+  }
+
+  addComment(post: Post) {
+    if (!post.newComment || post.newComment.trim() === '') return;
+
+    const body = { id: post.id, content: post.newComment };
+    this.http
+      .post<any>(`http://localhost:8080/post/add-comments`, body, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          post.comment.push(res.data);
+          post.countCommets++;
+          post.newComment = '';
+        },
+        error: (err) => console.error('Error adding comment', err),
+      });
+  }
+
+  // ❤️ Like Post
+  likePost(post: any) {
+    const url = `http://localhost:8080/post/like-post`;
+    const body = { id: post.id };
+
+    this.http.post<any>(url, body, { withCredentials: true }).subscribe({
+      next: (res) => {
+        post.countLike = res.data.count;
+        post.like = res.data.like;
+      },
+      error: (err) => console.error('Error liking post', err),
+    });
+  }
+
+  // ✏️ Edit Post
+  startEditing(post: any) {
+    post.isEditing = true;
+    post.editTitle = post.title;
+    post.editContent = post.content;
+  }
+
+  cancelEditing(post: any) {
+    post.isEditing = false;
+  }
+
+  savePost(post: any) {
+     const url = `http://localhost:8080/post/edit-post`;
+    const updatedPost = {
+      id: post.id,
+      title: post.editTitle,
+      content: post.editContent,
+      imageUrl: post.imageUrl,
+    };
+
+    this.http.put(url, updatedPost, { withCredentials: true }).subscribe({
+      next: () => {
+        post.title = post.editTitle;
+        post.content = post.editContent;
+        post.isEditing = false;
+      },
+      error: (err) => console.error('Error updating post', err),
+    });
+  }
+
+  // 🗑️ Delete Post
+  deletePost(post: any) {
+    const url = `http://localhost:8080/post/delete-post`;
+    const options = { body: { id: post.id }, withCredentials: true };
+
+    this.http.delete(url, options).subscribe({
+      next: () => {
+        this.posts = this.posts.filter((p) => p.id !== post.id);
+      },
+      error: (err) => console.error('Error deleting post', err),
+    });
   }
 }

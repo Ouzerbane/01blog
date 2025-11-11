@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +24,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*", methods = {
-        RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
+    RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class Follower {
 
     @Autowired
@@ -71,21 +72,19 @@ public class Follower {
         return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
     }
 
-    @GetMapping("/get-Followers")
-    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers() {
+    @GetMapping("/get-Followers/{userId}")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers(@PathVariable Long userId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<UserFollowDto> suggestions = followerService.getFollowersService(currentUser.getId());
-
-        return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
+        List<UserFollowDto> followers = followerService.getFollowersService(userId,currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, followers));
     }
 
-    @GetMapping("/get-Following")
-    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing() {
-        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<UserFollowDto> suggestions = followerService.getFollowingService(currentUser.getId());
-
-        return ResponseEntity.ok(new ApiResponse<>(true, null, suggestions));
+    @GetMapping("/get-Following/{userId}")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing(@PathVariable Long userId) {
+         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserFollowDto> following = followerService.getFollowingService(userId,currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, following));
     }
 
 }

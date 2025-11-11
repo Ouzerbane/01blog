@@ -1,5 +1,5 @@
 <div class="profile-container" *ngIf="user">
-  <!-- Profile Header -->
+  <!-- 🧑 Profile Header -->
   <section class="profile-header">
     <div class="avatar-large">
       {{ user.username.charAt(0).toUpperCase() }}
@@ -8,55 +8,130 @@
     <div class="profile-info">
       <h2>{{ user.username }}</h2>
       <p class="email">{{ user.email }}</p>
+
       <div class="follow-stats">
-        <span><strong>{{ user.followers }}</strong> Followers</span>
-        <span><strong>{{ user.following }}</strong> Following</span>
+        <span (click)="openFollowers()">
+          <strong>{{ user.followers }}</strong> Followers
+        </span>
+        <span (click)="openFollowing()">
+          <strong>{{ user.following }}</strong> Following
+        </span>
       </div>
     </div>
 
-    <button class="edit-profile-btn" (click)="editProfile()"> Repot Profile</button>
+    <button class="edit-profile-btn" >
+      ⚙️ Edit Profile
+    </button>
   </section>
 
-  <!-- User Posts -->
+  <!-- 📝 User Posts -->
   <section class="user-posts">
-    <h3>Posts</h3>
+    <h3>📚 Posts</h3>
 
-    <!-- Empty state -->
     <div *ngIf="posts.length === 0" class="empty">
-      <p>You haven’t created any posts yet.</p>
+      <p>No posts yet.</p>
     </div>
 
-    <!-- Posts List -->
     <div *ngFor="let post of posts" class="post-card">
-      <h4>{{ post.title }}</h4>
-      <p>{{ post.content }}</p>
-      <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
+      <p class="post-author">
+        <strong>{{ post.author.username }}</strong>
+        <small>{{ post.createdAt | date:'short' }}</small>
+      </p>
 
-      <div class="post-meta">
-        <span class="post-author">By {{ post.author.username }}</span>
-        <span class="post-date">{{ post.createdAt | date:'medium' }}</span>
+      <!-- Normal view -->
+      <div *ngIf="!post.isEditing; else editMode">
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content }}</p>
+        <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" />
+
+        <div class="post-actions">
+          <!-- Like -->
+          <button class="action-btn" (click)="likePost(post)">
+            <span class="icon" [class.like]="post.like">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   width="24" height="24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3
+                     1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z" />
+              </svg>
+            </span>
+            <span class="count">{{ post.countLike || 0 }}</span>
+          </button>
+
+          <!-- Comments -->
+          <button class="action-btn" (click)="toggleComments(post)">
+            💬 {{ post.countCommets || 0 }}
+          </button>
+
+          <!-- Edit/Delete -->
+          <button *ngIf="post.canEditAndDelet" class="action-btn" (click)="startEditing(post)">✏️</button>
+          <button *ngIf="post.canEditAndDelet" class="action-btn delete" (click)="deletePost(post)">🗑️</button>
+        </div>
+
+        <!-- Comments Section -->
+        <div *ngIf="post.showComment" class="comment-section">
+          <div *ngFor="let comment of post.comment" class="comment-card">
+            <p><strong>{{ comment.username }}</strong> <small>{{ comment.createdAt | date:'short' }}</small></p>
+            <p>{{ comment.content }}</p>
+          </div>
+
+          <div class="add-comment">
+            <input type="text" [(ngModel)]="post.newComment" placeholder="Write a comment..." />
+            <button (click)="addComment(post)">💬 Post</button>
+          </div>
+        </div>
       </div>
 
-      <div class="post-actions">
-        <!-- Like button -->
-        <button class="action-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
-            fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path
-              d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3 1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z" />
-          </svg>
-          {{ post.countLike || 0 }}
-        </button>
-
-        <!-- Comments count -->
-        <button class="action-btn">💬 {{ post.countCommets || 0 }}</button>
-
-        <!-- Edit/Delete buttons if allowed -->
-        <button *ngIf="post.canEditAndDelet" class="action-btn" >✏️ Edit</button>
-        <button *ngIf="post.canEditAndDelet" class="action-btn" >🗑️ Delete</button>
-        <!-- (click)="editPost(post)" -->
-         <!-- (click)="deletePost(post)" -->
-      </div>
+      <!-- Edit mode -->
+      <ng-template #editMode>
+        <div class="edit-form">
+          <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
+          <textarea [(ngModel)]="post.editContent" rows="4" placeholder="Edit content"></textarea>
+          <div class="edit-actions">
+            <button class="save-btn" (click)="savePost(post)">💾 Save</button>
+            <button class="cancel-btn" (click)="cancelEditing(post)">❌ Cancel</button>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </section>
+
+  <!-- Followers Modal -->
+  <div class="modal" *ngIf="showFollowers">
+    <div class="modal-content">
+      <h3>Followers</h3>
+      <div class="suggested-list">
+        <div *ngFor="let user of followersList" class="suggested-user">
+          <div class="user-info">
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span>{{ user.username }}</span>
+          </div>
+          <button class="follow-btn" [class.following]="user.followed" >
+            {{ user.followed ? 'Following' : 'Follow' }}
+          </button>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Following Modal -->
+  <div class="modal" *ngIf="showFollowing">
+    <div class="modal-content">
+      <h3>Following</h3>
+      <div class="suggested-list">
+        <div *ngFor="let user of followingList" class="suggested-user">
+          <div class="user-info">
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span>{{ user.username }}</span>
+          </div>
+          <button class="follow-btn" [class.following]="user.followed" >
+            {{ user.followed ? 'Following' : 'Follow' }}
+          </button>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeModal()">Close</button>
+    </div>
+  </div>
 </div>
