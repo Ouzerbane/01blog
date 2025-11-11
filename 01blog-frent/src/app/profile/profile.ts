@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Post, PostsResponse, Suggested, SuggestedResponse } from '../dashboard/dashboard.model';
+import { FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from '../dashboard/dashboard.model';
 import { FormsModule } from '@angular/forms';
 
 export interface UserDto {
@@ -14,16 +14,6 @@ export interface UserDto {
   following: number;
 }
 
-// export interface Suggested {
-//   id: number;
-//   username: string;
-//   followed: boolean;
-// }
-
-// export interface SuggestedResponse {
-//   success: boolean;
-//   data: Suggested[];
-// }
 
 @Component({
   selector: 'app-profile',
@@ -68,6 +58,18 @@ export class Profile implements OnInit {
       error: (err) => console.error('Error fetching posts', err),
     });
   }
+
+
+    toggleFollow(user: Suggested) {
+      user.followed = !user.followed;
+      const followUrl = `http://localhost:8080/follow`;
+      this.http
+        .post<FollowuserResponse>(followUrl,{ id: user.id },{ withCredentials: true })
+        .subscribe({
+          next: (resp) => {console.log(resp);this.getUser(this.userId)},
+          error: (err) => console.error('Error toggling follow', err),
+        });
+    }
 
   // 🧍‍♂️ Followers & Following
   openFollowers() {

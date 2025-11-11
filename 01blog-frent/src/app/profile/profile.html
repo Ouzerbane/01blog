@@ -107,7 +107,7 @@
             <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span>{{ user.username }}</span>
           </div>
-          <button class="follow-btn" [class.following]="user.followed" >
+          <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
             {{ user.followed ? 'Following' : 'Follow' }}
           </button>
         </div>
@@ -126,7 +126,7 @@
             <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span>{{ user.username }}</span>
           </div>
-          <button class="follow-btn" [class.following]="user.followed" >
+          <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
             {{ user.followed ? 'Following' : 'Follow' }}
           </button>
         </div>
