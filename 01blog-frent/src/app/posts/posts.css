@@ -1,50 +1,46 @@
 .create-post-container {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  padding: 2rem;
   max-width: 600px;
   margin: 2rem auto;
-  border-top: 4px solid #10b981;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.create-post-container h2 {
+h2 {
   color: #10b981;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 1rem;
 }
 
 label {
-  font-weight: 500;
+  font-weight: 600;
+  color: #333;
+  display: block;
   margin-bottom: 0.4rem;
-  color: #374151;
 }
 
 input[type="text"],
 textarea {
-  border: 1px solid #d1d5db;
+  width: 100%;
+  border: 1.5px solid #ccc;
   border-radius: 8px;
-  padding: 0.8rem;
-  font-size: 1rem;
-  font-family: inherit;
+  padding: 0.7rem;
+  outline: none;
   transition: border-color 0.2s ease;
 }
 
-input[type="text"]:focus,
+input:focus,
 textarea:focus {
   border-color: #10b981;
-  outline: none;
 }
 
 input[type="file"] {
-  margin-top: 0.4rem;
+  display: block;
+  margin-top: 0.5rem;
 }
 
 .image-preview {
@@ -54,30 +50,29 @@ input[type="file"] {
 
 .image-preview img {
   width: 100%;
-  max-height: 250px;
-  border-radius: 10px;
+  max-height: 300px;
   object-fit: cover;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 .submit-btn {
   width: 100%;
-  background-color: #10b981;
-  color: white;
   padding: 0.8rem;
+  background: #10b981;
+  color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.25s ease;
+  transition: background 0.3s ease;
 }
 
 .submit-btn:hover {
-  background-color: #059669;
+  background: #0e9a6c;
 }
 
-.submit-btn:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
+.text-danger {
+  color: red;
+  text-align: center;
+  margin-top: 0.5rem;
 }

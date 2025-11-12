@@ -19,8 +19,8 @@
       </div>
     </div>
 
-    <button class="edit-profile-btn" >
-      ⚙️ Edit Profile
+    <button class="edit-profile-btn"  (click)="report()" >
+      ⚙️ Report Profile
     </button>
   </section>
 
@@ -96,6 +96,20 @@
       </ng-template>
     </div>
   </section>
+
+<!-- report  -->
+  <div class="report-popup" *ngIf="showReportTemplite">
+  <div class="popup-content">
+    <h3>Report Profile</h3>
+    <input
+      type="text"
+      [(ngModel)]="reportReason"
+      placeholder="Enter your reason..."
+    />
+    <button (click)="reportUser()">Send</button>
+    <span class="close-btn" (click)="report()">✖</span>
+  </div>
+</div>
 
   <!-- Followers Modal -->
   <div class="modal" *ngIf="showFollowers">

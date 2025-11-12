@@ -33,20 +33,26 @@ export class Profile implements OnInit {
   showFollowers = false;
   showFollowing = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute ,  private router: Router) {}
+  reportReason = "";
+  showReportTemplite = false;
+
+  //  private Long targetUserId;
+  //   private String reason;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     // this.userId = Number(this.route.snapshot.paramMap.get('id'));
     // this.getUser(this.userId);
     // this.getPosts(this.userId);
-     this.route.paramMap.subscribe(params => {
-    this.userId = Number(params.get('id'));
-    this.getUser(this.userId);
-    this.getPosts(this.userId);
-  });
+    this.route.paramMap.subscribe(params => {
+      this.userId = Number(params.get('id'));
+      this.getUser(this.userId);
+      this.getPosts(this.userId);
+    });
   }
 
-  // 🧩 Get user info
+  // Get user info
   getUser(id: number) {
     const url = `http://localhost:8080/get-userInfo/${id}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
@@ -55,7 +61,26 @@ export class Profile implements OnInit {
     });
   }
 
-  // 📬 Get user posts
+  report() {
+    this.showReportTemplite = !this.showReportTemplite;
+  }
+
+  reportUser() {
+    const body = { reason: this.reportReason, targetUserId: this.userId };
+
+    this.http.post('http://localhost:8080/report-user', body, { withCredentials: true })
+      .subscribe({
+        next: () => {
+          this.reportReason = '';
+          this.showReportTemplite = false;
+        },
+        error: (err) => {
+          console.error('Error sending report', err);
+        }
+      });
+  }
+
+  // Get user posts
   getPosts(id: number) {
     const url = `http://localhost:8080/get-post-profile/${id}`;
     this.http.get<PostsResponse>(url, { withCredentials: true }).subscribe({
@@ -65,24 +90,24 @@ export class Profile implements OnInit {
   }
 
 
-    toggleFollow(user: Suggested) {
-      user.followed = !user.followed;
-      const followUrl = `http://localhost:8080/follow`;
-      this.http
-        .post<FollowuserResponse>(followUrl,{ id: user.id },{ withCredentials: true })
-        .subscribe({
-          next: (resp) => {console.log(resp);this.getUser(this.userId)},
-          error: (err) => console.error('Error toggling follow', err),
-        });
-    }
+  toggleFollow(user: Suggested) {
+    user.followed = !user.followed;
+    const followUrl = `http://localhost:8080/follow`;
+    this.http
+      .post<FollowuserResponse>(followUrl, { id: user.id }, { withCredentials: true })
+      .subscribe({
+        next: (resp) => { console.log(resp); this.getUser(this.userId) },
+        error: (err) => console.error('Error toggling follow', err),
+      });
+  }
 
-  // 🧍‍♂️ Followers & Following
+  //  Followers & Following
   openFollowers() {
     console.log("oppwnFollowers");
-    
+
     const url = `http://localhost:8080/get-Followers/${this.userId}`;
     this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-      next: (res) => {        
+      next: (res) => {
         this.followersList = res.data;
         this.showFollowers = true;
         this.showFollowing = false;
@@ -91,9 +116,9 @@ export class Profile implements OnInit {
     });
   }
 
-   getProfile(id: number) {
+  getProfile(id: number) {
     this.router.navigate(["/profile", id]);
-    
+
   }
 
   openFollowing() {
@@ -143,7 +168,7 @@ export class Profile implements OnInit {
       });
   }
 
-  // ❤️ Like Post
+  //  Like Post
   likePost(post: any) {
     const url = `http://localhost:8080/post/like-post`;
     const body = { id: post.id };
@@ -157,7 +182,7 @@ export class Profile implements OnInit {
     });
   }
 
-  // ✏️ Edit Post
+  //Edit Post
   startEditing(post: any) {
     post.isEditing = true;
     post.editTitle = post.title;
@@ -169,7 +194,7 @@ export class Profile implements OnInit {
   }
 
   savePost(post: any) {
-     const url = `http://localhost:8080/post/edit-post`;
+    const url = `http://localhost:8080/post/edit-post`;
     const updatedPost = {
       id: post.id,
       title: post.editTitle,

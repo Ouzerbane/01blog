@@ -1,7 +1,7 @@
 <div class="create-post-container">
   <h2>Create a New Post</h2>
 
-  <form  (ngSubmit)="onsubmet()">
+  <form (ngSubmit)="onsubmet()" enctype="multipart/form-data">
     <!-- 🔹 Title -->
     <div class="form-group">
       <label for="title">Title</label>
@@ -19,9 +19,9 @@
     <div class="form-group">
       <label for="content">Description</label>
       <textarea
-       [(ngModel)]="content"
         id="content"
         name="content"
+        [(ngModel)]="content"
         rows="4"
         placeholder="What's on your mind?"
         required
@@ -31,15 +31,20 @@
     <!-- 🔹 Image upload -->
     <div class="form-group">
       <label for="image">Upload Image (optional)</label>
-      <input [(ngModel)]="imageUrl" name="imageUrl" id="image" accept="image/*" />
+      <input
+        type="file"
+        id="image"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+      />
 
-      <div class="image-preview">
-        <img src="https://via.placeholder.com/400x200" alt="Preview" />
+      <div class="image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Preview" />
       </div>
     </div>
 
     <!-- 🔹 Submit -->
     <button type="submit" class="submit-btn">Post</button>
-     <p class="text-danger" *ngIf="err">{{ err }}</p>
+    <p class="text-danger" *ngIf="err">{{ err }}</p>
   </form>
 </div>

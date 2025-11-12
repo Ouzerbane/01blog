@@ -65,7 +65,7 @@
 }
 
 .edit-profile-btn {
-  background-color: #10b981;
+  background-color: #f13d3d;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -76,7 +76,7 @@
 }
 
 .edit-profile-btn:hover {
-  background-color: #059669;
+  background-color: #e40b0b;
   transform: translateY(-1px);
 }
 
@@ -466,4 +466,101 @@
     font-size: 0.85rem;
   }
 }
+
+
+
+
+
+
+
+
+
+
+.report-icon {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #10b981;
+  transition: transform 0.2s ease, color 0.3s;
+}
+
+.report-icon:hover {
+  transform: scale(1.1);
+  color: #0d9468;
+}
+
+/* Popup styling */
+.report-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  width: 320px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content h3 {
+  margin-bottom: 1rem;
+  color: #10b981;
+}
+
+.popup-content input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.popup-content input:focus {
+  border-color: #10b981;
+}
+
+.popup-content button {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.popup-content button:hover {
+  background: #0e9a6c;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+  color: #666;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
 
