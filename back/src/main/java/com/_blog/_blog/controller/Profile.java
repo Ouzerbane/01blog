@@ -35,13 +35,12 @@ public class Profile {
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts));
     }
 
-   @GetMapping("/me")
-public ResponseEntity<ApiResponse<?>> getCurrentUser() {
-    AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    IdDto userid = new IdDto(currentUser.getId()); 
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<?>> getCurrentUser() {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        IdDto userid = new IdDto(currentUser.getId());
 
-    return ResponseEntity.ok(new ApiResponse<>(true, null, userid));
-}
-
+        return ResponseEntity.ok(new ApiResponse<>(true, null, userid));
+    }
 
 }

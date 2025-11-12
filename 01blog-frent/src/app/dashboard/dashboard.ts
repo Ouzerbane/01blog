@@ -55,13 +55,15 @@ export class Dashboard implements OnInit {
   const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
   this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
     next: (res) => {
-      // ✅ Si imageUrl kayn, nprefixih b host backend sans /post/
       this.posts = res.data.map(post => ({
         ...post,
         imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null
       }));
     },
-    error: (err) => console.error('Error fetching posts', err),
+    error:(err) => {
+        // console.error('Error deleting post', err)
+
+      },
   });
 
   if (!this.areIsFirstTime) {
@@ -92,7 +94,10 @@ export class Dashboard implements OnInit {
         post.comment = res.data;
         console.log('Comments for post', post.id, post.comment);
       },
-      error: (err) => console.error('Error fetching comments', err),
+      error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
     });
   }
 
@@ -112,7 +117,10 @@ export class Dashboard implements OnInit {
           post.countCommets++;
           post.newComment = '';
         },
-        error: (err) => console.error('Error adding comment', err)
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
   }
 
@@ -125,7 +133,10 @@ export class Dashboard implements OnInit {
       .get<SuggestedResponse>(suggestedUrl, { withCredentials: true })
       .subscribe({
         next: (res) => (this.suggested = res.data),
-        error: (err) => console.error('Error fetching suggested users', err),
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
   }
 
@@ -138,7 +149,10 @@ export class Dashboard implements OnInit {
           this.followers = res.data.followers;
           this.following = res.data.following;
         },
-        error: (err) => console.error('Error fetching follow counts', err),
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
   }
 
@@ -153,7 +167,10 @@ export class Dashboard implements OnInit {
       )
       .subscribe({
         next: () => this.getFollowCounts(),
-        error: (err) => console.error('Error toggling follow', err),
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
   }
 
@@ -168,7 +185,10 @@ export class Dashboard implements OnInit {
           this.showFollowers = true;
           this.showFollowing = false;
         },
-        error: (err) => console.error('Error fetching followers', err),
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
 
   }
@@ -183,7 +203,10 @@ export class Dashboard implements OnInit {
           this.showFollowing = true;
           this.showFollowers = false;
         },
-        error: (err) => console.error('Error fetching following', err),
+        error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
       });
   }
 
@@ -242,7 +265,10 @@ export class Dashboard implements OnInit {
         post.content = post.editContent;
         post.isEditing = false;
       },
-      error: (err) => console.error('Error updating post', err),
+      error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
     });
   }
 
@@ -259,7 +285,10 @@ export class Dashboard implements OnInit {
         this.posts = this.posts.filter(p => p.id !== post.id);
         console.log('✅ Post deleted successfully');
       },
-      error: (err) => console.error('❌ Error deleting post', err),
+      error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
     });
   }
 
@@ -275,7 +304,10 @@ export class Dashboard implements OnInit {
 
         console.log(`👍 Like updated: ${post.liked}, total: ${post.likesCount}`);
       },
-      error: (err) => console.error('❌ Error liking post', err),
+      error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
     });
   }
 
