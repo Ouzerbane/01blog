@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PostService } from '../services/post';
 
 @Component({
   selector: 'app-header',
@@ -17,17 +18,18 @@ export class Header implements OnInit {
 
   private apiUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient , public service : PostService) {}
 
   ngOnInit(): void {
     this.getCurrentUser().subscribe({
       next: (res) => {
-        // if (res?.success && res.data) {
-          this.userId = res.data.id;
-          console.log("=====>",res);
+      
+          // this.userId = res.data.id;
+          this.service.id = res.data.id ;
+          // console.log("=====>",res);
           
           this.username = res.data.username;
-        // }
+     
       },
       error: (err) => {
         console.error('Error fetching user info:', err);

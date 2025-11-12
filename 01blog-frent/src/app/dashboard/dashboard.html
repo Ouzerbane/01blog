@@ -18,7 +18,7 @@
       </div>
 
       <div *ngFor="let post of posts" class="post-card">
-        <p><strong>{{ post.author.username }}</strong></p>
+        <p (click)="getProfile(post.author.id)"><strong>{{ post.author.username }}</strong></p>
         <p><small>{{ post.createdAt | date: 'short' }}</small></p>
 
         <div *ngIf="!post.isEditing; else editMode">
@@ -58,7 +58,7 @@
           <div *ngIf="post.showComment" class="comment-section">
             <div *ngFor="let comment of post.comment" class="comment-card">
               <p>
-                <strong>{{ comment.username }}</strong>
+                <strong (click)="getProfile(comment.userId)">{{ comment.username }}</strong>
                 <small>{{ comment.createdAt | date: 'short' }}</small>
               </p>
               <p>{{ comment.content }}</p>
@@ -98,7 +98,7 @@
       <h2>Suggested for you</h2>
       <div class="suggested-list">
         <div *ngFor="let user of suggested" class="suggested-user">
-          <div class="user-info">
+          <div class="user-info" (click)="getProfile(user.id)">
             <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span>{{ user.username }}</span>
           </div>
@@ -116,7 +116,7 @@
       <h3>Followers</h3>
       <div class="suggested-list">
         <div *ngFor="let user of followersList" class="suggested-user">
-          <div class="user-info">
+          <div class="user-info" (click)="getProfile(user.id)">
             <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span>{{ user.username }}</span>
           </div>
@@ -135,7 +135,7 @@
       <h3>Following</h3>
       <div class="suggested-list">
         <div *ngFor="let user of followingList" class="suggested-user">
-          <div class="user-info">
+          <div class="user-info" (click)="getProfile(user.id)">
             <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span>{{ user.username }}</span>
           </div>

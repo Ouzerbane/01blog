@@ -72,7 +72,7 @@
         <!-- Comments Section -->
         <div *ngIf="post.showComment" class="comment-section">
           <div *ngFor="let comment of post.comment" class="comment-card">
-            <p><strong>{{ comment.username }}</strong> <small>{{ comment.createdAt | date:'short' }}</small></p>
+            <p><strong (click)="getProfile(comment.userId)">{{ comment.username }}</strong> <small>{{ comment.createdAt | date:'short' }}</small></p>
             <p>{{ comment.content }}</p>
           </div>
 
@@ -104,8 +104,8 @@
       <div class="suggested-list">
         <div *ngFor="let user of followersList" class="suggested-user">
           <div class="user-info">
-            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
-            <span>{{ user.username }}</span>
+            <div class="avatar" >{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span (click)="getProfile(user.id)">{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
             {{ user.followed ? 'Following' : 'Follow' }}
@@ -123,8 +123,8 @@
       <div class="suggested-list">
         <div *ngFor="let user of followingList" class="suggested-user">
           <div class="user-info">
-            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
-            <span>{{ user.username }}</span>
+            <div class="avatar" >{{ user.username.charAt(0).toUpperCase() }}</div>
+            <span (click)="getProfile(user.id)">{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
             {{ user.followed ? 'Following' : 'Follow' }}

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowResponse, FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from './dashboard.model';
+import { PostService } from '../services/post';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,8 +18,10 @@ export class Dashboard implements OnInit {
   page: number = 0;
   size: number = 10;
 
+  id: number = 0;
+
   // comments: Comment[] = [];
-  newComment:string="";
+  newComment: string = "";
   // like?: Like;
 
   followers: number = 0;
@@ -37,7 +40,8 @@ export class Dashboard implements OnInit {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public service: PostService
   ) { }
 
   ngOnInit() {
@@ -62,46 +66,50 @@ export class Dashboard implements OnInit {
   }
 
   toggleComments(post: Post) {
-  post.showComment = !post.showComment;
+    post.showComment = !post.showComment;
 
-  if (post.showComment) {
-    this.getComment(post);
+    if (post.showComment) {
+      this.getComment(post);
+    }
   }
-}
 
-getComment(post: Post) {
-  const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
-  this.http.get<any>(url, { withCredentials: true }).subscribe({
-    next: (res) => {
-      post.comment = res.data;
-      console.log('Comments for post', post.id, post.comment);
-    },
-    error: (err) => console.error('Error fetching comments', err),
-  });
-}
+  getProfile(id: number) {
+    this.router.navigate(["/profile", id]);
+  }
 
-
-addComment(post: Post) {
-  if (!post.newComment || post.newComment.trim() === '') return;
-
-  const payload = {
-    id: post.id,
-    content: post.newComment
-  };
-
-  this.http.post<any>(`http://localhost:8080/post/add-comments`, payload, { withCredentials: true })
-    .subscribe({
+  getComment(post: Post) {
+    const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
-        post.comment.push(res.data);
-        post.countCommets++ ;
-        post.newComment = '';
+        post.comment = res.data;
+        console.log('Comments for post', post.id, post.comment);
       },
-      error: (err) => console.error('Error adding comment', err)
+      error: (err) => console.error('Error fetching comments', err),
     });
-}
+  }
 
 
-  
+  addComment(post: Post) {
+    if (!post.newComment || post.newComment.trim() === '') return;
+
+    const payload = {
+      id: post.id,
+      content: post.newComment
+    };
+
+    this.http.post<any>(`http://localhost:8080/post/add-comments`, payload, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          post.comment.push(res.data);
+          post.countCommets++;
+          post.newComment = '';
+        },
+        error: (err) => console.error('Error adding comment', err)
+      });
+  }
+
+
+
 
   getSuggested() {
     const suggestedUrl = `http://localhost:8080/suggested`;
@@ -142,7 +150,8 @@ addComment(post: Post) {
   }
 
   getFollowers() {
-    const url = `http://localhost:8080/get-Followers`;
+    const url = `http://localhost:8080/get-Followers/${this.service.id}`;
+
     this.http
       .get<SuggestedResponse>(url, { withCredentials: true })
       .subscribe({
@@ -153,10 +162,11 @@ addComment(post: Post) {
         },
         error: (err) => console.error('Error fetching followers', err),
       });
+      
   }
 
   getFollowing() {
-    const url = `http://localhost:8080/get-Following`;
+    const url = `http://localhost:8080/get-Following/${this.service.id}`;
     this.http
       .get<SuggestedResponse>(url, { withCredentials: true })
       .subscribe({

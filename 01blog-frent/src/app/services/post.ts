@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Post } from '../dashboard/dashboard.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Post {
-  
+export class PostService {
+   constructor (){}
+  postd: Post[] = [];
+  id : number = 0;
 }

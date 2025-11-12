@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from '../dashboard/dashboard.model';
 import { FormsModule } from '@angular/forms';
@@ -33,12 +33,17 @@ export class Profile implements OnInit {
   showFollowers = false;
   showFollowing = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute ,  private router: Router) {}
 
   ngOnInit(): void {
-    this.userId = Number(this.route.snapshot.paramMap.get('id'));
+    // this.userId = Number(this.route.snapshot.paramMap.get('id'));
+    // this.getUser(this.userId);
+    // this.getPosts(this.userId);
+     this.route.paramMap.subscribe(params => {
+    this.userId = Number(params.get('id'));
     this.getUser(this.userId);
     this.getPosts(this.userId);
+  });
   }
 
   // 🧩 Get user info
@@ -77,9 +82,7 @@ export class Profile implements OnInit {
     
     const url = `http://localhost:8080/get-Followers/${this.userId}`;
     this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-      next: (res) => {
-        console.log(res);
-        
+      next: (res) => {        
         this.followersList = res.data;
         this.showFollowers = true;
         this.showFollowing = false;
@@ -88,14 +91,15 @@ export class Profile implements OnInit {
     });
   }
 
-  openFollowing() {
-        console.log("oppwnFollowing");
+   getProfile(id: number) {
+    this.router.navigate(["/profile", id]);
+    
+  }
 
+  openFollowing() {
     const url = `http://localhost:8080/get-Following/${this.userId}`;
     this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
       next: (res) => {
-        console.log(res);
-        
         this.followingList = res.data;
         this.showFollowing = true;
         this.showFollowers = false;

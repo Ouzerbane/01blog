@@ -35,7 +35,6 @@ export class Regester {
           for (let e of err.error.errors) {
             if (e.field === "email") this.erremail = e.message;
             if (e.field === "password") {
-              // إذا بغيت تجمّع كل الرسائل ديال password
               this.errpassword += e.message + " ";
             }
             if (e.field === "username") this.errusername = e.message;
