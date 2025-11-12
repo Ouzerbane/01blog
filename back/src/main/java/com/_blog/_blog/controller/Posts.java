@@ -1,20 +1,32 @@
 package com._blog._blog.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.CommentsDto;
@@ -31,28 +43,72 @@ import com._blog._blog.service.PostsService;
 
 import jakarta.validation.Valid;
 
-// import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/post")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-
-
 public class Posts {
+
     @Autowired
     private CommentsService commentsService;
+
     @Autowired
     private PostsService emptyService;
 
     @Autowired
-    private LikesService likesservice;
+    private LikesService likesService;
 
-    @PostMapping("/add-post")
-    public ResponseEntity<ApiResponse<?>> addPost(@Valid @RequestBody PostsDto dto) {
+    //  ADD POST
+    @PostMapping(value = "/add-post", consumes = {"multipart/form-data"})
+    public ResponseEntity<ApiResponse<?>> addPost(
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ) throws IOException {
+
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PostsEntity saved = emptyService.savePost(dto, currentUser);
-        return ResponseEntity.ok(new ApiResponse<>(true, null, null));
+
+        PostsDto dto = new PostsDto();
+        dto.setTitle(title);
+        dto.setContent(content);
+
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            String uploadDir = "uploads/";
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+            Path dest = Paths.get(uploadDir + fileName);
+            Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+            imageUrl = "/uploads/" + fileName; //  correct URL format
+        }
+
+        dto.setImageUrl(imageUrl);
+        PostsEntity savedPost = emptyService.savePost(dto, currentUser);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));
     }
 
+    //  SERVE FILES
+    @GetMapping("/uploads/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
+        System.out.println(".......................................................................................................");
+        Path file = Paths.get("uploads").resolve(filename).normalize();
+        Resource resource = new UrlResource(file.toUri());
+
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+    //  EDIT POST
     @PutMapping("/edit-post")
     public ResponseEntity<ApiResponse<?>> editPost(@Valid @RequestBody PostsDto dto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -60,41 +116,44 @@ public class Posts {
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 
+    //  DELETE POST
     @DeleteMapping("/delete-post")
-    public ResponseEntity<ApiResponse<?>> deletePost(@RequestBody IdDto iddto) {
+    public ResponseEntity<ApiResponse<?>> deletePost(@RequestBody IdDto idDto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        emptyService.deletePost(iddto, currentUser);
+        emptyService.deletePost(idDto, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, null));
     }
 
+    //  GET POSTS
     @GetMapping("/get-posts")
     public ResponseEntity<ApiResponse<?>> getPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       Page<PostsResponseDto> posts = emptyService.getPosts(page, size, currentUser);
-    //    System.out.print("ppppppppp"+posts.getContent());
+        Page<PostsResponseDto> posts = emptyService.getPosts(page, size, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts.getContent()));
     }
 
+    // LIKE POST
     @PostMapping("/like-post")
-    public ResponseEntity<ApiResponse<?>> likePost(@RequestBody IdDto iddto) {
+    public ResponseEntity<ApiResponse<?>> likePost(@RequestBody IdDto idDto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LikeDto LikeDto = likesservice.toggleLike(iddto, currentUser);
-        return ResponseEntity.ok(new ApiResponse<>(true, null, LikeDto));
+        LikeDto likeDto = likesService.toggleLike(idDto, currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, likeDto));
     }
 
+    // ADD COMMENT
     @PostMapping("/add-comments")
     public ResponseEntity<ApiResponse<?>> commentPost(@RequestBody CommentsDto comment) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-         ResponsCommetDto count = commentsService.addComment(comment, currentUser);
+        ResponsCommetDto count = commentsService.addComment(comment, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, count));
     }
 
-@GetMapping("/get-comments")
-public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") Long postId) {
-    List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
-    return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
-}
-
+    // GET COMMENTS
+    @GetMapping("/get-comments")
+    public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") Long postId) {
+        List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
+        return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
+    }
 }

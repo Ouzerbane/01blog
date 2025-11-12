@@ -51,19 +51,27 @@ export class Dashboard implements OnInit {
     });
   }
 
-  getPosts() {
-    const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
-    this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
-      next: (res) => (this.posts = res.data),
-      error: (err) => console.error('Error fetching posts', err),
-    });
+ getPosts() {
+  const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
+  this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
+    next: (res) => {
+      // ✅ Si imageUrl kayn, nprefixih b host backend sans /post/
+      this.posts = res.data.map(post => ({
+        ...post,
+        imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null
+      }));
+    },
+    error: (err) => console.error('Error fetching posts', err),
+  });
 
-    if (!this.areIsFirstTime) {
-      this.areIsFirstTime = true;
-      this.getSuggested();
-      this.getFollowCounts();
-    }
+  if (!this.areIsFirstTime) {
+    this.areIsFirstTime = true;
+    this.getSuggested();
+    this.getFollowCounts();
   }
+}
+
+
 
   toggleComments(post: Post) {
     post.showComment = !post.showComment;
@@ -162,7 +170,7 @@ export class Dashboard implements OnInit {
         },
         error: (err) => console.error('Error fetching followers', err),
       });
-      
+
   }
 
   getFollowing() {

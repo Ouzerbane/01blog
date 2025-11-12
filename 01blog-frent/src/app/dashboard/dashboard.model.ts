@@ -8,29 +8,29 @@ export interface Post {
   id: number;
   title: string;
   content: string;
-  imageUrl: string;
+  imageUrl?: string | null;
   createdAt: string;
   canEditAndDelet: string;
   countLike: number;
   countCommets: number;
   like: boolean;
   author: AuthorDto;
-  showComment : boolean ;
-  comment : Comment [];
+  showComment: boolean;
+  comment: Comment[];
   isEditing?: boolean;
   editTitle?: string;
   editContent?: string;
-  newComment?: string; 
+  newComment?: string;
 
 }
 
 
 export interface Comment {
-  id: number;            
-  postId: number;        
-  userId: number;        
-  username: string;    
-  content: string;      
+  id: number;
+  postId: number;
+  userId: number;
+  username: string;
+  content: string;
   createdAt: string;
 
 }

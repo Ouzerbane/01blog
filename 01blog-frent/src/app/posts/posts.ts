@@ -16,23 +16,20 @@ export class Posts {
   imageUrl = ''; // not used directly anymore (will come from backend)
   err = '';
   selectedFile: File | null = null;
-  imagePreview: string | ArrayBuffer | null = null;
+  // imagePreview: string | ArrayBuffer | null = null;
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Handle image selection + preview
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-
-      const reader = new FileReader();
-      reader.onload = () => (this.imagePreview = reader.result);
-      reader.readAsDataURL(file);
+      // const reader = new FileReader();
+      // reader.onload = () => (this.imagePreview = reader.result);
+      // reader.readAsDataURL(file);
     }
   }
 
-  // 🔹 Submit post
   onsubmet() {
     if (!this.title || !this.content) {
       this.err = 'Please fill all required fields.';
@@ -55,7 +52,7 @@ export class Posts {
         this.title = '';
         this.content = '';
         this.selectedFile = null;
-        this.imagePreview = null;
+        // this.imagePreview = null;
       },
       error: (error) => {
         console.error('Error creating post:', error);
