@@ -1,88 +1,128 @@
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #87df23, #050505);
-  font-family: 'Poppins', sans-serif;
-}
-
+/* Full center layout */
 .register-container {
-  background-color: #fff;
-  padding: 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  text-align: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f6fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.register-container h2 {
-  margin-bottom: 1.5rem;
-  color: #1e293b;
+/* Register card */
+.register-box {
+    background: #ffffff;
+    padding: 40px 50px;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.register-container form div {
-  margin-bottom: 1rem;
-  text-align: left;
+/* Title */
+.register-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: #1f2937;
 }
 
-.register-container label {
-  display: block;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 0.4rem;
+/* Form inputs */
+.form-group {
+    margin-bottom: 22px;
 }
 
-.register-container input {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
 }
 
-.register-container input:focus {
-  border-color: #10b981;
-  outline: none;
+.form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    transition: 0.2s;
 }
 
-.register-container button {
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #10b981;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.form-group input:focus {
+    border-color: #9DF57B;
+    box-shadow: 0 0 0 2px #9DF57B;
+    outline: none;
 }
 
-.register-container button:hover {
-  background-color: #059669;
+/* Register button */
+.register-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #9DF57B;
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
 }
 
-::ng-deep .text-danger {
-  color: #dc2626 !important;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  display: block;
+.register-btn:hover {
+    background-color: #8be96a;
 }
 
-.register-container p {
-  margin-top: 1.5rem;
-  color: #475569;
-  font-size: 0.95rem;
+/* Login text */
+.login-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #6b7280;
+    font-size: 0.95rem;
 }
 
-.register-container i {
-  color: #10b981;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
+.login-link {
+    color: #9DF57B;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-.register-container i:hover {
-  text-decoration: underline;
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* Error text */
+.text-danger {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 6px;
+}
+
+
+
+
+/* Logo Style */
+.logo-style-1 {
+    display: flex;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    justify-content: center; /* Bash logo f l-center dyal register box */
+    margin-bottom: 25px;
+}
+
+.logo-style-1 .icon-code {
+    color: #3b82f6; /* Coulor Vert - Tba3 l-couleur dyal Register dyalek */
+    margin-right: 5px;
+    line-height: 1;
+}
+
+.logo-style-1 .part-01 {
+    color: #9DF57B; /* Blue dyal l-login button */
+    margin-right: 2px;
+}
+
+.logo-style-1 .part-blog {
+    color: #1f2937; /* Couleur dyal text 3adi */
+    font-weight: 500;
 }

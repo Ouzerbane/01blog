@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <button class="edit-profile-btn"  (click)="report()" >
+    <button class="edit-profile-btn" (click)="report()">
       ⚙️ Report Profile
     </button>
   </section>
@@ -48,11 +48,9 @@
           <!-- Like -->
           <button class="action-btn" (click)="likePost(post)">
             <span class="icon" [class.like]="post.like">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                   width="24" height="24" fill="none" stroke="currentColor"
-                   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path
-                  d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3
                      1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z" />
               </svg>
             </span>
@@ -72,7 +70,8 @@
         <!-- Comments Section -->
         <div *ngIf="post.showComment" class="comment-section">
           <div *ngFor="let comment of post.comment" class="comment-card">
-            <p><strong (click)="getProfile(comment.userId)">{{ comment.username }}</strong> <small>{{ comment.createdAt | date:'short' }}</small></p>
+            <p><strong (click)="getProfile(comment.userId)">{{ comment.username }}</strong> <small>{{ comment.createdAt
+                | date:'short' }}</small></p>
             <p>{{ comment.content }}</p>
           </div>
 
@@ -88,6 +87,18 @@
         <div class="edit-form">
           <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
           <textarea [(ngModel)]="post.editContent" rows="4" placeholder="Edit content"></textarea>
+
+          <!-- 🔵 Edit Image -->
+          <div class="edit-image-box">
+            <label class="upload-label">
+              Change Image
+              <input type="file" accept="image/*" (change)="onImageSelected($event, post)" hidden />
+            </label>
+
+            <img *ngIf="post.previewImage" [src]="post.previewImage" class="preview-image" />
+            <img *ngIf="!post.previewImage && post.imageUrl" [src]="post.imageUrl" class="preview-image" />
+          </div>
+
           <div class="edit-actions">
             <button class="save-btn" (click)="savePost(post)">💾 Save</button>
             <button class="cancel-btn" (click)="cancelEditing(post)">❌ Cancel</button>
@@ -97,19 +108,15 @@
     </div>
   </section>
 
-<!-- report  -->
+  <!-- report  -->
   <div class="report-popup" *ngIf="showReportTemplite">
-  <div class="popup-content">
-    <h3>Report Profile</h3>
-    <input
-      type="text"
-      [(ngModel)]="reportReason"
-      placeholder="Enter your reason..."
-    />
-    <button (click)="reportUser()">Send</button>
-    <span class="close-btn" (click)="report()">✖</span>
+    <div class="popup-content">
+      <h3>Report Profile</h3>
+      <input type="text" [(ngModel)]="reportReason" placeholder="Enter your reason..." />
+      <button (click)="reportUser()">Send</button>
+      <span class="close-btn" (click)="report()">✖</span>
+    </div>
   </div>
-</div>
 
   <!-- Followers Modal -->
   <div class="modal" *ngIf="showFollowers">
@@ -118,7 +125,7 @@
       <div class="suggested-list">
         <div *ngFor="let user of followersList" class="suggested-user">
           <div class="user-info">
-            <div class="avatar" >{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span (click)="getProfile(user.id)">{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
@@ -137,7 +144,7 @@
       <div class="suggested-list">
         <div *ngFor="let user of followingList" class="suggested-user">
           <div class="user-info">
-            <div class="avatar" >{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <span (click)="getProfile(user.id)">{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">

@@ -22,6 +22,9 @@ export interface Post {
   editContent?: string;
   newComment?: string;
 
+  previewImage: null;
+  newImage: null
+
 }
 
 

@@ -48,13 +48,13 @@
           </div>
 
 
-          
+
           <div class="owner-actions" *ngIf="post.canEditAndDelet">
             <button class="edit-btn" (click)="startEditing(post)">✏️ Edit</button>
             <button class="delete-btn" (click)="deletePost(post)">🗑️ Delete</button>
           </div>
 
-          
+
           <div *ngIf="post.showComment" class="comment-section">
             <div *ngFor="let comment of post.comment" class="comment-card">
               <p>
@@ -64,7 +64,7 @@
               <p>{{ comment.content }}</p>
             </div>
 
-            
+
             <div class="add-comment">
               <input type="text" [(ngModel)]="post.newComment" placeholder="Write a comment..." />
               <button (click)="addComment(post)">💬 Post</button>
@@ -72,11 +72,23 @@
           </div>
         </div>
 
-       
+
         <ng-template #editMode>
           <div class="edit-form">
             <input type="text" [(ngModel)]="post.editTitle" placeholder="Edit title" />
             <textarea [(ngModel)]="post.editContent" rows="4" placeholder="Edit content"></textarea>
+
+            <!-- 🔵 Edit Image -->
+            <div class="edit-image-box">
+              <label class="upload-label">
+                Change Image
+                <input type="file" accept="image/*" (change)="onImageSelected($event, post)" hidden />
+              </label>
+
+              <img *ngIf="post.previewImage" [src]="post.previewImage" class="preview-image" />
+              <img *ngIf="!post.previewImage && post.imageUrl" [src]="post.imageUrl" class="preview-image" />
+            </div>
+
             <div class="edit-actions">
               <button class="save-btn" (click)="savePost(post)">💾 Save</button>
               <button class="cancel-btn" (click)="cancelEditing(post)">❌ Cancel</button>
@@ -85,7 +97,7 @@
         </ng-template>
       </div>
 
-    
+
       <div class="pagination">
         <button (click)="changePage(page - 1)" [disabled]="page === 0">⬅ Prev</button>
         <span>Page {{ page + 1 }}</span>
@@ -93,7 +105,7 @@
       </div>
     </section>
 
-   
+
     <section class="recent-activity">
       <h2>Suggested for you</h2>
       <div class="suggested-list">

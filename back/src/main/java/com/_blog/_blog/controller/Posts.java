@@ -1,12 +1,9 @@
 package com._blog._blog.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +38,6 @@ import com._blog._blog.service.CommentsService;
 import com._blog._blog.service.LikesService;
 import com._blog._blog.service.PostsService;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/post")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -57,45 +52,31 @@ public class Posts {
     @Autowired
     private LikesService likesService;
 
-    //  ADD POST
-    @PostMapping(value = "/add-post", consumes = {"multipart/form-data"})
+    // ADD POST
+    @PostMapping(value = "/add-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> addPost(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam(value = "image", required = false) MultipartFile image
-    ) throws IOException {
+            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
-        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
 
         PostsDto dto = new PostsDto();
         dto.setTitle(title);
         dto.setContent(content);
 
-        String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            String uploadDir = "uploads/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-            Path dest = Paths.get(uploadDir + fileName);
-            Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-
-            imageUrl = "/uploads/" + fileName; //  correct URL format
-        }
-
+        String imageUrl = emptyService.uploadImage(image);
         dto.setImageUrl(imageUrl);
+
         PostsEntity savedPost = emptyService.savePost(dto, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));
     }
 
-    //  SERVE FILES
+    // SERVE FILES
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
-        System.out.println(".......................................................................................................");
         Path file = Paths.get("uploads").resolve(filename).normalize();
         Resource resource = new UrlResource(file.toUri());
 
@@ -108,15 +89,20 @@ public class Posts {
                 .body(resource);
     }
 
-    //  EDIT POST
-    @PutMapping("/edit-post")
-    public ResponseEntity<ApiResponse<?>> editPost(@Valid @RequestBody PostsDto dto) {
+    // EDIT POST
+    @PutMapping(value = "/edit-post", consumes = { "multipart/form-data" })
+    public ResponseEntity<ApiResponse<?>> editPost(
+            @RequestParam("id") Long  id,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PostsDto dto = PostsDto.builder().content(content).id(id).title(title).imageUrl(emptyService.uploadImage(image)).build();
         PostsEntity edit = emptyService.editPost(dto, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 
-    //  DELETE POST
+    // DELETE POST
     @DeleteMapping("/delete-post")
     public ResponseEntity<ApiResponse<?>> deletePost(@RequestBody IdDto idDto) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -124,7 +110,7 @@ public class Posts {
         return ResponseEntity.ok(new ApiResponse<>(true, null, null));
     }
 
-    //  GET POSTS
+    // GET POSTS
     @GetMapping("/get-posts")
     public ResponseEntity<ApiResponse<?>> getPosts(
             @RequestParam(defaultValue = "0") int page,

@@ -51,27 +51,40 @@ export class Dashboard implements OnInit {
     });
   }
 
- getPosts() {
-  const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
-  this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
-    next: (res) => {
-      this.posts = res.data.map(post => ({
-        ...post,
-        imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null
-      }));
-    },
-    error:(err) => {
+  onImageSelected(event: any, post: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    post.newImage = file;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      post.previewImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  getPosts() {
+    const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
+    this.http.get<PostsResponse>(postsUrl, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.posts = res.data.map(post => ({
+          ...post,
+          imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null
+        }));
+      },
+      error: (err) => {
         // console.error('Error deleting post', err)
 
       },
-  });
+    });
 
-  if (!this.areIsFirstTime) {
-    this.areIsFirstTime = true;
-    this.getSuggested();
-    this.getFollowCounts();
+    if (!this.areIsFirstTime) {
+      this.areIsFirstTime = true;
+      this.getSuggested();
+      this.getFollowCounts();
+    }
   }
-}
 
 
 
@@ -118,9 +131,9 @@ export class Dashboard implements OnInit {
           post.newComment = '';
         },
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
   }
 
@@ -134,9 +147,9 @@ export class Dashboard implements OnInit {
       .subscribe({
         next: (res) => (this.suggested = res.data),
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
   }
 
@@ -150,9 +163,9 @@ export class Dashboard implements OnInit {
           this.following = res.data.following;
         },
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
   }
 
@@ -168,9 +181,9 @@ export class Dashboard implements OnInit {
       .subscribe({
         next: () => this.getFollowCounts(),
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
   }
 
@@ -186,9 +199,9 @@ export class Dashboard implements OnInit {
           this.showFollowing = false;
         },
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
 
   }
@@ -204,9 +217,9 @@ export class Dashboard implements OnInit {
           this.showFollowers = false;
         },
         error: (err) => {
-        // console.error('Error deleting post', err)
+          // console.error('Error deleting post', err)
 
-      },
+        },
       });
   }
 
@@ -252,23 +265,28 @@ export class Dashboard implements OnInit {
 
   savePost(post: any) {
     const url = `http://localhost:8080/post/edit-post`;
-    const updatedPost = {
-      id: post.id,
-      title: post.editTitle,
-      content: post.editContent,
-      imageUrl: post.imageUrl,
-    };
 
-    this.http.put(url, updatedPost, { withCredentials: true }).subscribe({
-      next: () => {
+    const formData = new FormData();
+    formData.append("id", post.id);
+    formData.append("title", post.editTitle);
+    formData.append("content", post.editContent);
+
+    if (post.newImage) {
+      formData.append("image", post.newImage);
+    } else {
+      formData.append("imageUrl", post.imageUrl);
+    }
+
+    this.http.put(url, formData, { withCredentials: true }).subscribe({
+      next: (res: any) => {
         post.title = post.editTitle;
         post.content = post.editContent;
+
+        if (post.previewImage) post.imageUrl = post.previewImage;
+
         post.isEditing = false;
       },
-      error: (err) => {
-        // console.error('Error deleting post', err)
-
-      },
+      error: (err) => console.error("Error updating post", err)
     });
   }
 

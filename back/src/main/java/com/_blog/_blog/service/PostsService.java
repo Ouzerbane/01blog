@@ -1,5 +1,10 @@
 package com._blog._blog.service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.PostsDto;
@@ -19,6 +25,8 @@ import com._blog._blog.model.repository.CommentsRepo;
 import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.LikesRepo;
 import com._blog._blog.model.repository.PostsRepo;
+
+import io.jsonwebtoken.io.IOException;
 
 @Service
 public class PostsService {
@@ -32,7 +40,7 @@ public class PostsService {
     @Autowired
     private LikesRepo likesRepo;
     @Autowired
-    private CommentsRepo commentsRepo ;
+    private CommentsRepo commentsRepo;
 
     // PostsService(AuthRepo authRepo) {
     // this.authRepo = authRepo;
@@ -79,7 +87,8 @@ public class PostsService {
             return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
                     .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
                             likesRepo.countByPostId(post.getId()),
-                            likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),commentsRepo.countByPostId(post.getId())));
+                            likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                            commentsRepo.countByPostId(post.getId())));
         }
 
         List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
@@ -96,8 +105,30 @@ public class PostsService {
         return postsRepo.findByAuthorIdInOrderByCreatedAtDesc(followingIds, pageable)
                 .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
                         likesRepo.countByPostId(post.getId()),
-                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),commentsRepo.countByPostId(post.getId())));
+                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                        commentsRepo.countByPostId(post.getId())));
         // ::
+    }
+
+    public String uploadImage(MultipartFile image) throws IOException, java.io.IOException {
+
+        if (image == null || image.isEmpty()) {
+            return null; // no image
+        }
+
+        String uploadDir = "uploads/";
+        File directory = new File(uploadDir);
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+        Path dest = Paths.get(uploadDir + fileName);
+
+        Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+        return "/uploads/" + fileName;
     }
 
 }

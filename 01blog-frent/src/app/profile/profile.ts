@@ -42,15 +42,27 @@ export class Profile implements OnInit {
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    // this.userId = Number(this.route.snapshot.paramMap.get('id'));
-    // this.getUser(this.userId);
-    // this.getPosts(this.userId);
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
       this.getUser(this.userId);
       this.getPosts(this.userId);
     });
   }
+
+  onImageSelected(event: any, post: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    post.newImage = file;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      post.previewImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+
 
   // Get user info
   getUser(id: number) {
@@ -84,8 +96,17 @@ export class Profile implements OnInit {
   getPosts(id: number) {
     const url = `http://localhost:8080/get-post-profile/${id}`;
     this.http.get<PostsResponse>(url, { withCredentials: true }).subscribe({
-      next: (res) => (this.posts = res.data),
-      error: (err) => console.error('Error fetching posts', err),
+      next: (res) => {
+        this.posts = res.data.map(post => ({
+          ...post,
+          imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null,
+         
+        }));
+      },
+      error: (err) => {
+        // console.error('Error deleting post', err)
+
+      },
     });
   }
 
@@ -195,22 +216,31 @@ export class Profile implements OnInit {
 
   savePost(post: any) {
     const url = `http://localhost:8080/post/edit-post`;
-    const updatedPost = {
-      id: post.id,
-      title: post.editTitle,
-      content: post.editContent,
-      imageUrl: post.imageUrl,
-    };
 
-    this.http.put(url, updatedPost, { withCredentials: true }).subscribe({
-      next: () => {
+    const formData = new FormData();
+    formData.append("id", post.id);
+    formData.append("title", post.editTitle);
+    formData.append("content", post.editContent);
+
+    if (post.newImage) {
+      formData.append("image", post.newImage);
+    } else {
+      formData.append("imageUrl", post.imageUrl);
+    }
+
+    this.http.put(url, formData, { withCredentials: true }).subscribe({
+      next: (res: any) => {
         post.title = post.editTitle;
         post.content = post.editContent;
+
+        if (post.previewImage) post.imageUrl = post.previewImage;
+
         post.isEditing = false;
       },
-      error: (err) => console.error('Error updating post', err),
+      error: (err) => console.error("Error updating post", err)
     });
   }
+
 
   // 🗑️ Delete Post
   deletePost(post: any) {

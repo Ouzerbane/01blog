@@ -1,89 +1,125 @@
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #87df23, #050505);
+/* Full center layout */
+.register-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f6fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.login-container {
-  background-color: #fff;
-  padding: 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  text-align: center;
+/* Login/Register card */
+.register-box {
+    background: #ffffff;
+    padding: 40px 50px;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.login-container h2 {
-  margin-bottom: 1.5rem;
-  color: #1e293b;
+/* Logo Style */
+.logo-style-1 {
+    display: flex;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    justify-content: center;
+    margin-bottom: 25px;
 }
 
-.login-container form div {
-  margin-bottom: 1rem;
-  text-align: left;
+.logo-style-1 .icon-code {
+    color: #10b981;
+    margin-right: 5px;
+    line-height: 1;
 }
 
-.login-container label {
-  display: block;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 0.4rem;
+.logo-style-1 .part-01 {
+    color: #3b82f6;
+    margin-right: 2px;
 }
 
-.login-container input {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+.logo-style-1 .part-blog {
+    color: #1f2937;
+    font-weight: 500;
 }
 
-.login-container input:focus {
-  border-color: #10b981;
-  outline: none;
+/* Title */
+.register-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: #1f2937;
 }
 
-.login-container button {
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #10b981;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* Form inputs */
+.form-group {
+    margin-bottom: 22px;
 }
 
-.login-container button:hover {
-  background-color: #059669;
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
 }
 
+.form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #9DF57B;
+    box-shadow: 0 0 0 2px #9DF57B;
+    outline: none;
+}
+
+/* Button */
+.register-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #9DF57B;
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
+}
+
+.register-btn:hover {
+    background-color: #8be96a;
+}
+
+/* Login/SignUp text */
+.login-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.login-link {
+    color: #9DF57B;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* Error text */
 .text-danger {
-  color: #dc2626;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  display: block;
-}
-
-.login-container p {
-  margin-top: 1.5rem;
-  color: #475569;
-  font-size: 0.95rem;
-}
-
-.login-container a,
-.login-container i {
-  color: #10b981;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.login-container a:hover,
-.login-container i:hover {
-  text-decoration: underline;
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 6px;
 }
