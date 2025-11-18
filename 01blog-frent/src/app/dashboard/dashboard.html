@@ -2,6 +2,10 @@
   <main>
     <section class="stats">
       <div class="stats-header">
+        <div class="card" (click)="toggleNotification()">
+          <h3>Notification</h3>
+          <p>{{ notificationCount }}</p>
+        </div>
         <div class="card" (click)="openFollowers()">
           <h3>Followers</h3>
           <p>{{ followers }}</p>
@@ -172,5 +176,17 @@
       <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
   </div>
+
+
+  <div class="notification-popup" *ngIf="showNotifacation">
+    <h3>Notifications</h3>
+    <ul>
+      <li *ngFor="let noti of notifications">
+        {{ noti.message }}
+      </li>
+    </ul>
+    <button (click)="showNotifacation = false">Close</button>
+  </div>
+
 
 </div>

@@ -5,6 +5,7 @@
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/Adminpermetion.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/Auth.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/Follower.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/NotificationController.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/Posts.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/Profile.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/controller/ReportController.java
@@ -15,6 +16,7 @@
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/IdDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/LikeDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/LoginRequest.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/NotificationDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsResponseDto.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/RegisterRequest.java
@@ -29,12 +31,14 @@
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/CommentsEntity.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/FollowerEntity.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/LikesEntity.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/NotificationEntity.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/PostsEntity.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/ReportEntity.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/AuthRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/CommentsRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/FollowerRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/LikesRepo.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/NotificationRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/PostsRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/ReportRepo.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/AdminService.java
@@ -42,6 +46,7 @@
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/CommentsService.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/FollowerService.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/LikesService.java
+/home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/Notificationservice.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/PostsService.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/ProfileService.java
 /home/youssef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/ReportService.java

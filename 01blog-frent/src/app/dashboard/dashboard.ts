@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FollowResponse, FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from './dashboard.model';
+import { FollowResponse, FollowuserResponse, NotificationModul, Post, PostsResponse, Suggested, SuggestedResponse } from './dashboard.model';
 import { PostService } from '../services/post';
 
 @Component({
@@ -30,12 +30,17 @@ export class Dashboard implements OnInit {
   suggested: Suggested[] = [];
 
 
+  notifications: NotificationModul[] = [];
+
   // Lists for modal
   followersList: Suggested[] = [];
   followingList: Suggested[] = [];
   showFollowers = false;
   showFollowing = false;
   showPopatPost = false;
+
+  showNotifacation = false;
+  notificationCount: number = 0;
 
   constructor(
     private http: HttpClient,
@@ -62,6 +67,28 @@ export class Dashboard implements OnInit {
       post.previewImage = e.target.result;
     };
     reader.readAsDataURL(file);
+  }
+
+
+  toggleNotification() {
+    this.showNotifacation = !this.showNotifacation
+    if (this.showNotifacation) {
+      this.openNotification();
+    }
+  }
+
+  openNotification() {
+    const url = `http://localhost:8080/notifications`; // adjust endpoint if needed
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.notifications = res.data; // assign to your local notifications array
+        this.getSuggested();
+        console.log('Notifications loaded:', this.notifications);
+      },
+      error: (err) => {
+        console.error('Error fetching notifications', err);
+      }
+    });
   }
 
   getPosts() {
@@ -171,6 +198,7 @@ export class Dashboard implements OnInit {
         next: (res) => {
           this.followers = res.data.followers;
           this.following = res.data.following;
+          this.notificationCount = res.data.notification;
         },
         error: (err) => {
           // console.error('Error deleting post', err)
@@ -206,7 +234,7 @@ export class Dashboard implements OnInit {
         next: (res) => {
           this.followersList = res.data.map(user => ({
             ...user,
-            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : null
           }));
           this.showFollowers = true;
           this.showFollowing = false;
@@ -227,7 +255,7 @@ export class Dashboard implements OnInit {
         next: (res) => {
           this.followingList = res.data.map(user => ({
             ...user,
-            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : null
           }));
           this.showFollowing = true;
           this.showFollowers = false;

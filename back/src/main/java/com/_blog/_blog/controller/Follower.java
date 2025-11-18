@@ -18,6 +18,7 @@ import com._blog._blog.dto.FollowCountDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.UserFollowDto;
 import com._blog._blog.model.entity.AuthEntity;
+import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.service.FollowerService;
 
 import jakarta.validation.Valid;
@@ -29,6 +30,10 @@ public class Follower {
 
     @Autowired
     private FollowerService followerService;
+
+
+    @Autowired
+    private NotificationRepo notificationRepo;
 
     @PostMapping("/follow")
     public ResponseEntity<ApiResponse<?>> followUser(@Valid @RequestBody IdDto dto) {
@@ -57,8 +62,9 @@ public class Follower {
 
         Long followers = followerService.getCountFollowers(currentUser.getId());
         Long following = followerService.getCountFollowing(currentUser.getId());
+        Long notification = notificationRepo.countByUserIdAndReadFalse(currentUser.getId());
 
-        FollowCountDto counts = new FollowCountDto(followers, following);
+        FollowCountDto counts = new FollowCountDto(followers, following,notification);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, counts));
     }

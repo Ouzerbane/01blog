@@ -11,7 +11,7 @@
       </div>
     </ng-template>
 
-    <input type="file" #profileInput accept="image/*" (change)="changeProfileImage($event)" hidden />
+    <input *ngIf="isuser" type="file" #profileInput accept="image/*" (change)="changeProfileImage($event)" hidden />
 
 
     <div class="profile-info">

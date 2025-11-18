@@ -1,14 +1,15 @@
 package com._blog._blog.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class FollowCountDto {
-    private Long followers;
-    private Long following;
-    private Long notification ;
+@AllArgsConstructor
+@Builder
+public class NotificationDto {
+    private Long id;
+    private String message;
 }

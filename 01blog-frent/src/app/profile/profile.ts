@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FollowuserResponse, Post, PostsResponse, Suggested, SuggestedResponse } from '../dashboard/dashboard.model';
 import { FormsModule } from '@angular/forms';
+import { PostService } from '../services/post';
 
 export interface UserDto {
   id: number;
@@ -36,14 +37,19 @@ export class Profile implements OnInit {
   reportReason = "";
   showReportTemplite = false;
 
+  isuser = false;
+
   //  private Long targetUserId;
   //   private String reason;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public service: PostService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
+      if (this.userId == this.service.id) {
+        this.isuser = true;
+      }
       this.getUser(this.userId);
       this.getPosts(this.userId);
     });
@@ -53,7 +59,9 @@ export class Profile implements OnInit {
   @ViewChild('profileInput') profileInput!: any;
 
   triggerImagePicker() {
-    this.profileInput.nativeElement.click();
+    if (this.isuser) {
+      this.profileInput.nativeElement.click();
+    }
   }
 
   changeProfileImage(event: any) {
@@ -71,7 +79,7 @@ export class Profile implements OnInit {
       next: (res) => {
         this.user!.imageUrl = "http://localhost:8080/post" + res.data; // update preview instantly
         console.log(this.user?.imageUrl);
-        
+
       },
       error: () => alert("Error updating profile image"),
     });
@@ -94,22 +102,22 @@ export class Profile implements OnInit {
 
 
   // Get user info
-getUser(id: number) {
-  const url = `http://localhost:8080/get-userInfo/${id}`;
+  getUser(id: number) {
+    const url = `http://localhost:8080/get-userInfo/${id}`;
 
-  this.http.get<any>(url, { withCredentials: true }).subscribe({
-    next: (res) => {
-      const data = res.data;
-      console.log(res.data);
-      
-      this.user = {
-        ...data,
-        imageUrl: data.imagUrl ? `http://localhost:8080/post${data.imagUrl}` : null,
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        const data = res.data;
+        console.log(res.data);
+
+        this.user = {
+          ...data,
+          imageUrl: data.imagUrl ? `http://localhost:8080/post${data.imagUrl}` : null,
         };
-    },
-    error: (err) => console.error('Error fetching user', err),
-  });
-}
+      },
+      error: (err) => console.error('Error fetching user', err),
+    });
+  }
 
 
   report() {
@@ -166,36 +174,36 @@ getUser(id: number) {
     this.router.navigate(["/profile", id]);
   }
 
-openFollowers() {
-  const url = `http://localhost:8080/get-Followers/${this.userId}`;
-  this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-    next: (res) => {
-      this.followersList = res.data.map(user => ({
-        ...user,
-        imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
-      }));
-      this.showFollowers = true;
-      this.showFollowing = false;
-    },
-    error: (err) => console.error('Error fetching followers', err)
-  });
-}
+  openFollowers() {
+    const url = `http://localhost:8080/get-Followers/${this.userId}`;
+    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.followersList = res.data.map(user => ({
+          ...user,
+          imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+        }));
+        this.showFollowers = true;
+        this.showFollowing = false;
+      },
+      error: (err) => console.error('Error fetching followers', err)
+    });
+  }
 
-// Following
-openFollowing() {
-  const url = `http://localhost:8080/get-Following/${this.userId}`;
-  this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-    next: (res) => {
-      this.followingList = res.data.map(user => ({
-        ...user,
-        imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
-      }));
-      this.showFollowing = true;
-      this.showFollowers = false;
-    },
-    error: (err) => console.error('Error fetching following', err)
-  });
-}
+  // Following
+  openFollowing() {
+    const url = `http://localhost:8080/get-Following/${this.userId}`;
+    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.followingList = res.data.map(user => ({
+          ...user,
+          imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+        }));
+        this.showFollowing = true;
+        this.showFollowers = false;
+      },
+      error: (err) => console.error('Error fetching following', err)
+    });
+  }
 
   closeModal() {
     this.showFollowers = false;

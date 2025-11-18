@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +21,13 @@ import com._blog._blog.dto.PostsDto;
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
+import com._blog._blog.model.entity.FollowerEntity;
+import com._blog._blog.model.entity.NotificationEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.CommentsRepo;
 import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.LikesRepo;
+import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostsRepo;
 
 import io.jsonwebtoken.io.IOException;
@@ -42,6 +46,8 @@ public class PostsService {
     @Autowired
     private CommentsRepo commentsRepo;
 
+    @Autowired
+    private NotificationRepo notificationRepo;
     // PostsService(AuthRepo authRepo) {
     // this.authRepo = authRepo;
     // }
@@ -50,7 +56,17 @@ public class PostsService {
 
         PostsEntity post = postsDto.toEntity();
         post.setAuthor(currentUser);
-        return postsRepo.save(post);
+        postsRepo.save(post);
+        List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUser.getId());
+        for (FollowerEntity f : followers) {
+            NotificationEntity notification = NotificationEntity.builder()
+                    .message(currentUser.getUsername() + " created a post")
+                    .user(f.getFollower())
+                    .read(false)
+                    .build();
+            notificationRepo.save(notification);
+        }
+        return post;
     }
 
     public PostsEntity editPost(PostsDto postsDto, AuthEntity currentUser) {

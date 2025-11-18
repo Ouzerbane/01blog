@@ -64,11 +64,17 @@ export interface FollowuserResponse {
   data: Suggested;
 }
 
+export interface NotificationModul {
+  id: boolean;
+  message: string;
+}
+
 export interface FollowResponse {
   success: boolean;
   errors: any;
   data: {
     followers: number;
     following: number;
+    notification : number
   };
 }
