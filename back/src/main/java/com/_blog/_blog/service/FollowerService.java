@@ -69,7 +69,7 @@ public class FollowerService {
 
         return users.stream().map(user -> {
             boolean isFollowed = followerRepo.existsByFollowerIdAndFollowingId(currentUserId, user.getId());
-            return new UserFollowDto(user.getId(), user.getUsername(), isFollowed);
+            return new UserFollowDto(user.getId(), user.getUsername(),user.getImageUrl(), isFollowed);
         }).collect(Collectors.toList());
     }
 
@@ -101,7 +101,7 @@ public class FollowerService {
                 .collect(Collectors.toList());
 
         return suggestedUsers.stream()
-                .map(user -> new UserFollowDto(user.getId(), user.getUsername(), false))
+                .map(user -> new UserFollowDto(user.getId(), user.getUsername(), user.getImageUrl(),false))
                 .collect(Collectors.toList());
     }
 
@@ -117,6 +117,7 @@ public class FollowerService {
                     return new UserFollowDto(
                             f.getFollower().getId(),
                             f.getFollower().getUsername(),
+                            f.getFollower().getImageUrl(),
                             isFollowed
                     );
                 })
@@ -135,6 +136,7 @@ public class FollowerService {
                     return new UserFollowDto(
                             f.getFollowing().getId(),
                             f.getFollowing().getUsername(),
+                            f.getFollowing().getImageUrl(),
                             isFollowed
                     );
                 })

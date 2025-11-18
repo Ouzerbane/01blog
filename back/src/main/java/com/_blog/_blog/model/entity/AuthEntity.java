@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @Builder
-@NoArgsConstructor 
+@NoArgsConstructor
 @AllArgsConstructor
 public class AuthEntity {
     @Id
@@ -23,5 +23,6 @@ public class AuthEntity {
     private String username;
     private String email;
     private String password;
-    private String type ;
+    private String type;
+    private String imageUrl;
 }

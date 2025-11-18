@@ -50,8 +50,14 @@ public class ProfileService {
         Long followers = followerRepo.countByFollowingId(userId);
         Long fllowing = followerRepo.countByFollowerId(userId);
 
-        return UserDto.builder().email(userinfo.getEmail()).username(userinfo.getUsername()).followers(followers).following(fllowing).build();
+        return UserDto.builder().email(userinfo.getEmail()).username(userinfo.getUsername()).imagUrl(userinfo.getImageUrl()).followers(followers).following(fllowing).build();
 
+    }
+
+     public void  updateProfileImage(Long userId , String urile) {
+        AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
+        userinfo.setImageUrl(urile);
+        authRepo.save(userinfo);
     }
 
 }

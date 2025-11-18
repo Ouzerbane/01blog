@@ -145,13 +145,23 @@ export class Dashboard implements OnInit {
     this.http
       .get<SuggestedResponse>(suggestedUrl, { withCredentials: true })
       .subscribe({
-        next: (res) => (this.suggested = res.data),
-        error: (err) => {
-          // console.error('Error deleting post', err)
+        next: (res) => {
+          const data = res.data;
 
+          this.suggested = data.map(user => ({
+            ...user,
+            imageUrl: user.imageUrl
+              ? `http://localhost:8080/post${user.imageUrl}`
+              : null,
+          }));
+
+        },
+        error: (err) => {
+          console.error('Error fetching suggested users', err);
         },
       });
   }
+
 
   getFollowCounts() {
     const followUrl = `http://localhost:8080/follow-counts`;
@@ -194,7 +204,10 @@ export class Dashboard implements OnInit {
       .get<SuggestedResponse>(url, { withCredentials: true })
       .subscribe({
         next: (res) => {
-          this.followersList = res.data;
+          this.followersList = res.data.map(user => ({
+            ...user,
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+          }));
           this.showFollowers = true;
           this.showFollowing = false;
         },
@@ -212,7 +225,10 @@ export class Dashboard implements OnInit {
       .get<SuggestedResponse>(url, { withCredentials: true })
       .subscribe({
         next: (res) => {
-          this.followingList = res.data;
+          this.followingList = res.data.map(user => ({
+            ...user,
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+          }));
           this.showFollowing = true;
           this.showFollowers = false;
         },

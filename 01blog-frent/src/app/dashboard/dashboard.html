@@ -105,13 +105,16 @@
       </div>
     </section>
 
-
     <section class="recent-activity">
       <h2>Suggested for you</h2>
       <div class="suggested-list">
         <div *ngFor="let user of suggested" class="suggested-user">
           <div class="user-info" (click)="getProfile(user.id)">
-            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <!-- Show user image if available, otherwise first letter -->
+            <div class="avatar">
+              <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="{{ user.username }}" />
+              <span *ngIf="!user.imageUrl">{{ user.username.charAt(0).toUpperCase() }}</span>
+            </div>
             <span>{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
@@ -120,6 +123,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
 
@@ -129,7 +133,12 @@
       <div class="suggested-list">
         <div *ngFor="let user of followersList" class="suggested-user">
           <div class="user-info" (click)="getProfile(user.id)">
-            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div class="avatar">
+              <img *ngIf="user.imageUrl; else fallbackAvatar" [src]="user.imageUrl" alt="{{user.username}}" />
+              <ng-template #fallbackAvatar>
+                {{ user.username.charAt(0).toUpperCase() }}
+              </ng-template>
+            </div>
             <span>{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
@@ -140,7 +149,6 @@
       <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
   </div>
-
 
   <div class="modal" *ngIf="showFollowing">
     <div class="modal-content">
@@ -148,7 +156,12 @@
       <div class="suggested-list">
         <div *ngFor="let user of followingList" class="suggested-user">
           <div class="user-info" (click)="getProfile(user.id)">
-            <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div class="avatar">
+              <img *ngIf="user.imageUrl; else fallbackAvatar2" [src]="user.imageUrl" alt="{{user.username}}" />
+              <ng-template #fallbackAvatar2>
+                {{ user.username.charAt(0).toUpperCase() }}
+              </ng-template>
+            </div>
             <span>{{ user.username }}</span>
           </div>
           <button class="follow-btn" [class.following]="user.followed" (click)="toggleFollow(user)">
@@ -159,4 +172,5 @@
       <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
   </div>
+
 </div>

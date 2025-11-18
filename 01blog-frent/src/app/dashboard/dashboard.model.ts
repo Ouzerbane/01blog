@@ -49,6 +49,7 @@ export interface Suggested {
   id: number;
   followed: boolean;
   username: string;
+  imageUrl? : string  | null
 }
 
 export interface SuggestedResponse {
