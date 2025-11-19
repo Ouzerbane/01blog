@@ -1,5 +1,6 @@
 package com._blog._blog.service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import com._blog._blog.dto.LikeDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.LikesEntity;
+import com._blog._blog.model.entity.NotificationEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.LikesRepo;
+import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostsRepo;
 
 @Service
@@ -21,6 +24,9 @@ public class LikesService {
 
     @Autowired
     private PostsRepo postsRepo;
+
+    @Autowired
+    private NotificationRepo notificationRepo ;
 
     public LikeDto toggleLike(IdDto postIdDto, AuthEntity currentUser) {
         PostsEntity post = postsRepo.findById(postIdDto.getId())
@@ -32,6 +38,15 @@ public class LikesService {
             return countLikes(post.getId(), currentUser.getId());
         }
         likesRepo.save(LikesEntity.builder().user(currentUser).post(post).build());
+        if (!Objects.equals(post.getAuthor().getId(), currentUser.getId())){
+            NotificationEntity notification = NotificationEntity.builder()
+                        .message(currentUser.getUsername() + " Like your post")
+                        .user(post.getAuthor())
+                        .read(false)
+                        .build();
+            notificationRepo.save(notification);
+        }
+
         return countLikes(post.getId(), currentUser.getId());
 
     }

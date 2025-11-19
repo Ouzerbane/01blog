@@ -29,6 +29,7 @@ import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.LikesRepo;
 import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostsRepo;
+import com._blog._blog.util.NotificationType;
 
 import io.jsonwebtoken.io.IOException;
 
@@ -56,13 +57,15 @@ public class PostsService {
 
         PostsEntity post = postsDto.toEntity();
         post.setAuthor(currentUser);
-        postsRepo.save(post);
+        post = postsRepo.save(post);
         List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUser.getId());
         for (FollowerEntity f : followers) {
             NotificationEntity notification = NotificationEntity.builder()
-                    .message(currentUser.getUsername() + " created a post")
+                    .message(currentUser.getUsername() + " created a post " + post.getTitle())
                     .user(f.getFollower())
                     .read(false)
+                    .postId(post.getId())
+                    .type(NotificationType.POST_CREATED)
                     .build();
             notificationRepo.save(notification);
         }
