@@ -1,6 +1,7 @@
 package com._blog._blog.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,15 @@ import org.springframework.stereotype.Service;
 import com._blog._blog.dto.CommentsDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.ResponsCommetDto;
-import com._blog._blog.dto.ReturnCommentDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.CommentsEntity;
+import com._blog._blog.model.entity.NotificationEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.CommentsRepo;
+import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostsRepo;
+import com._blog._blog.util.NotificationType;
 
 @Service
 public class CommentsService {
@@ -25,6 +28,9 @@ public class CommentsService {
 
     @Autowired
     private PostsRepo postsRepo;
+
+    @Autowired
+    private NotificationRepo notificationRepo;
 
     public ResponsCommetDto addComment(CommentsDto commentsDto, AuthEntity authEntity) {
         PostsEntity post = postsRepo.findById(commentsDto.getId())
@@ -37,31 +43,34 @@ public class CommentsService {
                         .post(post)
                         .build()
         );
+        if (!Objects.equals(authEntity.getId(), post.getAuthor().getId())) {
 
-        // long count = commentsRepo.countByPostId(post.getId());
-        return  new ResponsCommetDto(savedComment.getId(),commentsDto.getId(),authEntity.getId(),authEntity.getUsername(),savedComment.getContent(),savedComment.getCreatedAt());
+            NotificationEntity notification = NotificationEntity.builder()
+                    .message(authEntity.getUsername() + " created add comment to post " + post.getTitle())
+                    .user(post.getAuthor())
+                    .read(false)
+                    .postId(post.getId())
+                    .type(NotificationType.COMMENT)
+                    .build();
+            notificationRepo.save(notification);
+        }
 
-        // return ReturnCommentDto.builder()
-        //         .id(savedComment.getId())
-        //         .user(authEntity.getId())
-        //         .content(savedComment.getContent())
-        //         .craetAt(savedComment.getCreatedAt().toString())
-        //         .count(count)
-        //         .build();
+        return new ResponsCommetDto(savedComment.getId(), commentsDto.getId(), authEntity.getId(), authEntity.getUsername(), savedComment.getContent(), savedComment.getCreatedAt());
+
     }
 
-     public List<ResponsCommetDto> getComment(IdDto postId) {
-         return commentsRepo.findAllByPostIdOrderByCreatedAtAsc(postId.getId())
+    public List<ResponsCommetDto> getComment(IdDto postId) {
+        return commentsRepo.findAllByPostIdOrderByCreatedAtAsc(postId.getId())
                 .stream()
                 .map(comment -> new ResponsCommetDto(
-                        comment.getId(),
-                        comment.getPost().getId(),
-                        comment.getUser().getId(),
-                        comment.getUser().getUsername(),
-                        comment.getContent(),
-                        comment.getCreatedAt()
-                ))
+                comment.getId(),
+                comment.getPost().getId(),
+                comment.getUser().getId(),
+                comment.getUser().getUsername(),
+                comment.getContent(),
+                comment.getCreatedAt()
+        ))
                 .collect(Collectors.toList());
-    
+
     }
 }

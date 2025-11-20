@@ -1,7 +1,5 @@
 package com._blog._blog.model.entity;
 
-
-
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -42,7 +40,11 @@ public class NotificationEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private AuthEntity user; 
+    private AuthEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id")
+    private AuthEntity sender;
 
     @Column(nullable = false)
     private boolean read = false;
