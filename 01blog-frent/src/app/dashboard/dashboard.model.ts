@@ -21,6 +21,7 @@ export interface Post {
   editTitle?: string;
   editContent?: string;
   newComment?: string;
+  showMenu : boolean ;
 
   previewImage: null;
   newImage: null

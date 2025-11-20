@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -206,6 +206,16 @@ export class Dashboard implements OnInit {
   //       },
   //     });
   // }
+
+  @HostListener('document:click', ['$event'])
+closeMenus(event: Event) {
+  this.posts.forEach(post => {
+    const clickedInside = (event.target as HTMLElement).closest('.post-menu');
+    if (!clickedInside) {
+      post.showMenu = false;
+    }
+  });
+}
 
   toggleFollow(user: Suggested) {
     user.followed = !user.followed;

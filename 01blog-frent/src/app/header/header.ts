@@ -21,7 +21,7 @@ export class Header implements OnInit {
   notificationCount: number = 0;
   notifications: NotificationModul[] = [];
 
-   showProfileMenu = false;
+  showProfileMenu = false;
 
   private apiUrl = 'http://localhost:8080';
 
@@ -48,15 +48,15 @@ export class Header implements OnInit {
     this.CountNotification()
   }
 
- 
 
-toggleProfileMenu() {
-  this.showProfileMenu = !this.showProfileMenu;
-}
 
-logout() {
-  // your logout logic
-}
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+  }
+
+  logout() {
+    // your logout logic
+  }
 
 
   toggleNotification() {
@@ -64,6 +64,7 @@ logout() {
     if (this.showNotifacation) {
       this.openNotification();
     }
+    this.CountNotification()
   }
 
   openNotification() {
@@ -80,12 +81,12 @@ logout() {
     });
   }
 
-   CountNotification() {
+  CountNotification() {
     const url = `http://localhost:8080/count-notifications`; // adjust endpoint if needed
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
         this.notificationCount = res.data; // assign to your local notifications array
-        console.log('NNNNNNNNNNNNN', res.data , this.notificationCount);
+        console.log('NNNNNNNNNNNNN', res.data, this.notificationCount);
       },
       error: (err) => {
         console.error('Error fetching notifications', err);
