@@ -2,23 +2,23 @@
   <main>
     <section class="stats">
       <div class="stats-header">
-        <div class="card" (click)="toggleNotification()">
+        <!-- <div class="card" (click)="toggleNotification()">
           <h3>Notification</h3>
           <p>{{ notificationCount }}</p>
-        </div>
-        <div class="card" (click)="openFollowers()">
+        </div> -->
+        <!-- <div class="card" (click)="openFollowers()">
           <h3>Followers</h3>
           <p>{{ followers }}</p>
-        </div>
+        </div> -->
 
-        <div class="card" (click)="openFollowing()">
+        <!-- <div class="card" (click)="openFollowing()">
           <h3>Following</h3>
           <p>{{ following }}</p>
-        </div>
+        </div> -->
 
-        <div class="card create-post" (click)="PopatPost()">
+        <!-- <div class="card create-post" (click)="PopatPost()">
           <h3>➕ Create Post</h3>
-        </div>
+        </div> -->
       </div>
 
       <div *ngFor="let post of posts" class="post-card">
@@ -131,7 +131,7 @@
   </main>
 
 
-  <div class="modal" *ngIf="showFollowers">
+  <!-- <div class="modal" *ngIf="showFollowers">
     <div class="modal-content">
       <h3>Followers</h3>
       <div class="suggested-list">
@@ -152,9 +152,9 @@
       </div>
       <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
-  </div>
+  </div> -->
 
-  <div class="modal" *ngIf="showFollowing">
+  <!-- <div class="modal" *ngIf="showFollowing">
     <div class="modal-content">
       <h3>Following</h3>
       <div class="suggested-list">
@@ -175,10 +175,10 @@
       </div>
       <button class="close-btn" (click)="closeModal()">Close</button>
     </div>
-  </div>
+  </div> -->
 
 
-  <div class="notification-popup" *ngIf="showNotifacation">
+  <!-- <div class="notification-popup" *ngIf="showNotifacation">
     <h3>Notifications</h3>
     <ul>
       <li *ngFor="let noti of notifications">
@@ -186,7 +186,7 @@
       </li>
     </ul>
     <button (click)="showNotifacation = false">Close</button>
-  </div>
+  </div> -->
 
 
 </div>

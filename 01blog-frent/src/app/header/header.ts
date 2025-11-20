@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PostService } from '../services/post';
+import { NotificationModul } from '../dashboard/dashboard.model';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,12 @@ import { PostService } from '../services/post';
 export class Header implements OnInit {
   userId: number = 0;
   username: string = '';
+
+  showNotifacation = false;
+  notificationCount: number = 0;
+  notifications: NotificationModul[] = [];
+
+   showProfileMenu = false;
 
   private apiUrl = 'http://localhost:8080';
 
@@ -37,6 +44,52 @@ export class Header implements OnInit {
           this.router.navigate(['/login']);
         }
       },
+    });
+    this.CountNotification()
+  }
+
+ 
+
+toggleProfileMenu() {
+  this.showProfileMenu = !this.showProfileMenu;
+}
+
+logout() {
+  // your logout logic
+}
+
+
+  toggleNotification() {
+    this.showNotifacation = !this.showNotifacation
+    if (this.showNotifacation) {
+      this.openNotification();
+    }
+  }
+
+  openNotification() {
+    const url = `http://localhost:8080/notifications`; // adjust endpoint if needed
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.notifications = res.data; // assign to your local notifications array
+        // this.getSuggested();
+        console.log('Notifications loaded:', this.notifications);
+      },
+      error: (err) => {
+        console.error('Error fetching notifications', err);
+      }
+    });
+  }
+
+   CountNotification() {
+    const url = `http://localhost:8080/count-notifications`; // adjust endpoint if needed
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.notificationCount = res.data; // assign to your local notifications array
+        console.log('NNNNNNNNNNNNN', res.data , this.notificationCount);
+      },
+      error: (err) => {
+        console.error('Error fetching notifications', err);
+      }
     });
   }
 
