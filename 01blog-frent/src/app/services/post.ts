@@ -5,7 +5,7 @@ import { Post } from '../dashboard/dashboard.model';
   providedIn: 'root',
 })
 export class PostService {
-   constructor (){}
+  constructor (){}
   postd: Post[] = [];
   id : number = 0;
 }

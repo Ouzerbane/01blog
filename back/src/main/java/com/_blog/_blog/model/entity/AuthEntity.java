@@ -25,4 +25,6 @@ public class AuthEntity {
     private String password;
     private String type;
     private String imageUrl;
+    private String Action ;
+    
 }

@@ -36,6 +36,7 @@ public class RegisterRequest {
                 .username(this.username)
                 .email(this.email)
                 .type("USER")
+                .Action("ACTIVE")
                 .password(this.password)
                 .build();
     }

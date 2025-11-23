@@ -20,27 +20,17 @@ export class Dashboard implements OnInit {
 
   id: number = 0;
 
-  // comments: Comment[] = [];
-  newComment: string = "";
-  // like?: Like;
 
-  // followers: number = 0;
-  // following: number = 0;
+  newComment: string = "";
+
   areIsFirstTime: boolean = false;
   suggested: Suggested[] = [];
 
 
   notifications: NotificationModul[] = [];
-
-  // Lists for modal
-  // followersList: Suggested[] = [];
-  // followingList: Suggested[] = [];
-  // showFollowers = false;
-  // showFollowing = false;
   showPopatPost = false;
 
-  // showNotifacation = false;
-  // notificationCount: number = 0;
+
 
   constructor(
     private http: HttpClient,
@@ -70,26 +60,7 @@ export class Dashboard implements OnInit {
   }
 
 
-  // toggleNotification() {
-  //   this.showNotifacation = !this.showNotifacation
-  //   if (this.showNotifacation) {
-  //     this.openNotification();
-  //   }
-  // }
 
-  // openNotification() {
-  //   const url = `http://localhost:8080/notifications`; // adjust endpoint if needed
-  //   this.http.get<any>(url, { withCredentials: true }).subscribe({
-  //     next: (res) => {
-  //       this.notifications = res.data; // assign to your local notifications array
-  //       // this.getSuggested();
-  //       console.log('Notifications loaded:', this.notifications);
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching notifications', err);
-  //     }
-  //   });
-  // }
 
   getPosts() {
     const postsUrl = `http://localhost:8080/post/get-posts?page=${this.page}&size=${this.size}`;
@@ -190,32 +161,17 @@ export class Dashboard implements OnInit {
   }
 
 
-  // getFollowCounts() {
-  //   const followUrl = `http://localhost:8080/follow-counts`;
-  //   this.http
-  //     .get<FollowResponse>(followUrl, { withCredentials: true })
-  //     .subscribe({
-  //       next: (res) => {
-  //         this.followers = res.data.followers;
-  //         this.following = res.data.following;
-  //         // this.notificationCount = res.data.notification;
-  //       },
-  //       error: (err) => {
-  //         // console.error('Error deleting post', err)
 
-  //       },
-  //     });
-  // }
 
   @HostListener('document:click', ['$event'])
-closeMenus(event: Event) {
-  this.posts.forEach(post => {
-    const clickedInside = (event.target as HTMLElement).closest('.post-menu');
-    if (!clickedInside) {
-      post.showMenu = false;
-    }
-  });
-}
+  closeMenus(event: Event) {
+    this.posts.forEach(post => {
+      const clickedInside = (event.target as HTMLElement).closest('.post-menu');
+      if (!clickedInside) {
+        post.showMenu = false;
+      }
+    });
+  }
 
   toggleFollow(user: Suggested) {
     user.followed = !user.followed;
@@ -238,47 +194,7 @@ closeMenus(event: Event) {
       });
   }
 
-  // getFollowers() {
-  //   const url = `http://localhost:8080/get-Followers/${this.service.id}`;
 
-  //   this.http
-  //     .get<SuggestedResponse>(url, { withCredentials: true })
-  //     .subscribe({
-  //       next: (res) => {
-  //         this.followersList = res.data.map(user => ({
-  //           ...user,
-  //           imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : null
-  //         }));
-  //         this.showFollowers = true;
-  //         this.showFollowing = false;
-  //       },
-  //       error: (err) => {
-  //         // console.error('Error deleting post', err)
-
-  //       },
-  //     });
-
-  // }
-
-  // getFollowing() {
-  //   const url = `http://localhost:8080/get-Following/${this.service.id}`;
-  //   this.http
-  //     .get<SuggestedResponse>(url, { withCredentials: true })
-  //     .subscribe({
-  //       next: (res) => {
-  //         this.followingList = res.data.map(user => ({
-  //           ...user,
-  //           imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : null
-  //         }));
-  //         this.showFollowing = true;
-  //         this.showFollowers = false;
-  //       },
-  //       error: (err) => {
-  //         // console.error('Error deleting post', err)
-
-  //       },
-  //     });
-  // }
 
   changePage(newPage: number) {
     if (newPage < 0) return;
@@ -289,20 +205,7 @@ closeMenus(event: Event) {
     });
   }
 
-  // closeModal() {
-  //   this.showFollowers = false;
-  //   this.showFollowing = false;
-  // }
 
-  // openFollowers() {
-  //   this.getFollowers();
-  //   this.showFollowers = true;
-  // }
-
-  // openFollowing() {
-  //   this.getFollowing();
-  //   this.showFollowing = true;
-  // }
 
   PopatPost() {
     this.router.navigate(['/post'])

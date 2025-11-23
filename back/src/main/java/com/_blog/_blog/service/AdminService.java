@@ -1,5 +1,7 @@
 package com._blog._blog.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,11 @@ public class AdminService {
 
     public String removeUserService(IdDto id, AuthEntity currentUser) {
 
-        if (!"admin".equalsIgnoreCase(currentUser.getType())) {
-            throw new CustomException("authorization", "You are not authorized to remove users");
-        }
-
+        // if (!"admin".equalsIgnoreCase(currentUser.getType())) {
+        //     throw new CustomException("authorization", "You are not authorized to remove users");
+        // }
+        AuthEntity user = authRepo.findById(id.getId()).orElseThrow(() -> new CustomException("user","User not found"));;
+        authRepo.delete(user);
         return "User with ID " + id.getId() + " has been removed successfully.";
     }
 

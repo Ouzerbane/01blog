@@ -17,6 +17,8 @@ export class Header implements OnInit {
   userId: number = 0;
   username: string = '';
 
+  userType : boolean = false;
+
   showNotifacation = false;
   notificationCount: number = 0;
   notifications: NotificationModul[] = [];
@@ -46,6 +48,7 @@ export class Header implements OnInit {
       },
     });
     this.CountNotification()
+    this.GetuserType()
   }
 
 
@@ -73,7 +76,7 @@ export class Header implements OnInit {
       next: (res) => {
         this.notifications = res.data; // assign to your local notifications array
         // this.getSuggested();
-        console.log('Notifications loaded:', this.notifications);
+        // console.log('Notifications loaded:', this.notifications);
       },
       error: (err) => {
         console.error('Error fetching notifications', err);
@@ -86,7 +89,22 @@ export class Header implements OnInit {
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
         this.notificationCount = res.data; // assign to your local notifications array
-        console.log('NNNNNNNNNNNNN', res.data, this.notificationCount);
+        // console.log('NNNNNNNNNNNNN', res.data, this.notificationCount);
+      },
+      error: (err) => {
+        console.error('Error fetching notifications', err);
+      }
+    });
+  }
+
+
+
+    GetuserType() {
+    const url = `http://localhost:8080/admin/user-type`; // adjust endpoint if needed
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.userType = res.data;
+        console.log('NNNNNNNNNNNNN', res.data);
       },
       error: (err) => {
         console.error('Error fetching notifications', err);

@@ -1,0 +1,83 @@
+<div class="admin-dashboard">
+
+  <h1 class="title">Admin Dashboard</h1>
+
+
+  <!-- 3 COLUMNS LAYOUT -->
+  <div class="admin-grid">
+
+    <!-- USERS (LEFT) -->
+    <section class="admin-section">
+      <h2>Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let user of users">
+          <tr>
+            <td>{{user.username}}</td>
+            <td><span class="status active">{{user.action}}</span></td>
+            <td>
+              <button class="btn ban" (click)="BanUser(user.id)">Ban</button>
+              <button class="btn delete" (click)="DeletUser(user.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- POSTS (CENTER) -->
+    <section class="admin-section">
+      <h2>Posts</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Preview</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>john_doe</td>
+            <td>My first post</td>
+            <td>Lorem ipsum dolor sit...</td>
+            <td>
+              <button class="btn hide">Hide</button>
+              <button class="btn delete">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- REPORTS (RIGHT) -->
+    <section class="admin-section">
+      <h2>Reports</h2>
+
+      <div class="report-card">
+        <p><strong>User:</strong> maria_22</p>
+        <p><strong>Reason:</strong> Inappropriate content</p>
+        <div class="report-actions">
+          <button class="btn resolve">Resolve</button>
+          <button class="btn delete">Remove Post</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <p><strong>User:</strong> john_doe</p>
+        <p><strong>Reason:</strong> Spam</p>
+        <div class="report-actions">
+          <button class="btn resolve">Resolve</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</div>

@@ -9,12 +9,13 @@
   <nav>
     <ul>
       <!-- <li routerLink="/" routerLinkActive="active">Home</li> -->
+      <li routerLink="/admin" routerLinkActive="active" *ngIf="userType">Admin</li>
       <li routerLink="/post" routerLinkActive="active">Creat-post</li>
       <li (click)="toggleNotification()">Notification ({{notificationCount}})</li>
       <li class="profile-menu">
         <div class="profile-btn" (click)="toggleProfileMenu()">
           <!-- <img class="avatar" src="assets/default-avatar.png" /> -->
-           <p>profile</p>
+          <p>profile</p>
         </div>
 
         <div class="profile-dropdown" *ngIf="showProfileMenu">

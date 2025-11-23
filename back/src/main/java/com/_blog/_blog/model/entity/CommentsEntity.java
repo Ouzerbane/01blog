@@ -30,6 +30,7 @@ public class CommentsEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity user;
 
     @ManyToOne
