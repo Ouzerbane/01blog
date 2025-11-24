@@ -41,7 +41,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // boolean checkValidationJwt = jwtUtil.isTokenValid(token) && token != null;
-
         if (path.startsWith("/regester") || path.startsWith("/login")) {
             filterChain.doFilter(request, response);
             return;
@@ -65,6 +64,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         Long userId = jwtUtil.getUserIdFromToken(token);
         AuthEntity user = authRepo.findById(userId).orElse(null);
+        if (!user.getType().equals("ADMIN")) {
+            if (user.getAction().equals("BAN")) {
+                ApiResponse<Object> errorResponse;
+                errorResponse = new ApiResponse<>(
+                        false,
+                        List.of(new ErrorItem("user", "User is Ban")),
+                        null);
+
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(errorResponse);
+                response.getWriter().write(json);
+                return;
+            }
+        }
 
         if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null,

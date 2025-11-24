@@ -42,6 +42,8 @@ public class PostsEntity {
 
     private String imageUrl;
 
+    private String status ;
+
     private LocalDateTime createdAt;
 
     // relation m3a l user li ktb l post

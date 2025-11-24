@@ -30,10 +30,12 @@ public class ReportEntity {
 
     @ManyToOne
     @JoinColumn(name = "reporter_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity reporter;
 
     @ManyToOne
     @JoinColumn(name = "target_user_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity targetUser;
 
     @Column(columnDefinition = "TEXT", nullable = false)

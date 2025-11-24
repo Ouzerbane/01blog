@@ -18,4 +18,10 @@ public interface PostsRepo extends JpaRepository<PostsEntity, Long> {
 
     List<PostsEntity> findByAuthorIdOrderByCreatedAtDesc(Long authorId);
 
+    List<PostsEntity> findAllByOrderByCreatedAtDesc();
+
+    Page<PostsEntity> findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(List<Long> ids, String status, Pageable pageable);
+
+
+
 }

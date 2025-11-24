@@ -19,9 +19,10 @@ public class PostAdminDto {
     private String imageUrl;
     private LocalDateTime createdAt;
     private AuthorDto author;
-    private Long countLike;
-    private Long countCommets;
-    private boolean like ;
+    private String status ;
+    // private Long countLike;
+    // private Long countCommets;
+    // private boolean like ;
     @Data
     @Builder
     @NoArgsConstructor

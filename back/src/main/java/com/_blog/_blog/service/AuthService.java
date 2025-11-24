@@ -23,17 +23,24 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    public String login(String usernameOrEmail, String rawPassword) {////for login
+    public String login(String usernameOrEmail, String rawPassword) {
+        ////for login
 
         AuthEntity user = empRepo.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new CustomException("user","User not found"));
+                .orElseThrow(() -> new CustomException("user", "User not found"));
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new CustomException("password","Invalid password");
+            throw new CustomException("password", "Invalid password");
         }
-        return jwtUtil.generateToken(user.getId(),user.getUsername());
+        if (!user.getType().equals("ADMIN")){
+            if (user.getAction().equals("BAN")) {
+                throw new CustomException("User", "User is ban");
+            }
+        }
+        return jwtUtil.generateToken(user.getId(), user.getUsername());
     }
 
-    public AuthEntity registerservece(AuthEntity req) {///for register
+    public AuthEntity registerservece(AuthEntity req) {
+        ///for register
         if (empRepo.existsByUsername(req.getUsername())) {
             throw new CustomException("username", "Username already exists");
         }

@@ -22,7 +22,7 @@
             <td>{{user.username}}</td>
             <td><span class="status active">{{user.action}}</span></td>
             <td>
-              <button class="btn ban" (click)="BanUser(user.id)">Ban</button>
+              <button class="btn ban" (click)="BanUser(user.id)">{{user.ban}}</button>
               <button class="btn delete" (click)="DeletUser(user.id)">Delete</button>
             </td>
           </tr>
@@ -31,49 +31,50 @@
     </section>
 
     <!-- POSTS (CENTER) -->
+    <!-- POSTS (CENTER) -->
     <section class="admin-section">
       <h2>Posts</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Author</th>
-            <th>Title</th>
-            <th>Preview</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>john_doe</td>
-            <td>My first post</td>
-            <td>Lorem ipsum dolor sit...</td>
-            <td>
-              <button class="btn hide">Hide</button>
-              <button class="btn delete">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+      <div class="posts-grid">
+        <div class="post-card" *ngFor="let post of posts">
+
+          <div class="post-header">
+            <span class="author">{{ post.author.username }}</span>
+            <span class="time">{{ post.createdAt | date:'short' }}</span>
+          </div>
+
+          <h4 class="post-title">{{ post.title }}</h4>
+          <p class="post-content">{{ post.content }}</p>
+
+          <!-- الصورة غير إلا كانت موجودة -->
+          <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" class="post-image" />
+
+          <div class="post-actions">
+            <button class="btn hide" (click)="changeStatus(post.id)">
+              {{ post.status }}
+            </button>
+            <button class="btn delete" (click)="deletePost(post)">
+              Delete
+            </button>
+          </div>
+
+        </div>
+      </div>
     </section>
+
+
 
     <!-- REPORTS (RIGHT) -->
     <section class="admin-section">
       <h2>Reports</h2>
 
-      <div class="report-card">
-        <p><strong>User:</strong> maria_22</p>
-        <p><strong>Reason:</strong> Inappropriate content</p>
+      <div class="report-card" *ngFor="let report of reports">
+        <p><strong>reporter:</strong> {{report.reporter}}</p>
+        <p><strong>targetUser:</strong> {{report.targetUser}}</p>
+        <p><strong>Reason:</strong> {{report.reason}}</p>
         <div class="report-actions">
-          <button class="btn resolve">Resolve</button>
-          <button class="btn delete">Remove Post</button>
-        </div>
-      </div>
-
-      <div class="report-card">
-        <p><strong>User:</strong> john_doe</p>
-        <p><strong>Reason:</strong> Spam</p>
-        <div class="report-actions">
-          <button class="btn resolve">Resolve</button>
+          <!-- <button class="btn resolve">Resolve</button> -->
+          <button class="btn delete" (click)="DeletReport(report.id)">Remove</button>
         </div>
       </div>
     </section>

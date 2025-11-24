@@ -44,6 +44,7 @@ public class PostsDto {
         post.setTitle(this.title);
         post.setContent(this.content);
         post.setImageUrl(this.imageUrl);
+        post.setStatus("show");
         post.setCreatedAt(this.createdAt != null ? this.createdAt : LocalDateTime.now());
         // author khasha ttsawb mn service (ma kansiftouch mn frontend)
         return post;

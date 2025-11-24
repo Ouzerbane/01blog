@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,9 +104,9 @@ public class PostsService {
         if (currentUser.getType().equalsIgnoreCase("admin")) {
             return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
                     .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
-                            likesRepo.countByPostId(post.getId()),
-                            likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                            commentsRepo.countByPostId(post.getId())));
+                    likesRepo.countByPostId(post.getId()),
+                    likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                    commentsRepo.countByPostId(post.getId())));
         }
 
         List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
@@ -121,11 +120,11 @@ public class PostsService {
             return Page.empty(pageable);
         }
 
-        return postsRepo.findByAuthorIdInOrderByCreatedAtDesc(followingIds, pageable)
+        return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "hide", pageable)
                 .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
-                        likesRepo.countByPostId(post.getId()),
-                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                        commentsRepo.countByPostId(post.getId())));
+                likesRepo.countByPostId(post.getId()),
+                likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                commentsRepo.countByPostId(post.getId())));
         // ::
     }
 
