@@ -16,8 +16,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "likes", 
-       uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "post_id"})) // باش مايديرش نفس المستخدم لايك مرتين لنفس البوست
+@Table(name = "likes", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "post_id" })) // باش مايديرش نفس
+                                                                                                      // المستخدم لايك
+                                                                                                      // مرتين لنفس
+                                                                                                      // البوست
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,12 +31,13 @@ public class LikesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private PostsEntity post;
 }

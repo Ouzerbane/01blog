@@ -46,10 +46,11 @@ public class PostsEntity {
 
     // relation m3a l user li ktb l post
     @ManyToOne
-    
+
     ///
     @JoinColumn(name = "author_id")
     @JsonBackReference
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -58,6 +59,7 @@ public class PostsEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private List<CommentsEntity> comments = new ArrayList<>();
 
     // bach kol ma ttsjjel post, ttsjjel b date jdida
@@ -66,7 +68,8 @@ public class PostsEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId, Long countLikes, boolean islike, Long countLike) {
+    public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId, Long countLikes,
+            boolean islike, Long countLike) {
         boolean canEdit = post.getAuthor() != null && post.getAuthor().getId().equals(currentUserId);
         return PostsResponseDto.builder()
                 .id(post.getId())

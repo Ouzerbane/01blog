@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "followers")
 @Data
 @Builder
-@NoArgsConstructor 
+@NoArgsConstructor
 @AllArgsConstructor
 public class FollowerEntity {
 
@@ -29,10 +29,12 @@ public class FollowerEntity {
 
     @ManyToOne
     @JoinColumn(name = "follower_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity follower;
 
     @ManyToOne
     @JoinColumn(name = "following_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity following;
 
     private LocalDateTime createdAt;
