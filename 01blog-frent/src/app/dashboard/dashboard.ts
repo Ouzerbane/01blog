@@ -26,6 +26,8 @@ export class Dashboard implements OnInit {
   areIsFirstTime: boolean = false;
   suggested: Suggested[] = [];
 
+  input :String = '';
+
 
   notifications: NotificationModul[] = [];
   showPopatPost = false;
@@ -98,6 +100,21 @@ export class Dashboard implements OnInit {
     this.router.navigate(["/profile", id]);
   }
 
+
+  serch() {
+    const url = `http://localhost:8080/serch?input=${this.input}`;
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.suggested = res.data;
+        console.log('Comments for post', res.data);
+      },
+      error: (err) => {
+        console.error('Error deleting post', err)
+
+      },
+    });
+  }
+
   getComment(post: Post) {
     const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
@@ -106,7 +123,7 @@ export class Dashboard implements OnInit {
         console.log('Comments for post', post.id, post.comment);
       },
       error: (err) => {
-        // console.error('Error deleting post', err)
+        console.error('Error deleting post', err)
 
       },
     });
@@ -183,12 +200,14 @@ export class Dashboard implements OnInit {
         { withCredentials: true }
       )
       .subscribe({
-        next: () => {
+        next: (rea) => {
           // this.getFollowCounts()
+          console.log(rea.data);
+          
 
         },
         error: (err) => {
-          // console.error('Error deleting post', err)
+          console.error('Error deleting post', err)
 
         },
       });

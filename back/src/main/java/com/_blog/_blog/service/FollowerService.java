@@ -18,6 +18,8 @@ import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.util.NotificationType;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class FollowerService {
 
@@ -30,6 +32,7 @@ public class FollowerService {
     @Autowired
     private NotificationRepo notificationRepo;
 
+    @Transactional
     public UserFollowDto followUser(IdDto followId, AuthEntity currentUser) {
 
         AuthEntity otherUser = authRepo.findById(followId.getId())
@@ -165,6 +168,20 @@ public class FollowerService {
                             isFollowed);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<UserFollowDto> serchService(String input, AuthEntity loginUser) {
+
+        return authRepo.findByUsernameContainingIgnoreCase(input)
+                .stream()
+                .filter(user -> !user.getId().equals(loginUser.getId()))
+                .map(user -> UserFollowDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .imageUrl(user.getImageUrl())
+                .followed(followerRepo.existsByFollowerIdAndFollowingId(loginUser.getId(), user.getId()))
+                .build())
+                .toList();
     }
 
 }

@@ -12,14 +12,17 @@ import com._blog._blog.model.entity.AuthEntity;
 
 @Repository
 public interface AuthRepo extends JpaRepository<AuthEntity, Long> {
-  boolean existsByUsername(String username);
 
-  boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 
-  boolean existsByType(String type);
+    boolean existsByEmail(String email);
 
-  Optional<AuthEntity> findByUsernameOrEmail(String username, String email);
+    boolean existsByType(String type);
 
-  @Query("SELECT u FROM AuthEntity u WHERE u.id <> :currentUserId")
-  List<AuthEntity> findAllExcept(@Param("currentUserId") Long currentUserId);
+    Optional<AuthEntity> findByUsernameOrEmail(String username, String email);
+
+    @Query("SELECT u FROM AuthEntity u WHERE u.id <> :currentUserId")
+    List<AuthEntity> findAllExcept(@Param("currentUserId") Long currentUserId);
+
+    List<AuthEntity> findByUsernameContainingIgnoreCase(String username);
 }

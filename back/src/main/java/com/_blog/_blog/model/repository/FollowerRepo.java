@@ -25,5 +25,7 @@ public interface FollowerRepo extends JpaRepository<FollowerEntity, Long> {
 
     List<FollowerEntity> findAllByFollowingId(Long followingId);
 
+ 
+
     // void deleteByFollowerIdAndFollowingId(Long followerId, Long followingId);
 }

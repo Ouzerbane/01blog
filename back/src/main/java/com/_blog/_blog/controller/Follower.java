@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.dto.ApiResponse;
@@ -30,7 +31,6 @@ public class Follower {
 
     @Autowired
     private FollowerService followerService;
-
 
     @Autowired
     private NotificationRepo notificationRepo;
@@ -64,7 +64,7 @@ public class Follower {
         Long following = followerService.getCountFollowing(currentUser.getId());
         Long notification = notificationRepo.countByUserIdAndReadFalse(currentUser.getId());
 
-        FollowCountDto counts = new FollowCountDto(followers, following,notification);
+        FollowCountDto counts = new FollowCountDto(followers, following, notification);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, counts));
     }
@@ -82,14 +82,21 @@ public class Follower {
     public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers(@PathVariable Long userId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<UserFollowDto> followers = followerService.getFollowersService(userId,currentUser);
+        List<UserFollowDto> followers = followerService.getFollowersService(userId, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, followers));
     }
 
     @GetMapping("/get-Following/{userId}")
     public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing(@PathVariable Long userId) {
-         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<UserFollowDto> following = followerService.getFollowingService(userId,currentUser);
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserFollowDto> following = followerService.getFollowingService(userId, currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, following));
+    }
+
+    @GetMapping("/serch")
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> serch(@RequestParam String input) {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserFollowDto> following = followerService.serchService(input, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, following));
     }
 

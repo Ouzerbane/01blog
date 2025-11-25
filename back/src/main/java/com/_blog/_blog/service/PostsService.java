@@ -120,7 +120,7 @@ public class PostsService {
             return Page.empty(pageable);
         }
 
-        return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "hide", pageable)
+        return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "Hide", pageable)
                 .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
                 likesRepo.countByPostId(post.getId()),
                 likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),

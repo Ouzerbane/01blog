@@ -12,8 +12,8 @@
           <span class="dots" (click)="post.showMenu = !post.showMenu">⋮</span>
 
           <div class="menu-dropdown" *ngIf="post.showMenu">
-            <p (click)="startEditing(post)">✏️ Edit</p>
-            <p (click)="deletePost(post)">🗑️ Delete</p>
+            <p (click)="startEditing(post)">Edit</p>
+            <p (click)="deletePost(post)">Delete</p>
           </div>
         </div>
 
@@ -25,11 +25,10 @@
           <div class="post-actions">
             <button class="action-btn" (click)="likePost(post)">
               <span class="icon" [class.like]="post.like">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     width="30" height="30" fill="none" stroke="currentColor"
-                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="none"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                   <path
-                    d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3 1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z"/>
+                    d="M20.8 7.3c0 5.1-8.8 11-8.8 11S3.2 12.4 3.2 7.3A4.6 4.6 0 0 1 7.8 2.7c1.8 0 3.1 1.1 4.2 2.3 1.1-1.2 2.4-2.3 4.2-2.3a4.6 4.6 0 0 1 4.6 4.6z" />
                 </svg>
               </span>
               <span class="count">{{ post.countLike}}</span>
@@ -73,8 +72,8 @@
             </div>
 
             <div class="edit-actions">
-              <button class="save-btn" (click)="savePost(post)">💾 Save</button>
-              <button class="cancel-btn" (click)="cancelEditing(post)">❌ Cancel</button>
+              <button class="save-btn" (click)="savePost(post)">Save</button>
+              <button class="cancel-btn" (click)="cancelEditing(post)">Cancel</button>
             </div>
           </div>
         </ng-template>
@@ -89,6 +88,11 @@
 
     <section class="recent-activity">
       <h2>Suggested for you</h2>
+      <div class="search-box">
+        <input type="search" id="search-input" name="input" placeholder="Search..." [(ngModel)]="input">
+        <button type="submit" (click)="serch()">Search</button>
+      </div>
+
       <div class="suggested-list">
         <div *ngFor="let user of suggested" class="suggested-user">
           <div class="user-info" (click)="getProfile(user.id)">
