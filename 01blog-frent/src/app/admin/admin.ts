@@ -53,6 +53,11 @@ export class Admin implements OnInit {
   }
 
 
+  showpopap(post: any) {
+    post.showConfirm = !post.showConfirm;
+  }
+  
+
 
   getUsers() {
     const api = `http://localhost:8080/admin/users`;
@@ -146,6 +151,13 @@ export class Admin implements OnInit {
     this.http.put(url, body, options).subscribe({
       next: (data) => {
         console.log('✅ User banned successfully', data);
+        this.users = this.users.map((usr) => {
+          if (usr.id == userId) {
+            usr.action = usr.action == "BAN" ? "ACTIVE" : "BAN"
+            usr.ban = usr.ban == "Debane" ? "Ban" : "Debane"
+          }
+          return usr
+        })
       },
       error: (err) => {
         console.error('Error banning user', err);

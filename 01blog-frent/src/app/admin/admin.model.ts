@@ -4,6 +4,8 @@ export interface UserAdminDto {
   imageUrl: string;
   action: string;
   ban: String;
+  showConfirm: boolean;
+
 }
 
 
@@ -22,6 +24,8 @@ export interface PostsAdminDto {
   createdAt: string;
   status: string;
   author: UserDto;
+  showConfirm: boolean;
+
 }
 
 export interface UserDto {

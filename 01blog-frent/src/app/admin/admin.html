@@ -23,9 +23,20 @@
             <td><span class="status active">{{user.action}}</span></td>
             <td>
               <button class="btn ban" (click)="BanUser(user.id)">{{user.ban}}</button>
-              <button class="btn delete" (click)="DeletUser(user.id)">Delete</button>
+              <button class="btn delete" (click)="showpopap(user)">Delete</button>
             </td>
           </tr>
+
+          <div class="modal-overlay" *ngIf="user.showConfirm">
+            <div class="confirm-modal">
+              <h3>Confirmation</h3>
+              <p>are you sure you want to remove {{user.username}} </p>
+              <div class="modal-actions">
+                <button class="btn cancel" (click)="showpopap(user)">Cancel</button>
+                <button class="btn confirm" (click)="DeletUser(user.id)">Confirm</button>
+              </div>
+            </div>
+          </div>
         </tbody>
       </table>
     </section>
@@ -53,9 +64,20 @@
             <button class="btn hide" (click)="changeStatus(post.id)">
               {{ post.status }}
             </button>
-            <button class="btn delete" (click)="deletePost(post)">
+            <button class="btn delete" (click)="showpopap(post)">
               Delete
             </button>
+
+            <div class="modal-overlay" *ngIf="post.showConfirm">
+              <div class="confirm-modal">
+                <h3>Confirmation</h3>
+                <p>are you sure you want to remove this post </p>
+                <div class="modal-actions">
+                  <button class="btn cancel" (click)="showpopap(post)">Cancel</button>
+                  <button class="btn confirm" (click)="deletePost(post)">Confirm</button>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>

@@ -18,7 +18,7 @@
           <p>profile</p>
         </div>
 
-        <div class="profile-dropdown" *ngIf="showProfileMenu">
+        <div class="profile-dropdown" *ngIf="showProfileMenu" (click)="toggleProfileMenu()">
           <a [routerLink]="['/profile', service.id]">My Profile</a>
           <a (click)="logout()">Logout</a>
         </div>
