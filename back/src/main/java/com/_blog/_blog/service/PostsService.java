@@ -101,13 +101,13 @@ public class PostsService {
     public Page<PostsResponseDto> getPosts(int page, int size, AuthEntity currentUser) {
         Pageable pageable = PageRequest.of(page, size);
 
-        if (currentUser.getType().equalsIgnoreCase("admin")) {
-            return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
-                    .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
-                    likesRepo.countByPostId(post.getId()),
-                    likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                    commentsRepo.countByPostId(post.getId())));
-        }
+        // if (currentUser.getType().equalsIgnoreCase("admin")) {
+        //     return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
+        //             .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
+        //             likesRepo.countByPostId(post.getId()),
+        //             likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+        //             commentsRepo.countByPostId(post.getId())));
+        // }
 
         List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
                 .stream()

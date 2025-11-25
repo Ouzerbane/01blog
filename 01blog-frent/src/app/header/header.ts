@@ -17,7 +17,7 @@ export class Header implements OnInit {
   userId: number = 0;
   username: string = '';
 
-  userType : boolean = false;
+  userType: boolean = false;
 
   showNotifacation = false;
   notificationCount: number = 0;
@@ -67,7 +67,7 @@ export class Header implements OnInit {
     if (this.showNotifacation) {
       this.openNotification();
     }
-    this.CountNotification()
+
   }
 
   openNotification() {
@@ -77,12 +77,16 @@ export class Header implements OnInit {
         this.notifications = res.data; // assign to your local notifications array
         // this.getSuggested();
         // console.log('Notifications loaded:', this.notifications);
+        this.CountNotification()
       },
       error: (err) => {
         console.error('Error fetching notifications', err);
       }
     });
   }
+
+
+
 
   CountNotification() {
     const url = `http://localhost:8080/count-notifications`; // adjust endpoint if needed
@@ -99,7 +103,7 @@ export class Header implements OnInit {
 
 
 
-    GetuserType() {
+  GetuserType() {
     const url = `http://localhost:8080/admin/user-type`; // adjust endpoint if needed
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {

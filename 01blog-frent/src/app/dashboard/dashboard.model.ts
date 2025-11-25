@@ -22,6 +22,7 @@ export interface Post {
   editContent?: string;
   newComment?: string;
   showMenu : boolean ;
+  showConfirm:boolean;
 
   previewImage: null;
   newImage: null

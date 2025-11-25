@@ -13,7 +13,7 @@
 
           <div class="menu-dropdown" *ngIf="post.showMenu">
             <p (click)="startEditing(post)">Edit</p>
-            <p (click)="deletePost(post)">Delete</p>
+            <p (click)="showpopap(post)">Delete</p>
           </div>
         </div>
 
@@ -39,6 +39,19 @@
               <span class="count">{{ post.countCommets}}</span>
             </button>
           </div>
+
+
+          <div class="modal-overlay" *ngIf="post.showConfirm">
+            <div class="confirm-modal">
+              <h3>Confirmation</h3>
+              <p>are you sure you want to remove this post </p>
+              <div class="modal-actions">
+                <button class="btn cancel" (click)="showpopap(post)">Cancel</button>
+                <button class="btn confirm" (click)="deletePost(post)">Confirm</button>
+              </div>
+            </div>
+          </div>
+
 
           <div *ngIf="post.showComment" class="comment-section">
             <div *ngFor="let comment of post.comment" class="comment-card">

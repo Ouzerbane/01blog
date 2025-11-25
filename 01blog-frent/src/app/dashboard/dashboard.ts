@@ -26,7 +26,7 @@ export class Dashboard implements OnInit {
   areIsFirstTime: boolean = false;
   suggested: Suggested[] = [];
 
-  input :String = '';
+  input: String = '';
 
 
   notifications: NotificationModul[] = [];
@@ -179,6 +179,10 @@ export class Dashboard implements OnInit {
 
 
 
+  showpopap(post: any){
+    post.showConfirm = !post.showConfirm;
+  }
+
 
   @HostListener('document:click', ['$event'])
   closeMenus(event: Event) {
@@ -203,7 +207,7 @@ export class Dashboard implements OnInit {
         next: (rea) => {
           // this.getFollowCounts()
           console.log(rea.data);
-          
+
 
         },
         error: (err) => {
