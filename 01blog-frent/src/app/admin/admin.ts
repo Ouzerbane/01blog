@@ -4,6 +4,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Action } from 'rxjs/internal/scheduler/Action';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -22,6 +23,8 @@ export class Admin implements OnInit {
 
   constructor(
     private http: HttpClient,
+    // private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -47,7 +50,7 @@ export class Admin implements OnInit {
           }));
         },
         error: (err) => {
-          console.error('Error fetching suggested users', err);
+         this.handleError(err)
         },
       });
   }
@@ -75,7 +78,7 @@ export class Admin implements OnInit {
           }));
         },
         error: (err) => {
-          console.error('Error fetching suggested users', err);
+         this.handleError(err) ;
         },
       });
   }
@@ -94,7 +97,7 @@ export class Admin implements OnInit {
 
         },
         error: (err) => {
-          console.error('Error fetching suggested users', err);
+          this.handleError(err);
         },
       });
   }
@@ -112,7 +115,7 @@ export class Admin implements OnInit {
         this.reports = this.reports.filter((repot) => repot.id != userId)
       },
       error: (err) => {
-        console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
@@ -133,7 +136,7 @@ export class Admin implements OnInit {
         this.users = this.users.filter((usr) => usr.id != userId)
       },
       error: (err) => {
-        console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
@@ -160,7 +163,7 @@ export class Admin implements OnInit {
         })
       },
       error: (err) => {
-        console.error('Error banning user', err);
+        this.handleError(err);
       },
     });
   }
@@ -185,7 +188,7 @@ export class Admin implements OnInit {
         })
       },
       error: (err) => {
-        console.error('Error banning user', err);
+        this.handleError(err);
       },
     });
   }
@@ -205,10 +208,27 @@ export class Admin implements OnInit {
         console.log('✅ Post deleted successfully');
       },
       error: (err) => {
-        // console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
+  }
+
+
+    handleError(err: any) {
+    if (err.error && err.error.errors && err.error.errors.length > 0) {
+      const firstError = err.error.errors[0];
+
+      if (firstError.field === 'token') {
+        alert('Session expired. Please login again.');
+        this.router.navigate(['/login']);
+      } else {
+        alert(firstError.message || 'Something went wrong');
+      }
+    } else {
+      console.error('Unknown error', err);
+      alert('An unexpected error occurred');
+    }
   }
 
 }

@@ -47,6 +47,15 @@
         <small>{{ post.createdAt | date:'short' }}</small>
       </p>
 
+      <div class="post-menu" *ngIf="post.canEditAndDelet">
+        <span class="dots" (click)="post.showMenu = !post.showMenu">⋮</span>
+        <div class="menu-dropdown" *ngIf="post.showMenu">
+          <p (click)="startEditing(post)">Edit</p>
+          <p (click)="showpopap(post)">Delete</p>
+        </div>
+      </div>
+
+
       <!-- Normal view -->
       <div *ngIf="!post.isEditing; else editMode">
         <h4>{{ post.title }}</h4>
@@ -70,10 +79,6 @@
           <button class="action-btn" (click)="toggleComments(post)">
             💬 {{ post.countCommets || 0 }}
           </button>
-
-          <!-- Edit/Delete -->
-          <button *ngIf="post.canEditAndDelet" class="action-btn" (click)="startEditing(post)">✏️</button>
-          <button *ngIf="post.canEditAndDelet" class="action-btn delete" (click)="deletePost(post)">🗑️</button>
         </div>
 
         <!-- Comments Section -->
@@ -87,6 +92,17 @@
           <div class="add-comment">
             <input type="text" [(ngModel)]="post.newComment" placeholder="Write a comment..." />
             <button (click)="addComment(post)">💬 Post</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-overlay" *ngIf="post.showConfirm">
+        <div class="confirm-modal">
+          <h3>Confirmation</h3>
+          <p>are you sure you want to remove this post </p>
+          <div class="modal-actions">
+            <button class="btn cancel" (click)="showpopap(post)">Cancel</button>
+            <button class="btn confirm" (click)="deletePost(post)">Confirm</button>
           </div>
         </div>
       </div>

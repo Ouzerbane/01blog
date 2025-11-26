@@ -35,6 +35,7 @@ public class SecurityConfig {
                 // 4. طلب get-posts يتطلب التوثيق الآن (لتلقي الكوكي)
                 .anyRequest().authenticated()
             )
+            .logout(logout -> logout.disable())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

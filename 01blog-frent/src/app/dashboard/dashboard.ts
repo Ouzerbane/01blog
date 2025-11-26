@@ -74,8 +74,7 @@ export class Dashboard implements OnInit {
         }));
       },
       error: (err) => {
-        // console.error('Error deleting post', err)
-
+        this.handleError(err)
       },
     });
 
@@ -109,7 +108,7 @@ export class Dashboard implements OnInit {
         console.log('Comments for post', res.data);
       },
       error: (err) => {
-        console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
@@ -123,8 +122,7 @@ export class Dashboard implements OnInit {
         console.log('Comments for post', post.id, post.comment);
       },
       error: (err) => {
-        console.error('Error deleting post', err)
-
+        this.handleError(err)
       },
     });
   }
@@ -146,7 +144,7 @@ export class Dashboard implements OnInit {
           post.newComment = '';
         },
         error: (err) => {
-          // console.error('Error deleting post', err)
+          this.handleError(err)
 
         },
       });
@@ -172,14 +170,14 @@ export class Dashboard implements OnInit {
 
         },
         error: (err) => {
-          console.error('Error fetching suggested users', err);
+          this.handleError(err)
         },
       });
   }
 
 
 
-  showpopap(post: any){
+  showpopap(post: any) {
     post.showConfirm = !post.showConfirm;
   }
 
@@ -211,7 +209,7 @@ export class Dashboard implements OnInit {
 
         },
         error: (err) => {
-          console.error('Error deleting post', err)
+          this.handleError(err)
 
         },
       });
@@ -269,7 +267,7 @@ export class Dashboard implements OnInit {
 
         post.isEditing = false;
       },
-      error: (err) => console.error("Error updating post", err)
+      error: (err) => this.handleError(err)
     });
   }
 
@@ -287,7 +285,7 @@ export class Dashboard implements OnInit {
         console.log('✅ Post deleted successfully');
       },
       error: (err) => {
-        // console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
@@ -306,10 +304,26 @@ export class Dashboard implements OnInit {
         console.log(`👍 Like updated: ${post.liked}, total: ${post.likesCount}`);
       },
       error: (err) => {
-        // console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
+  }
+
+  handleError(err: any) {
+    if (err.error && err.error.errors && err.error.errors.length > 0) {
+      const firstError = err.error.errors[0];
+
+      if (firstError.field === 'token') {
+        alert('Session expired. Please login again.');
+        this.router.navigate(['/login']);
+      } else {
+        alert(firstError.message || 'Something went wrong');
+      }
+    } else {
+      console.error('Unknown error', err);
+      alert('An unexpected error occurred');
+    }
   }
 
 }

@@ -81,10 +81,14 @@ export class Profile implements OnInit {
         console.log(this.user?.imageUrl);
 
       },
-      error: () => alert("Error updating profile image"),
+      error: (err) => this.handleError(err),
     });
   }
 
+
+  showpopap(post: any) {
+    post.showConfirm = !post.showConfirm;
+  }
 
   onImageSelected(event: any, post: any) {
     const file = event.target.files[0];
@@ -115,7 +119,7 @@ export class Profile implements OnInit {
           imageUrl: data.imagUrl ? `http://localhost:8080/post${data.imagUrl}` : null,
         };
       },
-      error: (err) => console.error('Error fetching user', err),
+      error: (err) => this.handleError(err),
     });
   }
 
@@ -134,7 +138,7 @@ export class Profile implements OnInit {
           this.showReportTemplite = false;
         },
         error: (err) => {
-          console.error('Error sending report', err);
+         this.handleError(err)
         }
       });
   }
@@ -151,7 +155,7 @@ export class Profile implements OnInit {
         }));
       },
       error: (err) => {
-        console.error('Error deleting post', err)
+        this.handleError(err)
 
       },
     });
@@ -165,7 +169,7 @@ export class Profile implements OnInit {
       .post<FollowuserResponse>(followUrl, { id: user.id }, { withCredentials: true })
       .subscribe({
         next: (resp) => { console.log(resp); this.getUser(this.userId) },
-        error: (err) => console.error('Error toggling follow', err),
+        error: (err) => this.handleError(err),
       });
   }
 
@@ -185,7 +189,7 @@ export class Profile implements OnInit {
         this.showFollowers = true;
         this.showFollowing = false;
       },
-      error: (err) => console.error('Error fetching followers', err)
+      error: (err) => this.handleError(err)
     });
   }
 
@@ -201,7 +205,7 @@ export class Profile implements OnInit {
         this.showFollowing = true;
         this.showFollowers = false;
       },
-      error: (err) => console.error('Error fetching following', err)
+      error: (err) => this.handleError(err)
     });
   }
 
@@ -220,7 +224,7 @@ export class Profile implements OnInit {
     const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => (post.comment = res.data),
-      error: (err) => console.error('Error fetching comments', err),
+      error: (err) => this.handleError(err),
     });
   }
 
@@ -236,7 +240,7 @@ export class Profile implements OnInit {
           post.countCommets++;
           post.newComment = '';
         },
-        error: (err) => console.error('Error adding comment', err),
+        error: (err) => this.handleError(err),
       });
   }
 
@@ -250,7 +254,7 @@ export class Profile implements OnInit {
         post.countLike = res.data.count;
         post.like = res.data.like;
       },
-      error: (err) => console.error('Error liking post', err),
+      error: (err) => this.handleError(err),
     });
   }
 
@@ -288,7 +292,7 @@ export class Profile implements OnInit {
 
         post.isEditing = false;
       },
-      error: (err) => console.error("Error updating post", err)
+      error: (err) => this.handleError(err)
     });
   }
 
@@ -302,7 +306,24 @@ export class Profile implements OnInit {
       next: () => {
         this.posts = this.posts.filter((p) => p.id !== post.id);
       },
-      error: (err) => console.error('Error deleting post', err),
+      error: (err) => this.handleError(err)
     });
+  }
+
+
+     handleError(err: any) {
+    if (err.error && err.error.errors && err.error.errors.length > 0) {
+      const firstError = err.error.errors[0];
+
+      if (firstError.field === 'token') {
+        alert('Session expired. Please login again.');
+        this.router.navigate(['/login']);
+      } else {
+        alert(firstError.message || 'Something went wrong');
+      }
+    } else {
+      console.error('Unknown error', err);
+      alert('An unexpected error occurred');
+    }
   }
 }

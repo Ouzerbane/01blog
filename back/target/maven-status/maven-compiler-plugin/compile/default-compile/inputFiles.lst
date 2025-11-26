@@ -33,6 +33,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/AuthEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/CommentsEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/FollowerEntity.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/JwtEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/LikesEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/NotificationEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/PostsEntity.java
@@ -40,6 +41,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/AuthRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/CommentsRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/FollowerRepo.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/JawtRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/LikesRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/NotificationRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/PostsRepo.java

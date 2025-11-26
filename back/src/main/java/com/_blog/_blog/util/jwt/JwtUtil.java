@@ -1,6 +1,7 @@
 package com._blog._blog.util.jwt;
 
 import java.security.Key;
+import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
@@ -20,11 +21,11 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("userId", userId)
+                .setIssuedAt(new Date(userId))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(key)
                 .compact();
     }
-
- 
 
     public static String extractTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -63,15 +64,13 @@ public class JwtUtil {
         return Long.valueOf(userId.toString());
     }
 
-
     public boolean isTokenValid(String token) {
-    try {
-        extractClaims(token);
-        return true;
-    } catch (Exception e) {
-        return false;
+        try {
+            extractClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
-}
-
 
 }

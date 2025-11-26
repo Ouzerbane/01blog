@@ -16,10 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "likes", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "post_id" })) // باش مايديرش نفس
-                                                                                                      // المستخدم لايك
-                                                                                                      // مرتين لنفس
-                                                                                                      // البوست
+@Table(name = "likes", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "post_id" }))
 @Getter
 @Setter
 @NoArgsConstructor

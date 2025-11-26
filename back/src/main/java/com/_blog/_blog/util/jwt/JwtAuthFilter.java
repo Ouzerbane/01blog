@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +15,8 @@ import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.ErrorItem;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
+import com._blog._blog.model.repository.JawtRepo;
+
 import static com._blog._blog.util.jwt.JwtUtil.extractTokenFromCookie;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,6 +30,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final AuthRepo authRepo;
+
+    @Autowired
+    private JawtRepo jwtRepo;
 
     public JwtAuthFilter(JwtUtil jwtUtil, AuthRepo authRepo) {
         this.jwtUtil = jwtUtil;
@@ -45,8 +51,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        
 
-        if (token == null || !jwtUtil.isTokenValid(token)) {
+        if (token == null || !jwtUtil.isTokenValid(token) || jwtRepo.existsByJwt(token)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             ApiResponse<Object> errorResponse;
@@ -84,6 +91,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     new ArrayList<>());
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            request.setAttribute("jwt", token);
+
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
 

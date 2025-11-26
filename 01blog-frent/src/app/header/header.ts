@@ -58,8 +58,19 @@ export class Header implements OnInit {
   }
 
   logout() {
-    // your logout logic
+    const url = 'http://localhost:8080/logout';
+
+    this.http.post(url, {}, { withCredentials: true }).subscribe({
+      next: (req) => {
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.log(err);
+
+      }
+    })
   }
+
 
 
   toggleNotification() {
@@ -71,12 +82,10 @@ export class Header implements OnInit {
   }
 
   openNotification() {
-    const url = `http://localhost:8080/notifications`; // adjust endpoint if needed
+    const url = `http://localhost:8080/notifications`; 
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
-        this.notifications = res.data; // assign to your local notifications array
-        // this.getSuggested();
-        // console.log('Notifications loaded:', this.notifications);
+        this.notifications = res.data; 
         this.CountNotification()
       },
       error: (err) => {
@@ -89,11 +98,10 @@ export class Header implements OnInit {
 
 
   CountNotification() {
-    const url = `http://localhost:8080/count-notifications`; // adjust endpoint if needed
+    const url = `http://localhost:8080/count-notifications`; 
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
-        this.notificationCount = res.data; // assign to your local notifications array
-        // console.log('NNNNNNNNNNNNN', res.data, this.notificationCount);
+        this.notificationCount = res.data; 
       },
       error: (err) => {
         console.error('Error fetching notifications', err);
@@ -104,7 +112,7 @@ export class Header implements OnInit {
 
 
   GetuserType() {
-    const url = `http://localhost:8080/admin/user-type`; // adjust endpoint if needed
+    const url = `http://localhost:8080/admin/user-type`; 
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
         this.userType = res.data;
@@ -119,4 +127,5 @@ export class Header implements OnInit {
   getCurrentUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/me`, { withCredentials: true });
   }
+  
 }
