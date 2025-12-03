@@ -38,14 +38,14 @@ public class Adminpermetion {
     @Autowired
     AdminService AdminService;
 
-    @Autowired
-    private AuthRepo authRepo;
+    // @Autowired
+    // private AuthRepo authRepo;
 
-    @Autowired
-    private ReportRepo reportRepoy;
+    // @Autowired
+    // private ReportRepo reportRepoy;
 
-    @Autowired
-    private PostsRepo postRepo;
+    // @Autowired
+    // private PostsRepo postRepo;
 
     @DeleteMapping("/remove-user")
     public ResponseEntity<?> removeUser(@Valid @RequestBody IdDto id) {
