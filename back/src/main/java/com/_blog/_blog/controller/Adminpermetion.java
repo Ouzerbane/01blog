@@ -21,9 +21,6 @@ import com._blog._blog.dto.PostAdminDto;
 import com._blog._blog.dto.ReportDataDto;
 import com._blog._blog.dto.UserAdminDto;
 import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.model.repository.AuthRepo;
-import com._blog._blog.model.repository.PostsRepo;
-import com._blog._blog.model.repository.ReportRepo;
 import com._blog._blog.service.AdminService;
 
 import jakarta.validation.Valid;
@@ -38,14 +35,6 @@ public class Adminpermetion {
     @Autowired
     AdminService AdminService;
 
-    // @Autowired
-    // private AuthRepo authRepo;
-
-    // @Autowired
-    // private ReportRepo reportRepoy;
-
-    // @Autowired
-    // private PostsRepo postRepo;
 
     @DeleteMapping("/remove-user")
     public ResponseEntity<?> removeUser(@Valid @RequestBody IdDto id) {
