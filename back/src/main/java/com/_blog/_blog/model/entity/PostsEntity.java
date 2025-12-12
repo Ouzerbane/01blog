@@ -55,14 +55,14 @@ public class PostsEntity {
     @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity author;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private List<LikesEntity> likes = new ArrayList<>();
+    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonBackReference
+    // private List<LikesEntity> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
-    private List<CommentsEntity> comments = new ArrayList<>();
+    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonBackReference
+    // @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    // private List<CommentsEntity> comments = new ArrayList<>();
 
     // bach kol ma ttsjjel post, ttsjjel b date jdida
     @PrePersist
