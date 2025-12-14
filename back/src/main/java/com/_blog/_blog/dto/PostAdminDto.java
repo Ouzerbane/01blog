@@ -20,9 +20,8 @@ public class PostAdminDto {
     private LocalDateTime createdAt;
     private AuthorDto author;
     private String status ;
-    // private Long countLike;
-    // private Long countCommets;
-    // private boolean like ;
+  
+    
     @Data
     @Builder
     @NoArgsConstructor

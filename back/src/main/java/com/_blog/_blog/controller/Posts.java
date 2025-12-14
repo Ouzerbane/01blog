@@ -62,18 +62,11 @@ public class Posts {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-
+               
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        System.out.print("=========>" + currentUser.getType());
-        PostsDto dto = new PostsDto();
-        dto.setTitle(title);
-        dto.setContent(content);
 
-        String imageUrl = emptyService.uploadImage(image);
-        dto.setImageUrl(imageUrl);
-
-        PostsEntity savedPost = emptyService.savePost(dto, currentUser);
+        PostsEntity savedPost = emptyService.savePost(title,content , image, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));
     }
@@ -123,7 +116,6 @@ public class Posts {
 
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
- 
         Page<PostsResponseDto> posts = emptyService.getPosts(page, size, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts.getContent()));
     }

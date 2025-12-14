@@ -39,7 +39,8 @@ public class Auth {
 
     @PostMapping("/regester")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
-        AuthEntity savedUser = emptyService.registerservece(req.toAuthEntity());
+
+        emptyService.registerservece(req);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, List.of()));
     }

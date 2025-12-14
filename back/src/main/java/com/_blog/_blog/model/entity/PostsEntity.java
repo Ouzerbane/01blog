@@ -1,13 +1,9 @@
 package com._blog._blog.model.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com._blog._blog.dto.PostsResponseDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -46,25 +41,12 @@ public class PostsEntity {
 
     private LocalDateTime createdAt;
 
-    // relation m3a l user li ktb l post
     @ManyToOne
-
-    ///
     @JoinColumn(name = "author_id")
     @JsonBackReference
     @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private AuthEntity author;
 
-    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonBackReference
-    // private List<LikesEntity> likes = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonBackReference
-    // @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
-    // private List<CommentsEntity> comments = new ArrayList<>();
-
-    // bach kol ma ttsjjel post, ttsjjel b date jdida
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -91,3 +73,19 @@ public class PostsEntity {
                 .build();
     }
 }
+
+
+
+
+
+
+    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonBackReference
+    // private List<LikesEntity> likes = new ArrayList<>();
+
+    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonBackReference
+    // @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    // private List<CommentsEntity> comments = new ArrayList<>();
+
+    // bach kol ma ttsjjel post, ttsjjel b date jdida

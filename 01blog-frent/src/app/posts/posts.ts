@@ -28,7 +28,7 @@ export class Posts {
   }
 
   onsubmet() {
-    if (!this.title || !this.content) {
+    if ((!this.title || !this.content) || (this.title.trim().length == 0 || this.content.trim().length==0)) {
       this.err = 'Please fill all required fields.';
       return;
     }

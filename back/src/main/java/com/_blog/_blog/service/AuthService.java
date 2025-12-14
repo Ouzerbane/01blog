@@ -5,10 +5,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com._blog._blog.dto.RegisterRequest;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
 import com._blog._blog.util.jwt.JwtUtil;
+
+import jakarta.validation.Valid;
 
 @Service
 public class AuthService {
@@ -39,18 +42,21 @@ public class AuthService {
         return jwtUtil.generateToken(user.getId(), user.getUsername());
     }
 
-    public AuthEntity registerservece(AuthEntity req) {
-        ///for register
-        if (empRepo.existsByUsername(req.getUsername())) {
+    public AuthEntity registerservece(RegisterRequest req) {
+       
+        req.normalizeAndValidate();
+
+        AuthEntity autentity = req.toAuthEntity(); 
+        if (empRepo.existsByUsername(autentity.getUsername())) {
             throw new CustomException("username", "Username already exists");
         }
 
-        if (empRepo.existsByEmail(req.getEmail())) {
+        if (empRepo.existsByEmail(autentity.getEmail())) {
             throw new CustomException("email", "Email already exists");
         }
 
-        req.setPassword(passwordEncoder.encode(req.getPassword()));
-        return empRepo.save(req);
+        autentity.setPassword(passwordEncoder.encode(autentity.getPassword()));
+        return empRepo.save(autentity);
     }
 
 }

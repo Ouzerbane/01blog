@@ -39,12 +39,16 @@ public class PostsService {
 
     @Autowired
     private FollowerRepo followerRepo;
+
     @Autowired
     private PostsRepo postsRepo;
+
     @Autowired
     private LikesRepo likesRepo;
+
     @Autowired
     private CommentsRepo commentsRepo;
+
 
     @Autowired
     private NotificationRepo notificationRepo;
@@ -52,7 +56,19 @@ public class PostsService {
     // this.authRepo = authRepo;
     // }
 
-    public PostsEntity savePost(PostsDto postsDto, AuthEntity currentUser) {
+    public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser) throws IOException, java.io.IOException {
+
+        PostsDto postsDto = new PostsDto();
+
+        postsDto.setTitle(title);
+
+        postsDto.setContent(content);
+
+        String imageUrl = uploadImage(image);
+
+        postsDto.setImageUrl(imageUrl);
+
+        postsDto.cheData();
 
         PostsEntity post = postsDto.toEntity();
         post.setAuthor(currentUser);
@@ -102,11 +118,11 @@ public class PostsService {
         Pageable pageable = PageRequest.of(page, size);
 
         // if (currentUser.getType().equalsIgnoreCase("admin")) {
-        //     return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
-        //             .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
-        //             likesRepo.countByPostId(post.getId()),
-        //             likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-        //             commentsRepo.countByPostId(post.getId())));
+        // return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
+        // .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
+        // likesRepo.countByPostId(post.getId()),
+        // likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+        // commentsRepo.countByPostId(post.getId())));
         // }
 
         List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
@@ -122,9 +138,9 @@ public class PostsService {
 
         return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "Hide", pageable)
                 .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
-                likesRepo.countByPostId(post.getId()),
-                likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                commentsRepo.countByPostId(post.getId())));
+                        likesRepo.countByPostId(post.getId()),
+                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                        commentsRepo.countByPostId(post.getId())));
         // ::
     }
 
