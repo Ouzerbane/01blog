@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.util.NotificationType;
 
 import io.jsonwebtoken.io.IOException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostsService {
@@ -49,14 +51,21 @@ public class PostsService {
     @Autowired
     private CommentsRepo commentsRepo;
 
-
     @Autowired
     private NotificationRepo notificationRepo;
+
     // PostsService(AuthRepo authRepo) {
     // this.authRepo = authRepo;
     // }
+    @Transactional
+    public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser)
+            throws IOException, java.io.IOException {
 
-    public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser) throws IOException, java.io.IOException {
+        title = title != null ? title.trim() : "";
+        content = content != null ? content.trim() : "";
+        if (title.length() < 3 || content.length() < 3) {
+            throw new CustomException("title/content", "Title and content must be at least 3 characters");
+        }
 
         PostsDto postsDto = new PostsDto();
 
@@ -66,24 +75,34 @@ public class PostsService {
 
         String imageUrl = uploadImage(image);
 
-        postsDto.setImageUrl(imageUrl);
+        PostsEntity post = PostsEntity.builder()
+                .title(title)
+                .content(content)
+                .imageUrl(imageUrl)
+                .status("show")
+                .createdAt(LocalDateTime.now())
+                .author(currentUser)
+                .build();
 
-        postsDto.cheData();
-
-        PostsEntity post = postsDto.toEntity();
-        post.setAuthor(currentUser);
         post = postsRepo.save(post);
+        PostsEntity postlambda = post;
+
+        /// Create notifications in batch
         List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUser.getId());
-        for (FollowerEntity f : followers) {
-            NotificationEntity notification = NotificationEntity.builder()
-                    .message(currentUser.getUsername() + " created a post " + post.getTitle())
-                    .user(f.getFollower())
-                    .read(false)
-                    .postId(post.getId())
-                    .type(NotificationType.POST_CREATED)
-                    .build();
-            notificationRepo.save(notification);
+        List<NotificationEntity> notifications = followers.stream()
+                .map(f -> NotificationEntity.builder()
+                        .message(currentUser.getUsername() + " created a post " + postlambda.getTitle())
+                        .user(f.getFollower())
+                        .read(false)
+                        .postId(postlambda.getId())
+                        .type(NotificationType.POST_CREATED)
+                        .build())
+                .collect(Collectors.toList());
+
+        if (!notifications.isEmpty()) {
+            notificationRepo.saveAll(notifications);
         }
+
         return post;
     }
 

@@ -18,6 +18,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/LoginRequest.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/NotificationDto.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostAdminDto.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostRequest.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsDto.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/PostsResponseDto.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/RegisterRequest.java

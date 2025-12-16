@@ -33,6 +33,11 @@ export class Posts {
       return;
     }
 
+    const postData = {
+      title : this.title,
+      content :this.content
+    }
+
     const formData = new FormData();
     formData.append('title', this.title);
     formData.append('content', this.content);
