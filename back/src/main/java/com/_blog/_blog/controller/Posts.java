@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,10 @@ import com._blog._blog.service.CommentsService;
 import com._blog._blog.service.LikesService;
 import com._blog._blog.service.PostsService;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Validated
 @RestController
 @RequestMapping("/post")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -54,20 +59,17 @@ public class Posts {
     @Autowired
     private LikesService likesService;
 
-    @Autowired
-    private AuthRepo authRepo;
-
     // ADD POST
     @PostMapping(value = "/add-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> addPost(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
+            @RequestParam("title") @NotBlank(message = "title is required") String title,
+            @RequestParam("content") @NotBlank(message = "content is required") String content,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-               
+
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-        PostsEntity savedPost = emptyService.savePost(title,content , image, currentUser);
+        PostsEntity savedPost = emptyService.savePost(title, content, image, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));
     }
@@ -90,14 +92,18 @@ public class Posts {
     // EDIT POST
     @PutMapping(value = "/edit-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> editPost(
-            @RequestParam("id") UUID id,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
+            @RequestParam("id") @NotNull(message = "id is required") UUID id,
+            @RequestParam("title") @NotBlank(message = "title is required") String title,
+            @RequestParam("content") @NotBlank(message = "content is required") String content,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PostsDto dto = PostsDto.builder().content(content).id(id).title(title).imageUrl(emptyService.uploadImage(image))
-                .build();
-        PostsEntity edit = emptyService.editPost(dto, currentUser);
+
+        // PostsDto dto =
+        // PostsDto.builder().content(content).id(id).title(title).imageUrl(emptyService.uploadImage(image))
+        // ////???? it7ayd
+        // .build();
+
+        PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 

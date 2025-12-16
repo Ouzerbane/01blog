@@ -14,6 +14,5 @@ import lombok.NoArgsConstructor;
 public class IdDto {
 
     @NotNull(message = "Post ID cannot be null")
-    // @Positive(message = "")@Positive(message = "id must be a positive number")
     private UUID id;
 }

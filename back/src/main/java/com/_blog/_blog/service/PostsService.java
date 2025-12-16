@@ -59,17 +59,8 @@ public class PostsService {
     public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser)
             throws IOException, java.io.IOException {
 
-        title = title != null ? title.trim() : "";
-        content = content != null ? content.trim() : "";
-        if (title.length() < 3 || content.length() < 3) {
-            throw new CustomException("title/content", "Title and content must be at least 3 characters");
-        }
-
-        PostsDto postsDto = new PostsDto();
-
-        postsDto.setTitle(title);
-
-        postsDto.setContent(content);
+        title = title.trim();
+        content = content.trim();
 
         String imageUrl = uploadImage(image);
 
@@ -104,17 +95,23 @@ public class PostsService {
         return post;
     }
 
-    public PostsEntity editPost(PostsDto postsDto, AuthEntity currentUser) {
-        PostsEntity post = postsRepo.findById(postsDto.getId())
+    public PostsEntity editPost(String title, String content, MultipartFile image, UUID id, AuthEntity currentUser)
+            throws IOException, java.io.IOException {
+        PostsEntity post = postsRepo.findById(id)
                 .orElseThrow(() -> new CustomException("post", "Post not found"));
 
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new CustomException("authorization", "You are not the author of this post");
         }
 
-        post.setTitle(postsDto.getTitle());
-        post.setContent(postsDto.getContent());
-        post.setImageUrl(postsDto.getImageUrl());
+        title =title.trim();
+        content = content.trim();
+
+        String imageUrl = uploadImage(image);
+
+        post.setTitle(title);
+        post.setContent(content);
+        post.setImageUrl(imageUrl);
         return postsRepo.save(post);
     }
 
@@ -125,6 +122,7 @@ public class PostsService {
             postsRepo.delete(post);
             return;
         }
+
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new CustomException("authorization", "You are not the author of this post");
         }

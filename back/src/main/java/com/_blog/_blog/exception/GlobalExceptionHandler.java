@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.ErrorItem;
 
+import jakarta.validation.ConstraintViolationException;
+
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,6 +49,21 @@ public class GlobalExceptionHandler {
         ErrorItem errorItem = new ErrorItem(ex.getField(), ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(false, List.of(errorItem), null));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleConstraintViolation(
+            ConstraintViolationException ex) {
+
+        List<ErrorItem> errors = ex.getConstraintViolations()
+                .stream()
+                .map(v -> new ErrorItem(
+                        v.getPropertyPath().toString(),
+                        v.getMessage()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>(false, errors, null));
     }
 
 }

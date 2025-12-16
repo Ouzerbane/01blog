@@ -245,6 +245,11 @@ export class Dashboard implements OnInit {
   }
 
   savePost(post: any) {
+    console.log("=======",post.title,post.content)
+    if ((!post.editTitle || !post.editContent) || (post.editTitle.trim().length == 0 || post.editContent.trim().length == 0)) {
+      alert('Please fill all required fields.');
+      return;
+    }
     const url = `http://localhost:8080/post/edit-post`;
 
     const formData = new FormData();
@@ -267,7 +272,10 @@ export class Dashboard implements OnInit {
 
         post.isEditing = false;
       },
-      error: (err) => this.handleError(err)
+      error: (err) => {
+        console.log(err)
+        this.handleError(err)
+      }
     });
   }
 
