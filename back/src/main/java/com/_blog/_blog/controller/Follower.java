@@ -1,6 +1,7 @@
 package com._blog._blog.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,7 @@ public class Follower {
     }
 
     @GetMapping("/get-Followers/{userId}")
-    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowers(@PathVariable UUID userId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<UserFollowDto> followers = followerService.getFollowersService(userId, currentUser);
@@ -87,7 +88,7 @@ public class Follower {
     }
 
     @GetMapping("/get-Following/{userId}")
-    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<List<UserFollowDto>>> getFollowing(@PathVariable UUID userId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserFollowDto> following = followerService.getFollowingService(userId, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, following));

@@ -3,6 +3,7 @@ package com._blog._blog.util.jwt;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,14 +17,14 @@ import com._blog._blog.dto.ErrorItem;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
 import com._blog._blog.model.repository.JawtRepo;
-
-import static com._blog._blog.util.jwt.JwtUtil.extractTokenFromCookie;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import static com._blog._blog.util.jwt.JwtUtil.extractTokenFromCookie;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -40,64 +41,56 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        String token = extractTokenFromCookie(request);
         String path = request.getRequestURI();
-
-        // boolean checkValidationJwt = jwtUtil.isTokenValid(token) && token != null;
+        // السماح بالوصول لمسارات التسجيل والدخول بدون JWT
         if (path.startsWith("/regester") || path.startsWith("/login")) {
             filterChain.doFilter(request, response);
             return;
         }
-        
+
+        String token = extractTokenFromCookie(request);
 
         if (token == null || !jwtUtil.isTokenValid(token) || jwtRepo.existsByJwt(token)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType("application/json");
-            ApiResponse<Object> errorResponse;
-            errorResponse = new ApiResponse<>(
-                    false,
-                    List.of(new ErrorItem("token", "Invalid or missing token")),
-                    null);
-
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(errorResponse);
-
-            response.getWriter().write(json);
+            sendError(response, "token", "Invalid or missing token", HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
-        Long userId = jwtUtil.getUserIdFromToken(token);
+        UUID userId = jwtUtil.getUserIdFromToken(token);
         AuthEntity user = authRepo.findById(userId).orElse(null);
-        if (!user.getType().equals("ADMIN")) {
-            if (user.getAction().equals("BAN")) {
-                ApiResponse<Object> errorResponse;
-                errorResponse = new ApiResponse<>(
-                        false,
-                        List.of(new ErrorItem("user", "User is Ban")),
-                        null);
 
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(errorResponse);
-                response.getWriter().write(json);
-                return;
-            }
+        if (user == null) {
+            sendError(response, "user", "User not found", HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
-        if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null,
-                    new ArrayList<>());
+        if (!"ADMIN".equals(user.getType()) && "BAN".equals(user.getAction())) {
+            sendError(response, "user", "User is banned", HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             request.setAttribute("jwt", token);
-
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
 
-        // System.out.println("====> Token valid for user id: " + userId);
         filterChain.doFilter(request, response);
     }
 
+    private void sendError(HttpServletResponse response, String field, String message, int status) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+
+        ApiResponse<Object> errorResponse =
+                new ApiResponse<>(false, List.of(new ErrorItem(field, message)), null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getWriter(), errorResponse);
+    }
 }

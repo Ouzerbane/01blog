@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,14 @@ public class Profile {
     private ProfileService profileService;
 
     @GetMapping("/get-post-profile/{userId}")
-    public ResponseEntity<ApiResponse<?>> getPostsByUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<ApiResponse<?>> getPostsByUser(@PathVariable("userId") UUID userId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<PostsResponseDto> posts = profileService.getPostsByUserId(userId, currentUser.getId());
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts));
     }
 
     @GetMapping("/get-userInfo/{userId}")
-    public ResponseEntity<ApiResponse<?>> getUserInfo(@PathVariable("userId") Long userId) {
+    public ResponseEntity<ApiResponse<?>> getUserInfo(@PathVariable("userId") UUID userId) {
         UserDto posts = profileService.UserInfo(userId);
         return ResponseEntity.ok(new ApiResponse<>(true, null, posts));
     }

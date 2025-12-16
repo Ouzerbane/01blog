@@ -1,6 +1,7 @@
 package com._blog._blog.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.PostsEntity;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostsDto {
 
-    private Long id;
+    private UUID id;
 
     private String title;
 

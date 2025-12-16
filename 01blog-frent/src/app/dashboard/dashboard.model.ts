@@ -1,11 +1,11 @@
 interface AuthorDto {
-  id: number;
+  id: string;
   username: string;
   email: string;
 }
 
 export interface Post {
-  id: number;
+  id: string;
   title: string;
   content: string;
   imageUrl?: string | null;
@@ -31,9 +31,9 @@ export interface Post {
 
 
 export interface Comment {
-  id: number;
-  postId: number;
-  userId: number;
+  id: string;
+  postId: string;
+  userId: string;
   username: string;
   content: string;
   createdAt: string;
@@ -48,7 +48,7 @@ export interface PostsResponse {
 }
 
 export interface Suggested {
-  id: number;
+  id: string;
   followed: boolean;
   username: string;
   imageUrl? : string  | null

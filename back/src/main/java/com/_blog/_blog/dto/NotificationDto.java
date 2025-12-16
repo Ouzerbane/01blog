@@ -1,5 +1,7 @@
 package com._blog._blog.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class NotificationDto {
-    private Long id;
+    private UUID id;
     private String message;
 }

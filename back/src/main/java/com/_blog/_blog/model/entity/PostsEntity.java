@@ -1,13 +1,16 @@
 package com._blog._blog.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import com._blog._blog.dto.PostsResponseDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -27,8 +30,10 @@ import lombok.NoArgsConstructor;
 public class PostsEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(updatable = false, nullable = false)
+    private UUID id;
 
     private String title;
 
@@ -37,7 +42,7 @@ public class PostsEntity {
 
     private String imageUrl;
 
-    private String status ;
+    private String status;
 
     private LocalDateTime createdAt;
 
@@ -52,8 +57,7 @@ public class PostsEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static PostsResponseDto toPostsResponseDto(PostsEntity post, Long currentUserId, Long countLikes,
-            boolean islike, Long countLike) {
+    public static PostsResponseDto toPostsResponseDto(PostsEntity post, UUID currentUserId, Long countLikes,boolean islike, Long countLike) {
         boolean canEdit = post.getAuthor() != null && post.getAuthor().getId().equals(currentUserId);
         return PostsResponseDto.builder()
                 .id(post.getId())
@@ -74,18 +78,16 @@ public class PostsEntity {
     }
 }
 
+// @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval =
+// true)
+// @JsonBackReference
+// private List<LikesEntity> likes = new ArrayList<>();
 
+// @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval =
+// true)
+// @JsonBackReference
+// @org.hibernate.annotations.OnDelete(action =
+// org.hibernate.annotations.OnDeleteAction.CASCADE)
+// private List<CommentsEntity> comments = new ArrayList<>();
 
-
-
-
-    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonBackReference
-    // private List<LikesEntity> likes = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonBackReference
-    // @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
-    // private List<CommentsEntity> comments = new ArrayList<>();
-
-    // bach kol ma ttsjjel post, ttsjjel b date jdida
+// bach kol ma ttsjjel post, ttsjjel b date jdida

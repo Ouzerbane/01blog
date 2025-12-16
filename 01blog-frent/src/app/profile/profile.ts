@@ -7,14 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { PostService } from '../services/post';
 
 export interface UserDto {
-  id: number;
+  id: string;
   username: string;
   email: string;
-  imageUrl?: string;
+  imageUrl?: string; // <-- هذا يسمح بـ undefined ولكن ما يسمحش بـ null
   followers: number;
   following: number;
 }
-
 
 @Component({
   selector: 'app-profile',
@@ -25,10 +24,9 @@ export interface UserDto {
 })
 export class Profile implements OnInit {
   posts: Post[] = [];
-  userId = 0;
+  userId: string = ''; // UUID
   user?: UserDto;
 
-  // followers modal
   followersList: Suggested[] = [];
   followingList: Suggested[] = [];
   showFollowers = false;
@@ -39,24 +37,22 @@ export class Profile implements OnInit {
 
   isuser = false;
 
-  //  private Long targetUserId;
-  //   private String reason;
+  @ViewChild('profileInput') profileInput!: any;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public service: PostService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.userId = Number(params.get('id'));
-      if (this.userId == this.service.id) {
+      const idParam = params.get('id');
+      if (!idParam) return;
+      this.userId = idParam; // UUID كـ string
+      if (this.userId === this.service.id) {
         this.isuser = true;
       }
       this.getUser(this.userId);
       this.getPosts(this.userId);
     });
   }
-
-
-  @ViewChild('profileInput') profileInput!: any;
 
   triggerImagePicker() {
     if (this.isuser) {
@@ -77,14 +73,11 @@ export class Profile implements OnInit {
       { withCredentials: true }
     ).subscribe({
       next: (res) => {
-        this.user!.imageUrl = "http://localhost:8080/post" + res.data; // update preview instantly
-        console.log(this.user?.imageUrl);
-
+        this.user!.imageUrl = res.data ? `http://localhost:8080/post${res.data}` : undefined;
       },
       error: (err) => this.handleError(err),
     });
   }
-
 
   showpopap(post: any) {
     post.showConfirm = !post.showConfirm;
@@ -93,36 +86,25 @@ export class Profile implements OnInit {
   onImageSelected(event: any, post: any) {
     const file = event.target.files[0];
     if (!file) return;
-
     post.newImage = file;
-
     const reader = new FileReader();
-    reader.onload = (e: any) => {
-      post.previewImage = e.target.result;
-    };
+    reader.onload = (e: any) => post.previewImage = e.target.result;
     reader.readAsDataURL(file);
   }
 
-
-
-  // Get user info
-  getUser(id: number) {
+  getUser(id: string) {
     const url = `http://localhost:8080/get-userInfo/${id}`;
-
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
         const data = res.data;
-        console.log(res.data);
-
         this.user = {
           ...data,
-          imageUrl: data.imagUrl ? `http://localhost:8080/post${data.imagUrl}` : null,
+          imageUrl: data.imageUrl ? `http://localhost:8080/post${data.imageUrl}` : null,
         };
       },
       error: (err) => this.handleError(err),
     });
   }
-
 
   report() {
     this.showReportTemplite = !this.showReportTemplite;
@@ -130,83 +112,66 @@ export class Profile implements OnInit {
 
   reportUser() {
     const body = { reason: this.reportReason, targetUserId: this.userId };
-
-    this.http.post('http://localhost:8080/report-user', body, { withCredentials: true })
-      .subscribe({
-        next: () => {
-          this.reportReason = '';
-          this.showReportTemplite = false;
-        },
-        error: (err) => {
-         this.handleError(err)
-        }
-      });
+    this.http.post('http://localhost:8080/report-user', body, { withCredentials: true }).subscribe({
+      next: () => {
+        this.reportReason = '';
+        this.showReportTemplite = false;
+      },
+      error: (err) => this.handleError(err),
+    });
   }
 
-  // Get user posts
-  getPosts(id: number) {
+  getPosts(id: string) {
     const url = `http://localhost:8080/get-post-profile/${id}`;
     this.http.get<PostsResponse>(url, { withCredentials: true }).subscribe({
       next: (res) => {
         this.posts = res.data.map(post => ({
           ...post,
           imageUrl: post.imageUrl ? `http://localhost:8080/post${post.imageUrl}` : null,
-
         }));
       },
-      error: (err) => {
-        this.handleError(err)
-
-      },
+      error: (err) => this.handleError(err),
     });
   }
 
-
   toggleFollow(user: Suggested) {
     user.followed = !user.followed;
-    const followUrl = `http://localhost:8080/follow`;
-    this.http
-      .post<FollowuserResponse>(followUrl, { id: user.id }, { withCredentials: true })
-      .subscribe({
-        next: (resp) => { console.log(resp); this.getUser(this.userId) },
-        error: (err) => this.handleError(err),
-      });
+    this.http.post<FollowuserResponse>('http://localhost:8080/follow', { id: user.id }, { withCredentials: true })
+      .subscribe({ next: () => this.getUser(this.userId), error: (err) => this.handleError(err) });
   }
 
-  //  Followers & Following
-  getProfile(id: number) {
+  getProfile(id: string) {
     this.router.navigate(["/profile", id]);
   }
 
   openFollowers() {
-    const url = `http://localhost:8080/get-Followers/${this.userId}`;
-    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.followersList = res.data.map(user => ({
-          ...user,
-          imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
-        }));
-        this.showFollowers = true;
-        this.showFollowing = false;
-      },
-      error: (err) => this.handleError(err)
-    });
+    this.http.get<SuggestedResponse>(`http://localhost:8080/get-Followers/${this.userId}`, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.followersList = res.data.map(user => ({
+            ...user,
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+          }));
+          this.showFollowers = true;
+          this.showFollowing = false;
+        },
+        error: (err) => this.handleError(err)
+      });
   }
 
-  // Following
   openFollowing() {
-    const url = `http://localhost:8080/get-Following/${this.userId}`;
-    this.http.get<SuggestedResponse>(url, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.followingList = res.data.map(user => ({
-          ...user,
-          imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
-        }));
-        this.showFollowing = true;
-        this.showFollowers = false;
-      },
-      error: (err) => this.handleError(err)
-    });
+    this.http.get<SuggestedResponse>(`http://localhost:8080/get-Following/${this.userId}`, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.followingList = res.data.map(user => ({
+            ...user,
+            imageUrl: user.imageUrl ? `http://localhost:8080/post${user.imageUrl}` : undefined
+          }));
+          this.showFollowing = true;
+          this.showFollowers = false;
+        },
+        error: (err) => this.handleError(err)
+      });
   }
 
   closeModal() {
@@ -214,7 +179,6 @@ export class Profile implements OnInit {
     this.showFollowing = false;
   }
 
-  // 💬 Comments
   toggleComments(post: Post) {
     post.showComment = !post.showComment;
     if (post.showComment) this.getComments(post);
@@ -223,33 +187,27 @@ export class Profile implements OnInit {
   getComments(post: Post) {
     const url = `http://localhost:8080/post/get-comments?postId=${post.id}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
-      next: (res) => (post.comment = res.data),
+      next: (res) => post.comment = res.data,
       error: (err) => this.handleError(err),
     });
   }
 
   addComment(post: Post) {
     if (!post.newComment || post.newComment.trim() === '') return;
-
     const body = { id: post.id, content: post.newComment };
-    this.http
-      .post<any>(`http://localhost:8080/post/add-comments`, body, { withCredentials: true })
-      .subscribe({
-        next: (res) => {
-          post.comment.push(res.data);
-          post.countCommets++;
-          post.newComment = '';
-        },
-        error: (err) => this.handleError(err),
-      });
+    this.http.post<any>(`http://localhost:8080/post/add-comments`, body, { withCredentials: true }).subscribe({
+      next: (res) => {
+        post.comment.push(res.data);
+        post.countCommets++;
+        post.newComment = '';
+      },
+      error: (err) => this.handleError(err),
+    });
   }
 
-  //  Like Post
   likePost(post: any) {
-    const url = `http://localhost:8080/post/like-post`;
     const body = { id: post.id };
-
-    this.http.post<any>(url, body, { withCredentials: true }).subscribe({
+    this.http.post<any>(`http://localhost:8080/post/like-post`, body, { withCredentials: true }).subscribe({
       next: (res) => {
         post.countLike = res.data.count;
         post.like = res.data.like;
@@ -258,7 +216,6 @@ export class Profile implements OnInit {
     });
   }
 
-  //Edit Post
   startEditing(post: any) {
     post.isEditing = true;
     post.editTitle = post.title;
@@ -270,51 +227,35 @@ export class Profile implements OnInit {
   }
 
   savePost(post: any) {
-    const url = `http://localhost:8080/post/edit-post`;
-
     const formData = new FormData();
     formData.append("id", post.id);
     formData.append("title", post.editTitle);
     formData.append("content", post.editContent);
+    if (post.newImage) formData.append("image", post.newImage);
+    else formData.append("imageUrl", post.imageUrl);
 
-    if (post.newImage) {
-      formData.append("image", post.newImage);
-    } else {
-      formData.append("imageUrl", post.imageUrl);
-    }
-
-    this.http.put(url, formData, { withCredentials: true }).subscribe({
-      next: (res: any) => {
+    this.http.put(`http://localhost:8080/post/edit-post`, formData, { withCredentials: true }).subscribe({
+      next: () => {
         post.title = post.editTitle;
         post.content = post.editContent;
-
         if (post.previewImage) post.imageUrl = post.previewImage;
-
         post.isEditing = false;
       },
       error: (err) => this.handleError(err)
     });
   }
 
-
-  // 🗑️ Delete Post
   deletePost(post: any) {
-    const url = `http://localhost:8080/post/delete-post`;
     const options = { body: { id: post.id }, withCredentials: true };
-
-    this.http.delete(url, options).subscribe({
-      next: () => {
-        this.posts = this.posts.filter((p) => p.id !== post.id);
-      },
+    this.http.delete(`http://localhost:8080/post/delete-post`, options).subscribe({
+      next: () => this.posts = this.posts.filter(p => p.id !== post.id),
       error: (err) => this.handleError(err)
     });
   }
 
-
-     handleError(err: any) {
+  handleError(err: any) {
     if (err.error && err.error.errors && err.error.errors.length > 0) {
       const firstError = err.error.errors[0];
-
       if (firstError.field === 'token') {
         alert('Session expired. Please login again.');
         this.router.navigate(['/login']);

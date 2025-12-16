@@ -1,6 +1,7 @@
 package com._blog._blog.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostAdminDto {
 
-    private Long id;
+    private UUID id;
     private String title;
     private String content;
     private String imageUrl;
@@ -27,7 +28,7 @@ public class PostAdminDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AuthorDto {
-        private Long id;
+        private UUID id;
         private String username;
         private String email;
     }

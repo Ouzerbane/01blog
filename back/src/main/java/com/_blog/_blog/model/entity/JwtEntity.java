@@ -1,5 +1,10 @@
 package com._blog._blog.model.entity;
 
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,9 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name="blacklist")
+@Table(name = "blacklist")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,9 +24,11 @@ import lombok.NoArgsConstructor;
 public class JwtEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    private String jwt ;
-    
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(updatable = false, nullable = false)
+    private UUID id;
+
+    private String jwt;
+
 }

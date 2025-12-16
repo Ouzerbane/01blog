@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,6 @@ public class PostsService {
     @Autowired
     private NotificationRepo notificationRepo;
 
-    // PostsService(AuthRepo authRepo) {
-    // this.authRepo = authRepo;
-    // }
     @Transactional
     public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser)
             throws IOException, java.io.IOException {
@@ -136,15 +134,7 @@ public class PostsService {
     public Page<PostsResponseDto> getPosts(int page, int size, AuthEntity currentUser) {
         Pageable pageable = PageRequest.of(page, size);
 
-        // if (currentUser.getType().equalsIgnoreCase("admin")) {
-        // return postsRepo.findAllByOrderByCreatedAtDesc(pageable)
-        // .map(post -> PostsEntity.toPostsResponseDto(post, post.getAuthor().getId(),
-        // likesRepo.countByPostId(post.getId()),
-        // likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-        // commentsRepo.countByPostId(post.getId())));
-        // }
-
-        List<Long> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
+        List<UUID> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
                 .stream()
                 .map(f -> f.getFollowing().getId())
                 .collect(Collectors.toList());

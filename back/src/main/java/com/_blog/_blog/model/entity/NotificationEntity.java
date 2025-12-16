@@ -3,6 +3,9 @@ package com._blog._blog.model.entity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.util.NotificationType;
@@ -30,8 +33,10 @@ import jakarta.persistence.Table;
 public class NotificationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(updatable = false, nullable = false)
+    private UUID id;
 
     @Column(nullable = false)
     private String message;
@@ -55,7 +60,7 @@ public class NotificationEntity {
     @Column(nullable = false)
     private NotificationType type;
 
-    private Long postId;
+    private UUID postId;
 
     @PrePersist
     protected void onCreate() {

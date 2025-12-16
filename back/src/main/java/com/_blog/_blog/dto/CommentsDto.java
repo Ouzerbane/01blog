@@ -1,5 +1,7 @@
 package com._blog._blog.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentsDto {
-    private Long id;
+    private UUID id;
     private String content;
 }

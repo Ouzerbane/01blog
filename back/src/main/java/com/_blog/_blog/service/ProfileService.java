@@ -1,6 +1,7 @@
 package com._blog._blog.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ProfileService {
     @Autowired
     private CommentsRepo commentsRepo;
 
-    public List<PostsResponseDto> getPostsByUserId(Long userId, Long currentUserId) {
+    public List<PostsResponseDto> getPostsByUserId(UUID userId, UUID currentUserId) {
         List<PostsEntity> posts = postsRepo.findByAuthorIdOrderByCreatedAtDesc(userId);
         return posts.stream().map(post -> {
             Long countLikes = likesRepo.countByPostId(post.getId());
@@ -45,7 +46,7 @@ public class ProfileService {
         }).collect(Collectors.toList());
     }
 
-    public UserDto UserInfo(Long userId) {
+    public UserDto UserInfo(UUID userId) {
         AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
         Long followers = followerRepo.countByFollowingId(userId);
         Long fllowing = followerRepo.countByFollowerId(userId);
@@ -54,7 +55,7 @@ public class ProfileService {
 
     }
 
-     public void  updateProfileImage(Long userId , String urile) {
+     public void  updateProfileImage(UUID userId , String urile) {
         AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
         userinfo.setImageUrl(urile);
         authRepo.save(userinfo);

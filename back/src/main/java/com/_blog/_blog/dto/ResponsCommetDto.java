@@ -1,6 +1,7 @@
 package com._blog._blog.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponsCommetDto {
-    private Long id;
-    private Long postId;
-    private Long userId;
+    private UUID id;
+    private UUID postId;
+    private UUID userId;
     private String username;
     private String content;
     private LocalDateTime createdAt;

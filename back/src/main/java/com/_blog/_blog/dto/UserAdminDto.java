@@ -1,5 +1,7 @@
 package com._blog._blog.dto;
 
+import java.util.UUID;
+
 import com._blog._blog.model.entity.AuthEntity;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserAdminDto {
-    private Long id;
+    private UUID id;
     private String username;
     private String imageUrl;
     private String action;

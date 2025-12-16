@@ -2,6 +2,7 @@ package com._blog._blog.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class FollowerService {
                 .build();
     }
 
-    public List<UserFollowDto> getUsersWithFollowStatus(Long currentUserId) {
+    public List<UserFollowDto> getUsersWithFollowStatus(UUID currentUserId) {
 
         List<AuthEntity> users = authRepo.findAll()
                 .stream()
@@ -99,17 +100,17 @@ public class FollowerService {
         }).collect(Collectors.toList());
     }
 
-    public Long getCountFollowers(Long currentUserId) {
+    public Long getCountFollowers(UUID currentUserId) {
 
         return followerRepo.countByFollowingId(currentUserId);
     }
 
-    public Long getCountFollowing(Long currentUserId) {
+    public Long getCountFollowing(UUID currentUserId) {
 
         return followerRepo.countByFollowerId(currentUserId);
     }
 
-    public List<UserFollowDto> getUsersSuggested(Long currentUserId) {
+    public List<UserFollowDto> getUsersSuggested(UUID currentUserId) {
 
         List<AuthEntity> allUsers = authRepo.findAll()
                 .stream()
@@ -118,7 +119,7 @@ public class FollowerService {
 
         List<FollowerEntity> followingList = followerRepo.findByFollowerId(currentUserId);
 
-        List<Long> followingIds = followingList.stream()
+        List<UUID> followingIds = followingList.stream()
                 .map(f -> f.getFollowing().getId())
                 .collect(Collectors.toList());
 
@@ -132,7 +133,7 @@ public class FollowerService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFollowDto> getFollowersService(Long profileUserId, AuthEntity loginUser) {
+    public List<UserFollowDto> getFollowersService(UUID profileUserId, AuthEntity loginUser) {
         authRepo.findById(profileUserId)
                 .orElseThrow(() -> new CustomException("user", "User not found"));
 
@@ -151,7 +152,7 @@ public class FollowerService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFollowDto> getFollowingService(Long profileUserId, AuthEntity loginUser) {
+    public List<UserFollowDto> getFollowingService(UUID profileUserId, AuthEntity loginUser) {
         authRepo.findById(profileUserId)
                 .orElseThrow(() -> new CustomException("user", "User not found"));
 

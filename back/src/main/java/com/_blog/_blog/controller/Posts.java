@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -89,7 +90,7 @@ public class Posts {
     // EDIT POST
     @PutMapping(value = "/edit-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> editPost(
-            @RequestParam("id") Long id,
+            @RequestParam("id") UUID id,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
@@ -138,7 +139,7 @@ public class Posts {
 
     // GET COMMENTS
     @GetMapping("/get-comments")
-    public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") Long postId) {
+    public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") UUID postId) {
         List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
         return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
     }

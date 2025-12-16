@@ -1,6 +1,7 @@
 package com._blog._blog.model.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,18 +10,18 @@ import com._blog._blog.model.entity.NotificationEntity;
 import com._blog._blog.util.NotificationType;
 
 @Repository
-public interface NotificationRepo extends JpaRepository<NotificationEntity, Long> {
+public interface NotificationRepo extends JpaRepository<NotificationEntity, UUID> {
 
-    long countByUserIdAndReadFalse(Long userId);
+    long countByUserIdAndReadFalse(UUID userId);
 
-    List<NotificationEntity> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+    List<NotificationEntity> findAllByUserIdOrderByCreatedAtDesc(UUID userId);
 
-    boolean existsBySenderIdAndUserIdAndType(Long senderId, Long userId, NotificationType type);
+    boolean existsBySenderIdAndUserIdAndType(UUID senderId, UUID userId, NotificationType type);
 
-    boolean existsBySenderIdAndUserIdAndTypeAndPostId(Long senderId, Long userId, NotificationType type, Long postId);
+    boolean existsBySenderIdAndUserIdAndTypeAndPostId(UUID senderId, UUID userId, NotificationType type, UUID postId);
 
-    void deleteBySenderIdAndUserIdAndType(Long senderId, Long userId, NotificationType type);
+    void deleteBySenderIdAndUserIdAndType(UUID senderId, UUID userId, NotificationType type);
 
-    void deleteBySenderIdAndUserIdAndTypeAndPostId(Long senderId, Long userId, NotificationType type, Long postId);
+    void deleteBySenderIdAndUserIdAndTypeAndPostId(UUID senderId, UUID userId, NotificationType type, UUID postId);
 
 }

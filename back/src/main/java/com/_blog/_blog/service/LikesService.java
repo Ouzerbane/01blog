@@ -2,6 +2,7 @@ package com._blog._blog.service;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,7 @@ public class LikesService {
 
     }
 
-    public LikeDto countLikes(Long postId, Long userid) {
+    public LikeDto countLikes(UUID postId, UUID userid) {
         return LikeDto.builder().count(likesRepo.countByPostId(postId))
                 .like(likesRepo.existsByUserIdAndPostId(userid, postId)).build();
 

@@ -1,9 +1,11 @@
 package com._blog._blog.dto;
 
+import java.util.UUID;
+
 import lombok.Data;
 
 @Data
 public class ReportDto {
-    private Long targetUserId;
+    private UUID targetUserId;
     private String reason;
 }

@@ -18,7 +18,7 @@ export class Dashboard implements OnInit {
   page: number = 0;
   size: number = 10;
 
-  id: number = 0;
+  id: string = "";
 
 
   newComment: string = "";
@@ -95,7 +95,7 @@ export class Dashboard implements OnInit {
     }
   }
 
-  getProfile(id: number) {
+  getProfile(id: string) {
     this.router.navigate(["/profile", id]);
   }
 

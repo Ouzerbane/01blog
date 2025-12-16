@@ -1,6 +1,7 @@
 package com._blog._blog.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ public class Notificationservice {
     @Autowired
     private NotificationRepo notificationRepo;
 
-    public long countUnreadNotifications(Long userId) {
+    public long countUnreadNotifications(UUID userId) {
         return notificationRepo.countByUserIdAndReadFalse(userId);
     }
 
-    public List<NotificationDto> getNotificationsAndMarkRead(Long userId) {
+    public List<NotificationDto> getNotificationsAndMarkRead(UUID userId) {
         List<NotificationEntity> notifications = notificationRepo.findAllByUserIdOrderByCreatedAtDesc(userId);
 
         notifications.forEach(n -> n.setRead(true));

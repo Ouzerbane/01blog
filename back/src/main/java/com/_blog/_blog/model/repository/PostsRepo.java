@@ -1,6 +1,7 @@
 package com._blog._blog.model.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,17 +11,17 @@ import org.springframework.stereotype.Repository;
 import com._blog._blog.model.entity.PostsEntity;
 
 @Repository
-public interface PostsRepo extends JpaRepository<PostsEntity, Long> {
+public interface PostsRepo extends JpaRepository<PostsEntity, UUID> {
 
     Page<PostsEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    Page<PostsEntity> findByAuthorIdInOrderByCreatedAtDesc(List<Long> authorIds, Pageable pageable);
+    Page<PostsEntity> findByAuthorIdInOrderByCreatedAtDesc(List<UUID> authorIds, Pageable pageable);
 
-    List<PostsEntity> findByAuthorIdOrderByCreatedAtDesc(Long authorId);
+    List<PostsEntity> findByAuthorIdOrderByCreatedAtDesc(UUID authorId);
 
     List<PostsEntity> findAllByOrderByCreatedAtDesc();
 
-    Page<PostsEntity> findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(List<Long> ids, String status, Pageable pageable);
+    Page<PostsEntity> findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(List<UUID> ids, String status, Pageable pageable);
 
 
 

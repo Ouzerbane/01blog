@@ -7,5 +7,5 @@ import { Post } from '../dashboard/dashboard.model';
 export class PostService {
   constructor (){}
   postd: Post[] = [];
-  id : number = 0;
+  id : String = "";
 }

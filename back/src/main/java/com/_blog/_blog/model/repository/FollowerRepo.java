@@ -2,6 +2,7 @@ package com._blog._blog.model.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,21 +10,21 @@ import org.springframework.stereotype.Repository;
 import com._blog._blog.model.entity.FollowerEntity;
 
 @Repository
-public interface FollowerRepo extends JpaRepository<FollowerEntity, Long> {
+public interface FollowerRepo extends JpaRepository<FollowerEntity, UUID> {
 
-    Optional<FollowerEntity> findByFollowerIdAndFollowingId(Long followerId, Long followingId);
+    Optional<FollowerEntity> findByFollowerIdAndFollowingId(UUID followerId, UUID followingId);
 
-    boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId);
+    boolean existsByFollowerIdAndFollowingId(UUID followerId, UUID followingId);
 
-    Long countByFollowingId(Long followingId);
+    Long countByFollowingId(UUID followingId);
 
-    Long countByFollowerId(Long followingId);
+    Long countByFollowerId(UUID followingId);
 
-    List<FollowerEntity> findByFollowerId(Long followerId);
+    List<FollowerEntity> findByFollowerId(UUID followerId);
 
-    List<FollowerEntity> findAllByFollowerId(Long followerId);
+    List<FollowerEntity> findAllByFollowerId(UUID followerId);
 
-    List<FollowerEntity> findAllByFollowingId(Long followingId);
+    List<FollowerEntity> findAllByFollowingId(UUID followingId);
 
  
 
