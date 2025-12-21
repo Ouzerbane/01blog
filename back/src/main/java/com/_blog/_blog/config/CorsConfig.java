@@ -20,8 +20,5 @@ public class CorsConfig {
                         .allowCredentials(true); // ✅ khass ykoun boolean, ma string
             }
         };
-    }
-
-
-    
+    } 
 }
