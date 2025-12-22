@@ -104,7 +104,7 @@ public class PostsService {
             throw new CustomException("authorization", "You are not the author of this post");
         }
 
-        title =title.trim();
+        title = title.trim();
         content = content.trim();
 
         String imageUrl = uploadImage(image);
@@ -153,21 +153,38 @@ public class PostsService {
 
     public String uploadImage(MultipartFile image) throws IOException, java.io.IOException {
 
+    
         if (image == null || image.isEmpty()) {
-            return null; // no image
+            return null;
         }
 
-        String uploadDir = "uploads/";
-        File directory = new File(uploadDir);
-
-        if (!directory.exists()) {
-            directory.mkdirs();
+        //  type immage or vidio
+        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg");
+        if (!allowedTypes.contains(image.getContentType())) {
+            throw new CustomException("image", "Only JPG and PNG images are allowed");
         }
+        
+        
+        long maxSize = 5 * 1024 * 1024;
+        if (image.getSize() > maxSize) {
+            throw new CustomException("image", "Image size must be less than 5MB");
+        }
+        
+    
+        Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();//normalize for rm . and ..
+        Files.createDirectories(uploadDir);
+        System.out.println("------------->"+image.getSize());
 
-        String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-        Path dest = Paths.get(uploadDir + fileName);
 
-        Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        String originalFileName = Paths.get(image.getOriginalFilename()).getFileName().toString();
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+   
+        String fileName = UUID.randomUUID() + extension;
+        Path targetLocation = uploadDir.resolve(fileName);
+
+       
+        Files.copy(image.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
         return "/uploads/" + fileName;
     }
