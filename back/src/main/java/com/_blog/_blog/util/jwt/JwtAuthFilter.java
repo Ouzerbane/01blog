@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        // السماح بالوصول لمسارات التسجيل والدخول بدون JWT
+        
         if (path.startsWith("/regester") || path.startsWith("/login")) {
             filterChain.doFilter(request, response);
             return;

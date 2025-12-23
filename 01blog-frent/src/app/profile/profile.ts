@@ -67,10 +67,7 @@ export class Profile implements OnInit {
     const formData = new FormData();
     formData.append("image", file);
 
-    this.http.post<any>(
-      "http://localhost:8080/update-profile-image",
-      formData,
-      { withCredentials: true }
+    this.http.post<any>("http://localhost:8080/update-profile-image",formData,{ withCredentials: true }
     ).subscribe({
       next: (res) => {
         this.user!.imageUrl = res.data ? `http://localhost:8080/post${res.data}` : undefined;
@@ -96,10 +93,11 @@ export class Profile implements OnInit {
     const url = `http://localhost:8080/get-userInfo/${id}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (res) => {
+        console.log(res.data)
         const data = res.data;
         this.user = {
           ...data,
-          imageUrl: data.imageUrl ? `http://localhost:8080/post${data.imageUrl}` : null,
+          imageUrl: data.imagUrl ? `http://localhost:8080/post${data.imagUrl}` : null,
         };
       },
       error: (err) => this.handleError(err),

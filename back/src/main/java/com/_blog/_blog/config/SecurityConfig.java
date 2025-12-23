@@ -2,12 +2,14 @@ package com._blog._blog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // يجب إضافة هذا الاستيراد
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com._blog._blog.util.jwt.JwtAuthFilter;
 
@@ -23,21 +25,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            // 1. تفعيل CORS داخل سلسلة فلاتر Security
-            .cors(Customizer.withDefaults()) 
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                // 2. السماح بمرور طلبات OPTIONS لجميع المسارات (مهم جداً لـ CORS Pre-flight)
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // 3. السماح بمرور مسارات التسجيل والدخول
-                .requestMatchers("/regester", "/login").permitAll()
-                // 4. طلب get-posts يتطلب التوثيق الآن (لتلقي الكوكي)
-                .anyRequest().authenticated()
-            )
-            .logout(logout -> logout.disable())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/regester", "/login").permitAll()
+                        .anyRequest().authenticated())
+                .logout(logout -> logout.disable())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
     }
 }

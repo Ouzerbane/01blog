@@ -50,7 +50,7 @@ public class ProfileService {
         AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
         Long followers = followerRepo.countByFollowingId(userId);
         Long fllowing = followerRepo.countByFollowerId(userId);
-
+        System.out.println(userinfo.getImageUrl());
         return UserDto.builder().email(userinfo.getEmail()).username(userinfo.getUsername()).imagUrl(userinfo.getImageUrl()).followers(followers).following(fllowing).build();
 
     }
