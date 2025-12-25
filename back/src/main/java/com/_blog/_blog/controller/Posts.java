@@ -31,12 +31,12 @@ import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.CommentsDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.LikeDto;
-import com._blog._blog.dto.PostsDto;
+
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.dto.ResponsCommetDto;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
-import com._blog._blog.model.repository.AuthRepo;
+
 import com._blog._blog.service.CommentsService;
 import com._blog._blog.service.LikesService;
 import com._blog._blog.service.PostsService;
@@ -47,7 +47,7 @@ import jakarta.validation.constraints.NotNull;
 @Validated
 @RestController
 @RequestMapping("/post")
-// @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+
 public class Posts {
 
     @Autowired
@@ -98,10 +98,7 @@ public class Posts {
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // PostsDto dto =
-        // PostsDto.builder().content(content).id(id).title(title).imageUrl(emptyService.uploadImage(image))
-        // ////???? it7ayd
-        // .build();
+      
 
         PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));

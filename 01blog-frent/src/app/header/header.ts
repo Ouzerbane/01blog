@@ -65,7 +65,7 @@ export class Header implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.log(err);
+       this.router.navigate(['/login']);
 
       }
     })

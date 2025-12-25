@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+// import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,7 +17,7 @@ import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.ErrorItem;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
-import com._blog._blog.model.repository.JawtRepo;
+// import com._blog._blog.model.repository.JawtRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -34,7 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final AuthRepo authRepo;
 
     @Autowired
-    private JawtRepo jwtRepo;
+    // private JawtRepo jwtRepo;
 
     public JwtAuthFilter(JwtUtil jwtUtil, AuthRepo authRepo) {
         this.jwtUtil = jwtUtil;
@@ -54,7 +54,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = extractTokenFromCookie(request);
 
-        if (token == null || !jwtUtil.isTokenValid(token) || jwtRepo.existsByJwt(token)) {
+// || jwtRepo.existsByJwt(token)
+
+        if (token == null || !jwtUtil.isTokenValid(token) ) {
             ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
                     .httpOnly(true)
                     .path("/")

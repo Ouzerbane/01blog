@@ -6,36 +6,30 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+// import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
+// import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.dto.RegisterRequest;
-import com._blog._blog.model.entity.AuthEntity;
-import com._blog._blog.model.entity.JwtEntity;
-import com._blog._blog.model.repository.JawtRepo;
+// import com._blog._blog.model.entity.AuthEntity;
+// import com._blog._blog.model.entity.JwtEntity;
+// import com._blog._blog.model.repository.JawtRepo;
 import com._blog._blog.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-// @AllArgsConstructor
-// @NoArgsConstructor
 
 @RestController
-// @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*", methods = {
-//         RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
+
 public class Auth {
     @Autowired
     private AuthService emptyService;
-
-    @Autowired
-    private JawtRepo jawtRepo;
 
     @PostMapping("/regester")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
@@ -66,11 +60,11 @@ public class Auth {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        String token = (String) request.getAttribute("jwt");
+        // String token = (String) request.getAttribute("jwt");
 
-        if (token != null) {
-            jawtRepo.save(JwtEntity.builder().jwt(token).build());
-        }
+        // if (token != null) {
+        //     jawtRepo.save(JwtEntity.builder().jwt(token).build());
+        // }
 
         ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
                 .httpOnly(true)
