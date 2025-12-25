@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -42,10 +43,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        
+
         if (path.startsWith("/regester") || path.startsWith("/login")) {
             filterChain.doFilter(request, response);
             return;
@@ -54,6 +55,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = extractTokenFromCookie(request);
 
         if (token == null || !jwtUtil.isTokenValid(token) || jwtRepo.existsByJwt(token)) {
+            ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(0)
+                    .build();
+
+            response.addHeader("Set-Cookie", deleteCookie.toString());
+            
             sendError(response, "token", "Invalid or missing token", HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -72,10 +81,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null,
+                    new ArrayList<>());
 
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            // authToken.setDetails(new
+            // WebAuthenticationDetailsSource().buildDetails(request));
             request.setAttribute("jwt", token);
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
@@ -87,8 +97,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         response.setStatus(status);
         response.setContentType("application/json");
 
-        ApiResponse<Object> errorResponse =
-                new ApiResponse<>(false, List.of(new ErrorItem(field, message)), null);
+        ApiResponse<Object> errorResponse = new ApiResponse<>(false, List.of(new ErrorItem(field, message)), null);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getWriter(), errorResponse);

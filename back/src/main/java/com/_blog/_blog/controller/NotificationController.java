@@ -15,7 +15,7 @@ import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.service.Notificationservice;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+// @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class NotificationController {
 
     @Autowired

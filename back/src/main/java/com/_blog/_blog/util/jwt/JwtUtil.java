@@ -1,7 +1,7 @@
 package com._blog._blog.util.jwt;
 
 import java.security.Key;
-import java.sql.Date;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -21,9 +21,9 @@ public class JwtUtil {
     public String generateToken(UUID userId, String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("userId", userId.toString()) // خزّن UUID كسلسلة
+                .claim("userId", userId.toString())
                 .setIssuedAt(new java.util.Date())
-                .setExpiration(new java.util.Date(System.currentTimeMillis() + 86400000)) // 1 يوم
+                .setExpiration(new java.util.Date(System.currentTimeMillis() + 86400000)) // 1 day
                 .signWith(key)
                 .compact();
     }
@@ -57,7 +57,8 @@ public class JwtUtil {
     // --- get userId as UUID
     public UUID getUserIdFromToken(String token) {
         Object userId = extractClaims(token).get("userId");
-        if (userId == null) return null;
+        if (userId == null)
+            return null;
         return UUID.fromString(userId.toString());
     }
 
@@ -70,4 +71,25 @@ public class JwtUtil {
             return false;
         }
     }
+
+    // --- check if token is still valid within 24 hours
+    public boolean isTokenNotExpired24h(String token) {
+        try {
+            Claims claims = extractClaims(token);
+
+            Date issuedAt = (Date) claims.getIssuedAt();
+
+            if (issuedAt == null)
+                return false;
+
+            Date now = new Date();
+
+            Date expiry24h = new Date(issuedAt.getTime() + 24 * 60 * 60 * 1000);
+
+            return now.before(expiry24h);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
