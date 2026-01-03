@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class NotificationDto {
     private UUID id;
     private String message;
+    private boolean status ;
 }

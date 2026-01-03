@@ -16,6 +16,8 @@ public interface NotificationRepo extends JpaRepository<NotificationEntity, UUID
 
     List<NotificationEntity> findAllByUserIdOrderByCreatedAtDesc(UUID userId);
 
+    NotificationEntity findByIdAndUserId(UUID Id ,UUID userId);
+
     boolean existsBySenderIdAndUserIdAndType(UUID senderId, UUID userId, NotificationType type);
 
     boolean existsBySenderIdAndUserIdAndTypeAndPostId(UUID senderId, UUID userId, NotificationType type, UUID postId);

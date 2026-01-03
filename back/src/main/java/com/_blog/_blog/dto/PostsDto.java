@@ -35,7 +35,7 @@ public class PostsDto {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                .imageUrl(entity.getImageUrl())
+                // .imageUrl(entity.getImageUrl())
                 .createdAt(entity.getCreatedAt())
                 .authorUsername(entity.getAuthor() != null ? entity.getAuthor().getUsername() : null)
                 .build();

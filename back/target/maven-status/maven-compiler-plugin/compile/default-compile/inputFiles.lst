@@ -37,6 +37,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/JwtEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/LikesEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/NotificationEntity.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/PostMediaEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/PostsEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/ReportEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/AuthRepo.java
@@ -45,6 +46,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/JawtRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/LikesRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/NotificationRepo.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/PostMediaRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/PostsRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/repository/ReportRepo.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/AdminService.java
@@ -56,6 +58,7 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/PostsService.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/ProfileService.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/service/ReportService.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/util/MediaType.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/util/NotificationType.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/util/jwt/JwtAuthFilter.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/util/jwt/JwtUtil.java

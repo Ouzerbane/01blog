@@ -36,13 +36,13 @@ public class ProfileService {
     private CommentsRepo commentsRepo;
 
     public List<PostsResponseDto> getPostsByUserId(UUID userId, UUID currentUserId) {
-        List<PostsEntity> posts = postsRepo.findByAuthorIdOrderByCreatedAtDesc(userId);
+        List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId);
         return posts.stream().map(post -> {
             Long countLikes = likesRepo.countByPostId(post.getId());
             Long countComments = commentsRepo.countByPostId(post.getId());
             boolean isLiked = likesRepo.existsByUserIdAndPostId(currentUserId, post.getId());
 
-            return PostsEntity.toPostsResponseDto(post, currentUserId, countLikes, isLiked, countComments);
+            return PostsResponseDto.toPostsResponseDto(post, currentUserId, countLikes, isLiked, countComments);
         }).collect(Collectors.toList());
     }
 

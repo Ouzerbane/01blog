@@ -6,3 +6,6 @@ public enum NotificationType {
     FOLLOW,
     POST_CREATED
 }
+
+
+

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,11 +25,13 @@ import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.FollowerEntity;
 import com._blog._blog.model.entity.NotificationEntity;
+import com._blog._blog.model.entity.PostMediaEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.CommentsRepo;
 import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.LikesRepo;
 import com._blog._blog.model.repository.NotificationRepo;
+import com._blog._blog.model.repository.PostMediaRepo;
 import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.util.NotificationType;
 
@@ -47,6 +50,9 @@ public class PostsService {
     private PostsRepo postsRepo;
 
     @Autowired
+    private PostMediaRepo postMediaRepo;
+
+    @Autowired
     private LikesRepo likesRepo;
 
     @Autowired
@@ -56,43 +62,60 @@ public class PostsService {
     private NotificationRepo notificationRepo;
 
     @Transactional
-    public PostsEntity savePost(String title, String content, MultipartFile image, AuthEntity currentUser)
-            throws IOException, java.io.IOException {
+    public PostsEntity savePost(
+            String title,
+            String content,
+            MultipartFile[] images,
+            AuthEntity currentUser) throws IOException, java.io.IOException {
 
         title = title.trim();
         content = content.trim();
 
-        String imageUrl = uploadImage(image);
-
         PostsEntity post = PostsEntity.builder()
                 .title(title)
                 .content(content)
-                .imageUrl(imageUrl)
                 .status("show")
-                .createdAt(LocalDateTime.now())
                 .author(currentUser)
                 .build();
 
-        post = postsRepo.save(post);
-        PostsEntity postlambda = post;
+        if (images != null && images.length > 0) {
+            for (MultipartFile img : images) {
+                String url = uploadImage(img);
 
-        /// Create notifications in batch
+                PostMediaEntity media = PostMediaEntity.builder()
+                        .mediaUrl(url)
+                        .post(post)
+                        .build();
+                if (post.getMedia() == null) {
+                    post.setMedia(new ArrayList<>());
+                }
+
+                post.getMedia().add(media); // add media to post
+            }
+        }
+
+        // Save post
+        PostsEntity savedPost = postsRepo.save(post);
+
+        // Notifications
         List<FollowerEntity> followers = followerRepo.findAllByFollowingId(currentUser.getId());
-        List<NotificationEntity> notifications = followers.stream()
-                .map(f -> NotificationEntity.builder()
-                        .message(currentUser.getUsername() + " created a post " + postlambda.getTitle())
-                        .user(f.getFollower())
-                        .read(false)
-                        .postId(postlambda.getId())
-                        .type(NotificationType.POST_CREATED)
-                        .build())
-                .collect(Collectors.toList());
 
-        if (!notifications.isEmpty()) {
+        if (!followers.isEmpty()) {
+            List<NotificationEntity> notifications = followers.stream()
+                    .map(f -> NotificationEntity.builder()
+                            .message(currentUser.getUsername()
+                                    + " created a post " + savedPost.getTitle())
+                            .user(f.getFollower())
+                            .read(false)
+                            .postId(savedPost.getId())
+                            .type(NotificationType.POST_CREATED)
+                            .build())
+                    .toList();
+
             notificationRepo.saveAll(notifications);
         }
 
-        return post;
+        return savedPost;
     }
 
     public PostsEntity editPost(String title, String content, MultipartFile image, UUID id, AuthEntity currentUser)
@@ -111,7 +134,7 @@ public class PostsService {
 
         post.setTitle(title);
         post.setContent(content);
-        post.setImageUrl(imageUrl);
+        // post.setImageUrl(imageUrl);
         return postsRepo.save(post);
     }
 
@@ -137,53 +160,58 @@ public class PostsService {
                 .map(f -> f.getFollowing().getId())
                 .collect(Collectors.toList());
 
-        followingIds.add(currentUser.getId());
+        // followingIds.add(currentUser.getId());
 
         if (followingIds.isEmpty()) {
             return Page.empty(pageable);
         }
 
-        return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "Hide", pageable)
-                .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
+        List<PostsEntity> posts = postsRepo.findPostsWithMediaByAuthors(followingIds, "Hide", pageable);
+
+        // return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "Hide", pageable)
+        //         .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
+        //                 likesRepo.countByPostId(post.getId()),
+        //                 likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+        //                 commentsRepo.countByPostId(post.getId())));
+
+        List<PostsResponseDto> dtoList = posts.stream()
+                .map(post -> PostsResponseDto.toPostsResponseDto(post, currentUser.getId(),
                         likesRepo.countByPostId(post.getId()),
                         likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                        commentsRepo.countByPostId(post.getId())));
-        // ::
+                        commentsRepo.countByPostId(post.getId())))
+                .collect(Collectors.toList());
+        
+        return new org.springframework.data.domain.PageImpl<>(dtoList, pageable, dtoList.size());
+
     }
 
     public String uploadImage(MultipartFile image) throws IOException, java.io.IOException {
 
-    
         if (image == null || image.isEmpty()) {
             return null;
         }
 
-        //  type immage or vidio
-        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg");
+        // type immage or vidio
+        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "image/webp", "video/mp4");
         if (!allowedTypes.contains(image.getContentType())) {
             throw new CustomException("image", "Only JPG and PNG images are allowed");
         }
-        
-        
+
         long maxSize = 5 * 1024 * 1024;
         if (image.getSize() > maxSize) {
             throw new CustomException("image", "Image size must be less than 5MB");
         }
-        
-    
-        Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();//normalize for rm . and ..
-        Files.createDirectories(uploadDir);
-        System.out.println("------------->"+image.getSize());
 
+        Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();// normalize for rm . and ..
+        Files.createDirectories(uploadDir);
+        System.out.println("------------->" + image.getSize());
 
         String originalFileName = Paths.get(image.getOriginalFilename()).getFileName().toString();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-   
         String fileName = UUID.randomUUID() + extension;
         Path targetLocation = uploadDir.resolve(fileName);
 
-       
         Files.copy(image.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
         return "/uploads/" + fileName;

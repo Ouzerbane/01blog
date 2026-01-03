@@ -64,11 +64,12 @@ public class Posts {
     public ResponseEntity<ApiResponse<?>> addPost(
             @RequestParam("title") @NotBlank(message = "title is required") String title,
             @RequestParam("content") @NotBlank(message = "content is required") String content,
-            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+            @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
 
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
+                
         PostsEntity savedPost = emptyService.savePost(title, content, image, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));

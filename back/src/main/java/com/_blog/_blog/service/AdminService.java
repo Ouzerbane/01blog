@@ -116,7 +116,7 @@ public class AdminService {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .imageUrl(post.getImageUrl())
+                // .imageUrl(post.getImageUrl())
                 .createdAt(post.getCreatedAt())
                 .status(post.getStatus())
                 .author(PostAdminDto.AuthorDto.builder()
