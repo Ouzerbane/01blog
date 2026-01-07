@@ -43,7 +43,6 @@ public class Follower {
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
-
         UserFollowDto result = followerService.followUser(dto, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, result));

@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com._blog._blog.dto.PostMediaDto;
 import com._blog._blog.dto.PostsResponseDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,13 +57,13 @@ public class PostsEntity {
     private AuthEntity author;
 
     @OneToMany(mappedBy = "post", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("post-media")
     private List<PostMediaEntity> media = new java.util.ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
 
 }
 

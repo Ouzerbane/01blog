@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 import com._blog._blog.dto.ReportDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
+import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.entity.ReportEntity;
 import com._blog._blog.model.repository.AuthRepo;
+import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.model.repository.ReportRepo;
+
+import jakarta.validation.Valid;
 
 @Service
 public class ReportService {
@@ -18,6 +22,9 @@ public class ReportService {
 
     @Autowired
     private AuthRepo authRepo;
+
+    @Autowired
+    private PostsRepo postsRepo;
 
     public void reportUserService(ReportDto reportDto, AuthEntity currentUser) {
         AuthEntity targetUser = authRepo.findById(reportDto.getTargetUserId())
@@ -30,5 +37,15 @@ public class ReportService {
                 .build();
 
         reportRepo.save(report);
+    }
+
+    public void reportPostService(ReportDto reportDto, AuthEntity currentUser) {
+        
+        PostsEntity targetPost = postsRepo.findById(reportDto.getTargetPostId())
+                .orElseThrow(() -> new CustomException("post", "Post not found"));
+        
+        
+        
+        
     }
 }

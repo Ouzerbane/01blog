@@ -11,5 +11,5 @@ import com._blog._blog.model.entity.CommentsEntity;
 @Repository
 public interface CommentsRepo extends JpaRepository<CommentsEntity, UUID>  {
     long countByPostId(UUID postId);
-    List<CommentsEntity> findAllByPostIdOrderByCreatedAtAsc(UUID postId);
+    List<CommentsEntity> findAllByPostIdOrderByCreatedAtDesc(UUID postId);
 } 

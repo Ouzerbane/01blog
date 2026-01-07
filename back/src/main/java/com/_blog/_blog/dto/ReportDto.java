@@ -8,4 +8,5 @@ import lombok.Data;
 public class ReportDto {
     private UUID targetUserId;
     private String reason;
+    private UUID targetPostId;
 }

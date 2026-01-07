@@ -31,4 +31,10 @@ public class ReportController {
         reportService.reportUserService(reportDto, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, null));
     }
+      @PostMapping("/report-post")
+    public ResponseEntity<ApiResponse<?>> reportPost(@Valid @RequestBody ReportDto reportDto) {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        reportService.reportPostService(reportDto, currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, null));
+    }
 }

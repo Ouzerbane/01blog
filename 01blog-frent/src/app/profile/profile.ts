@@ -10,7 +10,7 @@ export interface UserDto {
   id: string;
   username: string;
   email: string;
-  imageUrl?: string; // <-- هذا يسمح بـ undefined ولكن ما يسمحش بـ null
+  imageUrl?: string; 
   followers: number;
   following: number;
 }

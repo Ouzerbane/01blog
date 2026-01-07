@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.CommentsDto;
+import com._blog._blog.dto.DeletCpmmentDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.LikeDto;
 import com._blog._blog.dto.PostsDto;
@@ -41,6 +42,7 @@ import com._blog._blog.service.CommentsService;
 import com._blog._blog.service.LikesService;
 import com._blog._blog.service.PostsService;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -69,7 +71,6 @@ public class Posts {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-                
         PostsEntity savedPost = emptyService.savePost(title, content, image, currentUser);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, savedPost));
@@ -99,11 +100,6 @@ public class Posts {
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // PostsDto dto =
-        // PostsDto.builder().content(content).id(id).title(title).imageUrl(emptyService.uploadImage(image))
-        // ////???? it7ayd
-        // .build();
-
         PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
@@ -118,14 +114,10 @@ public class Posts {
 
     // GET POSTS
     @GetMapping("/get-posts")
-    public ResponseEntity<ApiResponse<?>> getPosts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
+    public ResponseEntity<ApiResponse<?>> getPosts() {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Page<PostsResponseDto> posts = emptyService.getPosts(page, size, currentUser);
-        return ResponseEntity.ok(new ApiResponse<>(true, null, posts.getContent()));
+        List<PostsResponseDto> posts = emptyService.getPosts(currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, posts));
     }
 
     // LIKE POST
@@ -138,7 +130,7 @@ public class Posts {
 
     // ADD COMMENT
     @PostMapping("/add-comments")
-    public ResponseEntity<ApiResponse<?>> commentPost(@RequestBody CommentsDto comment) {
+    public ResponseEntity<ApiResponse<?>> commentPost(@Valid @RequestBody CommentsDto comment) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponsCommetDto count = commentsService.addComment(comment, currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, count));
@@ -149,5 +141,12 @@ public class Posts {
     public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") UUID postId) {
         List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
         return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
+    }
+
+    @DeleteMapping("/delete-comment")
+    public ResponseEntity<ApiResponse<?>> deleteComment(@RequestBody DeletCpmmentDto idDto) {
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long count = commentsService.deleteComment(idDto, currentUser);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, count));
     }
 }

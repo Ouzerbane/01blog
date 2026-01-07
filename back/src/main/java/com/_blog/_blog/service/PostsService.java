@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.print.attribute.standard.Media;
+
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -80,11 +83,13 @@ public class PostsService {
 
         if (images != null && images.length > 0) {
             for (MultipartFile img : images) {
+                com._blog._blog.util.MediaType mediaType = getMediaType(img);
                 String url = uploadImage(img);
 
                 PostMediaEntity media = PostMediaEntity.builder()
                         .mediaUrl(url)
                         .post(post)
+                        .mediaType(mediaType)
                         .build();
                 if (post.getMedia() == null) {
                     post.setMedia(new ArrayList<>());
@@ -152,36 +157,27 @@ public class PostsService {
         postsRepo.delete(post);
     }
 
-    public Page<PostsResponseDto> getPosts(int page, int size, AuthEntity currentUser) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<PostsResponseDto> getPosts( AuthEntity currentUser) {
 
         List<UUID> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
                 .stream()
                 .map(f -> f.getFollowing().getId())
                 .collect(Collectors.toList());
 
-        // followingIds.add(currentUser.getId());
+        followingIds.add(currentUser.getId());
 
         if (followingIds.isEmpty()) {
-            return Page.empty(pageable);
+            return List.of();
         }
 
-        List<PostsEntity> posts = postsRepo.findPostsWithMediaByAuthors(followingIds, "Hide", pageable);
+        List<PostsEntity> posts = postsRepo.findPostsWithMediaByAuthors(followingIds, "Hide");
 
-        // return postsRepo.findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(followingIds, "Hide", pageable)
-        //         .map(post -> PostsEntity.toPostsResponseDto(post, currentUser.getId(),
-        //                 likesRepo.countByPostId(post.getId()),
-        //                 likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-        //                 commentsRepo.countByPostId(post.getId())));
-
-        List<PostsResponseDto> dtoList = posts.stream()
+        return posts.stream()
                 .map(post -> PostsResponseDto.toPostsResponseDto(post, currentUser.getId(),
                         likesRepo.countByPostId(post.getId()),
                         likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
                         commentsRepo.countByPostId(post.getId())))
                 .collect(Collectors.toList());
-        
-        return new org.springframework.data.domain.PageImpl<>(dtoList, pageable, dtoList.size());
 
     }
 
@@ -189,12 +185,6 @@ public class PostsService {
 
         if (image == null || image.isEmpty()) {
             return null;
-        }
-
-        // type immage or vidio
-        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "image/webp", "video/mp4");
-        if (!allowedTypes.contains(image.getContentType())) {
-            throw new CustomException("image", "Only JPG and PNG images are allowed");
         }
 
         long maxSize = 5 * 1024 * 1024;
@@ -215,6 +205,22 @@ public class PostsService {
         Files.copy(image.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
         return "/uploads/" + fileName;
+    }
+
+
+    public com._blog._blog.util.MediaType getMediaType(MultipartFile image) {
+       List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "video/mp4");
+       if (!allowedTypes.contains(image.getContentType())) {
+           throw new CustomException("mediaType", "Invalid media type: " + image.getContentType());
+       }
+
+       if (image.getContentType().startsWith("image/")) {
+           return com._blog._blog.util.MediaType.IMAGE; // or other image types based on actual content type
+       } else if (image.getContentType().equals("video/mp4")) {
+           return com._blog._blog.util.MediaType.VIDEO;
+       } else {
+           throw new CustomException("mediaType", "Unsupported media type: " + image.getContentType());
+       }
     }
 
 }

@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.apache.tomcat.util.http.parser.MediaType;
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="post_media")
+@Table(name = "post_media")
 @Getter
 @Setter
 @Builder
@@ -38,11 +40,12 @@ public class PostMediaEntity {
 
     private String mediaUrl;
 
-    // @Enumerated(EnumType.STRING)
-    // private MediaType mediaType;
+    @Enumerated(EnumType.STRING)
+    private com._blog._blog.util.MediaType mediaType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonBackReference("post-media")
     @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private PostsEntity post;
 

@@ -45,6 +45,11 @@ public class ReportEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String reason;
 
+    @ManyToOne
+    @JoinColumn(name = "target_post_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    private PostsEntity targetPost;
+
     private LocalDateTime createdAt;
 
     @PrePersist

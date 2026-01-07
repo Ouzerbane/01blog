@@ -2,6 +2,8 @@ package com._blog._blog.dto;
 
 import java.util.UUID;
 
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +16,6 @@ import lombok.NoArgsConstructor;
 public class PostMediaDto {
     private UUID id;
     private String url;
+    private String type;
     
 }

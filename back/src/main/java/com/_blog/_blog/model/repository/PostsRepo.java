@@ -15,34 +15,36 @@ import com._blog._blog.model.entity.PostsEntity;
 @Repository
 public interface PostsRepo extends JpaRepository<PostsEntity, UUID> {
 
-        // Page<PostsEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    // Page<PostsEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-        Page<PostsEntity> findByAuthorIdInOrderByCreatedAtDesc(List<UUID> authorIds, Pageable pageable);
+    Page<PostsEntity> findByAuthorIdInOrderByCreatedAtDesc(List<UUID> authorIds, Pageable pageable);
 
-        // List<PostsEntity> findByAuthorIdOrderByCreatedAtDesc(UUID authorId);
-        @Query("""
-                            SELECT p
-                            FROM PostsEntity p
-                            LEFT JOIN FETCH p.media
-                            WHERE p.author.id = :authorId
-                            ORDER BY p.createdAt DESC
-                        """)
-        List<PostsEntity> findByAuthorIdWithMedia(@Param("authorId") UUID authorId);
+    // List<PostsEntity> findByAuthorIdOrderByCreatedAtDesc(UUID authorId);
+    @Query("""
+                SELECT p
+                FROM PostsEntity p
+                LEFT JOIN FETCH p.media
+                WHERE p.author.id = :authorId
+                ORDER BY p.createdAt DESC
+            """)
+    List<PostsEntity> findByAuthorIdWithMedia(@Param("authorId") UUID authorId);
 
-        List<PostsEntity> findAllByOrderByCreatedAtDesc();
+    List<PostsEntity> findAllByOrderByCreatedAtDesc();
 
-        Page<PostsEntity> findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(List<UUID> ids, String status,
-                        Pageable pageable);
+    // Page<PostsEntity> findByAuthorIdInAndStatusNotOrderByCreatedAtDesc(List<UUID>
+    // ids, String status,
+    // Pageable pageable);
 
-        @Query("""
-                            SELECT DISTINCT p
-                            FROM PostsEntity p
-                            LEFT JOIN FETCH p.media
-                            WHERE p.author.id IN :authorIds AND p.status <> :status
-                            ORDER BY p.createdAt DESC
-                        """)
-        List<PostsEntity> findPostsWithMediaByAuthors(@Param("authorIds") List<UUID> authorIds,
-                        @Param("status") String status,
-                        Pageable pageable);
+    @Query("""
+                SELECT DISTINCT p
+                FROM PostsEntity p
+                LEFT JOIN FETCH p.media
+                WHERE p.author.id IN :authorIds
+                  AND p.status <> :status
+                ORDER BY p.createdAt DESC
+            """)
+    List<PostsEntity> findPostsWithMediaByAuthors(
+            @Param("authorIds") List<UUID> authorIds,
+            @Param("status") String status);
 
 }

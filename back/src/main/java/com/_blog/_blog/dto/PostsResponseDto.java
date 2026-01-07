@@ -19,7 +19,6 @@ public class PostsResponseDto {
     private UUID id;
     private String title;
     private String content;
-    private String imageUrl;
     private LocalDateTime createdAt;
     private AuthorDto author;
     private boolean canEditAndDelet;
@@ -46,6 +45,7 @@ public class PostsResponseDto {
                 .map(media -> PostMediaDto.builder()
                         .id(media.getId())
                         .url(media.getMediaUrl())
+                        .type(media.getMediaType().name())
                         .build())
                 .toList();
         return PostsResponseDto.builder()
