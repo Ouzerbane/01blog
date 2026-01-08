@@ -18,6 +18,8 @@ public class ResponsCommetDto {
     private UUID userId;
     private String username;
     private String content;
+    private String url ;
     private LocalDateTime createdAt;
+    private boolean candelet;
     // private Long count ;
 }

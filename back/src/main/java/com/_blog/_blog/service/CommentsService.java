@@ -57,20 +57,25 @@ public class CommentsService {
                 }
 
                 return new ResponsCommetDto(savedComment.getId(), commentsDto.getId(), authEntity.getId(),
-                                authEntity.getUsername(), savedComment.getContent(), savedComment.getCreatedAt());
+                                authEntity.getUsername(), savedComment.getContent(), authEntity.getImageUrl(), savedComment.getCreatedAt(), true);
 
         }
 
-        public List<ResponsCommetDto> getComment(IdDto postId) {
+        public List<ResponsCommetDto> getComment(IdDto postId , AuthEntity currentUser) {
                 return commentsRepo.findAllByPostIdOrderByCreatedAtDesc(postId.getId())
                                 .stream()
-                                .map(comment -> new ResponsCommetDto(
-                                                comment.getId(),
-                                                comment.getPost().getId(),
-                                                comment.getUser().getId(),
-                                                comment.getUser().getUsername(),
-                                                comment.getContent(),
-                                                comment.getCreatedAt()))
+                                .map(comment -> {
+                                        boolean canDelete = comment.getUser().getId().equals(currentUser.getId());
+                                        return new ResponsCommetDto(
+                                                        comment.getId(),
+                                                        comment.getPost().getId(),
+                                                        comment.getUser().getId(),
+                                                        comment.getUser().getUsername(),
+                                                        comment.getContent(),
+                                                        comment.getUser().getImageUrl(),
+                                                        comment.getCreatedAt(),
+                                                        canDelete);
+                                        })
                                 .collect(Collectors.toList());
         }
 

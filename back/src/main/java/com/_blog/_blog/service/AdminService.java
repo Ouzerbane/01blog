@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.PostAdminDto;
+import com._blog._blog.dto.PostMediaDto;
 import com._blog._blog.dto.ReportDataDto;
 import com._blog._blog.dto.UserAdminDto;
 import com._blog._blog.exception.CustomException;
@@ -34,7 +35,9 @@ public class AdminService {
         if (!"ADMIN".equals(currentUser.getType())) {
             throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
-        AuthEntity user = authRepo.findById(id.getId()).orElseThrow(() -> new CustomException("user", "User not found"));;
+        AuthEntity user = authRepo.findById(id.getId())
+                .orElseThrow(() -> new CustomException("user", "User not found"));
+        ;
         authRepo.delete(user);
         return "User with ID " + id.getId() + " has been removed successfully.";
     }
@@ -43,7 +46,9 @@ public class AdminService {
         if (!"ADMIN".equals(currentUser.getType())) {
             throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
-        ReportEntity user = reportRepo.findById(id.getId()).orElseThrow(() -> new CustomException("post", "post not found"));;
+        ReportEntity user = reportRepo.findById(id.getId())
+                .orElseThrow(() -> new CustomException("post", "post not found"));
+        ;
         reportRepo.delete(user);
         return "post has been removed successfully.";
     }
@@ -54,12 +59,11 @@ public class AdminService {
         }
         List<ReportDataDto> reports = reportRepo.findAllOrderByTime().stream()
                 .map(repo -> ReportDataDto.builder()
-                .id(repo.getId())
-                .reason(repo.getReason())
-                .reporter(repo.getReporter().getUsername())
-                .targetUser(repo.getTargetUser().getUsername())
-                .build()
-                )
+                        .id(repo.getId())
+                        .reason(repo.getReason())
+                        .reporter(repo.getReporter().getUsername())
+                        .targetUser(repo.getTargetUser().getUsername())
+                        .build())
                 .collect(Collectors.toList());
 
         return reports;
@@ -69,7 +73,8 @@ public class AdminService {
         if (!"ADMIN".equals(currentUser.getType())) {
             throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
-        AuthEntity banUser = authRepo.findById(id.getId()).orElseThrow(() -> new CustomException("user", "User not found"));
+        AuthEntity banUser = authRepo.findById(id.getId())
+                .orElseThrow(() -> new CustomException("user", "User not found"));
         if (banUser.getAction().equals("BAN")) {
             banUser.setAction("ACTIVE");
         } else {
@@ -83,7 +88,8 @@ public class AdminService {
         if (!"ADMIN".equals(currentUser.getType())) {
             throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
-        PostsEntity post = postRepo.findById(id.getId()).orElseThrow(() -> new CustomException("post", "post not found"));
+        PostsEntity post = postRepo.findById(id.getId())
+                .orElseThrow(() -> new CustomException("post", "post not found"));
         if (post.getStatus().equals("show")) {
             post.setStatus("Hide");
         } else {
@@ -112,19 +118,29 @@ public class AdminService {
 
         List<PostsEntity> Posts = postRepo.findAllByOrderByCreatedAtDesc();
         List<PostAdminDto> postsDto = Posts.stream()
-                .map(post -> PostAdminDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                // .imageUrl(post.getImageUrl())
-                .createdAt(post.getCreatedAt())
-                .status(post.getStatus())
-                .author(PostAdminDto.AuthorDto.builder()
-                        .id(post.getAuthor().getId())
-                        .username(post.getAuthor().getUsername())
-                        .email(post.getAuthor().getEmail())
-                        .build())
-                .build())
+                .map(post -> {
+                    List<PostMediaDto> mediaDtos = post.getMedia().stream()
+                            .map(media -> PostMediaDto.builder()
+                                    .id(media.getId())
+                                    .url(media.getMediaUrl())
+                                    .type(media.getMediaType().name())
+                                    .build())
+                            .collect(Collectors.toList());
+                    return PostAdminDto.builder()
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            // .imageUrl(post.getImageUrl())
+                            .media(mediaDtos)
+                            .createdAt(post.getCreatedAt())
+                            .status(post.getStatus())
+                            .author(PostAdminDto.AuthorDto.builder()
+                                    .id(post.getAuthor().getId())
+                                    .username(post.getAuthor().getUsername())
+                                    .email(post.getAuthor().getEmail())
+                                    .build())
+                            .build();
+                })
                 .collect(Collectors.toList());
         return postsDto;
     }

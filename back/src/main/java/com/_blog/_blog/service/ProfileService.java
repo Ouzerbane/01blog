@@ -36,6 +36,9 @@ public class ProfileService {
     private CommentsRepo commentsRepo;
 
     public List<PostsResponseDto> getPostsByUserId(UUID userId, UUID currentUserId) {
+        AuthEntity user = authRepo.findById(userId)
+                .orElseThrow(() -> new CustomException("user", "user not found"));
+                
         List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId);
         return posts.stream().map(post -> {
             Long countLikes = likesRepo.countByPostId(post.getId());

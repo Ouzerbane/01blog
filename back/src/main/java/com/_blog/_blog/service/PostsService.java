@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,7 +38,9 @@ import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostMediaRepo;
 import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.util.NotificationType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import aj.org.objectweb.asm.TypeReference;
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
 
@@ -63,6 +66,9 @@ public class PostsService {
 
     @Autowired
     private NotificationRepo notificationRepo;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Transactional
     public PostsEntity savePost(
@@ -123,7 +129,8 @@ public class PostsService {
         return savedPost;
     }
 
-    public PostsEntity editPost(String title, String content, MultipartFile image, UUID id, AuthEntity currentUser)
+    public PostsEntity editPost(String title, String content, List<MultipartFile> image, UUID id,
+            AuthEntity currentUser, String oldMediaIds)
             throws IOException, java.io.IOException {
         PostsEntity post = postsRepo.findById(id)
                 .orElseThrow(() -> new CustomException("post", "Post not found"));
@@ -131,16 +138,42 @@ public class PostsService {
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new CustomException("authorization", "You are not the author of this post");
         }
-
         title = title.trim();
         content = content.trim();
-
-        String imageUrl = uploadImage(image);
-
         post.setTitle(title);
         post.setContent(content);
-        // post.setImageUrl(imageUrl);
+
+        List<UUID> mediaIds = objectMapper.readValue(
+                oldMediaIds,
+                new com.fasterxml.jackson.core.type.TypeReference<List<UUID>>() {
+                });
+
+        // DELETE OLD MEDIA
+        Iterator<PostMediaEntity> iterator = post.getMedia().iterator();
+        while (iterator.hasNext()) {
+            PostMediaEntity media = iterator.next();
+            if (!mediaIds.contains(media.getId())) {
+                deleteFile(media.getMediaUrl());
+                iterator.remove();
+                postMediaRepo.delete(media);
+            }
+        }
+
+        // ADD NEW MEDIA
+        if (image != null && !image.isEmpty()) {
+            for (MultipartFile img : image) {
+                String url = uploadImage(img);
+                PostMediaEntity media = PostMediaEntity.builder()
+                        .mediaUrl(url)
+                        .mediaType(getMediaType(img))
+                        .post(post)
+                        .build();
+                post.getMedia().add(media);
+            }
+        }
+
         return postsRepo.save(post);
+
     }
 
     public void deletePost(IdDto idDto, AuthEntity currentUser) {
@@ -157,7 +190,7 @@ public class PostsService {
         postsRepo.delete(post);
     }
 
-    public List<PostsResponseDto> getPosts( AuthEntity currentUser) {
+    public List<PostsResponseDto> getPosts(AuthEntity currentUser) {
 
         List<UUID> followingIds = followerRepo.findAllByFollowerId(currentUser.getId())
                 .stream()
@@ -207,20 +240,41 @@ public class PostsService {
         return "/uploads/" + fileName;
     }
 
-
     public com._blog._blog.util.MediaType getMediaType(MultipartFile image) {
-       List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "video/mp4");
-       if (!allowedTypes.contains(image.getContentType())) {
-           throw new CustomException("mediaType", "Invalid media type: " + image.getContentType());
-       }
+        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "video/mp4");
+        if (!allowedTypes.contains(image.getContentType())) {
+            throw new CustomException("mediaType", "Invalid media type: " + image.getContentType());
+        }
 
-       if (image.getContentType().startsWith("image/")) {
-           return com._blog._blog.util.MediaType.IMAGE; // or other image types based on actual content type
-       } else if (image.getContentType().equals("video/mp4")) {
-           return com._blog._blog.util.MediaType.VIDEO;
-       } else {
-           throw new CustomException("mediaType", "Unsupported media type: " + image.getContentType());
-       }
+        if (image.getContentType().startsWith("image/")) {
+            return com._blog._blog.util.MediaType.IMAGE; // or other image types based on actual content type
+        } else if (image.getContentType().equals("video/mp4")) {
+            return com._blog._blog.util.MediaType.VIDEO;
+        } else {
+            throw new CustomException("mediaType", "Unsupported media type: " + image.getContentType());
+        }
     }
+
+
+    private void deleteFile(String mediaUrl) {
+    try {
+        if (mediaUrl == null || mediaUrl.isBlank()) {
+            return;
+        }
+
+        String filePathStr = mediaUrl.replaceFirst("^/", "");
+
+        Path filePath = Paths.get(filePathStr)
+                .toAbsolutePath()
+                .normalize();
+
+        Files.deleteIfExists(filePath);
+
+    } catch (Exception e) {
+        System.out.println("Failed to delete file: " + mediaUrl);
+        e.printStackTrace();
+    }
+}
+
 
 }

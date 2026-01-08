@@ -35,6 +35,7 @@ public class PostsResponseDto {
         private UUID id;
         private String username;
         private String email;
+        private String imagUrl;
     }
 
     public static PostsResponseDto toPostsResponseDto(PostsEntity post, UUID currentUserId, Long countLikes,
@@ -58,6 +59,7 @@ public class PostsResponseDto {
                         .id(post.getAuthor().getId())
                         .username(post.getAuthor().getUsername())
                         .email(post.getAuthor().getEmail())
+                        .imagUrl(post.getAuthor().getImageUrl())
                         .build())
                 .canEditAndDelet(canEdit)
                 .like(islike)

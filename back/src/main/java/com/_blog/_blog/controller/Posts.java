@@ -97,10 +97,11 @@ public class Posts {
             @RequestParam("id") @NotNull(message = "id is required") UUID id,
             @RequestParam("title") @NotBlank(message = "title is required") String title,
             @RequestParam("content") @NotBlank(message = "content is required") String content,
-            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+            @RequestParam(required = false) List<MultipartFile> image,
+            @RequestParam("oldMediaIds") String oldMediaIds) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser);
+        PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser , oldMediaIds);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 
@@ -139,7 +140,8 @@ public class Posts {
     // GET COMMENTS
     @GetMapping("/get-comments")
     public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") UUID postId) {
-        List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId));
+        AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId) , currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
     }
 

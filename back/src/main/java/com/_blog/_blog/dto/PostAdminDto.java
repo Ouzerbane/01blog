@@ -1,6 +1,7 @@
 package com._blog._blog.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -17,10 +18,10 @@ public class PostAdminDto {
     private UUID id;
     private String title;
     private String content;
-    private String imageUrl;
     private LocalDateTime createdAt;
     private AuthorDto author;
     private String status ;
+    private List<PostMediaDto> media;
   
     
     @Data
