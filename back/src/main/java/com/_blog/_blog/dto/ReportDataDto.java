@@ -13,7 +13,17 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReportDataDto {
     private UUID id;
-    private String reporter;
-    private String targetUser;
     private String reason;
+
+    private String reporter;
+    private UUID reporterId ;
+
+    private String targetUser;
+    private UUID targetUserId ;
+
+    private String type;
+
+    private String targetPost;
+    private UUID targetPostId;
+
 }

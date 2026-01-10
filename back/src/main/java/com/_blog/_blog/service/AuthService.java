@@ -27,14 +27,14 @@ public class AuthService {
     }
 
     public String login(String usernameOrEmail, String rawPassword) {
-        ////for login
+        //// for login
 
         AuthEntity user = empRepo.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new CustomException("user", "User not found"));
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new CustomException("password", "Invalid password");
         }
-        if (!user.getType().equals("ADMIN")){
+        if (!user.getType().equals("ADMIN")) {
             if (user.getAction().equals("BAN")) {
                 throw new CustomException("User", "User is ban");
             }
@@ -43,10 +43,10 @@ public class AuthService {
     }
 
     public AuthEntity registerservece(RegisterRequest req) {
-       
+
         req.normalizeAndValidate();
 
-        AuthEntity autentity = req.toAuthEntity(); 
+        AuthEntity autentity = req.toAuthEntity();
         if (empRepo.existsByUsername(autentity.getUsername())) {
             throw new CustomException("username", "Username already exists");
         }

@@ -25,9 +25,10 @@ public interface PostsRepo extends JpaRepository<PostsEntity, UUID> {
                 FROM PostsEntity p
                 LEFT JOIN FETCH p.media
                 WHERE p.author.id = :authorId
+                AND p.status <> :status
                 ORDER BY p.createdAt DESC
             """)
-    List<PostsEntity> findByAuthorIdWithMedia(@Param("authorId") UUID authorId);
+    List<PostsEntity> findByAuthorIdWithMedia(@Param("authorId") UUID authorId, @Param("status") String status);
 
     List<PostsEntity> findAllByOrderByCreatedAtDesc();
 

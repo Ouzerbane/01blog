@@ -2,11 +2,13 @@ package com._blog._blog.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -78,16 +80,24 @@ public class Posts {
 
     // SERVE FILES
     @GetMapping("/uploads/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
-        Path file = Paths.get("uploads").resolve(filename).normalize();
-        Resource resource = new UrlResource(file.toUri());
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException {
+
+        Path filePath = Paths.get("uploads").resolve(filename).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
 
         if (!resource.exists()) {
             return ResponseEntity.notFound().build();
         }
 
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
         return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                 .body(resource);
     }
 
@@ -101,7 +111,7 @@ public class Posts {
             @RequestParam("oldMediaIds") String oldMediaIds) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser , oldMediaIds);
+        PostsEntity edit = emptyService.editPost(title, content, image, id, currentUser, oldMediaIds);
         return ResponseEntity.ok(new ApiResponse<>(true, null, edit));
     }
 
@@ -141,7 +151,7 @@ public class Posts {
     @GetMapping("/get-comments")
     public ResponseEntity<ApiResponse<?>> getComment(@RequestParam("postId") UUID postId) {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId) , currentUser);
+        List<ResponsCommetDto> comments = commentsService.getComment(new IdDto(postId), currentUser);
         return ResponseEntity.ok(new ApiResponse<>(true, null, comments));
     }
 

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com._blog._blog.dto.ApiResponse;
 import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.dto.RegisterRequest;
-import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.JwtEntity;
 import com._blog._blog.model.repository.JawtRepo;
 import com._blog._blog.service.AuthService;
@@ -54,12 +53,10 @@ public class Auth {
                 .httpOnly(true)
                 .path("/")
                 .maxAge(24 * 60 * 60)
-                // .sameSite("None")
                 .secure(false)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
-
         return ResponseEntity.ok(new ApiResponse<>(true, null, null));
     }
 

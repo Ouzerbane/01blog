@@ -58,12 +58,25 @@ public class AdminService {
             throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         List<ReportDataDto> reports = reportRepo.findAllOrderByTime().stream()
-                .map(repo -> ReportDataDto.builder()
-                        .id(repo.getId())
-                        .reason(repo.getReason())
-                        .reporter(repo.getReporter().getUsername())
-                        .targetUser(repo.getTargetUser().getUsername())
-                        .build())
+                .map(repo ->{
+                    ReportDataDto dto = new ReportDataDto();
+                    dto.setId(repo.getId());
+                    dto.setReason(repo.getReason());
+                    dto.setReporter(repo.getReporter().getUsername());
+                    dto.setReporterId(repo.getReporter().getId());
+
+                    if (repo.getTargetUser() != null) {
+                        dto.setTargetUser(repo.getTargetUser().getUsername());
+                        dto.setTargetUserId(repo.getTargetUser().getId());
+                        dto.setType("USER");
+                    }
+                    if (repo.getTargetPost() != null) {
+                        dto.setTargetPost(repo.getTargetPost().getTitle());
+                        dto.setTargetPostId(repo.getTargetPost().getId());
+                        dto.setType("POST");
+                    }
+                    return dto; 
+                })
                 .collect(Collectors.toList());
 
         return reports;
@@ -138,6 +151,7 @@ public class AdminService {
                                     .id(post.getAuthor().getId())
                                     .username(post.getAuthor().getUsername())
                                     .email(post.getAuthor().getEmail())
+                                    .imageUrl(post.getAuthor().getImageUrl())
                                     .build())
                             .build();
                 })

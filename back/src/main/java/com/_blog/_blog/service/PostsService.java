@@ -1,29 +1,21 @@
 package com._blog._blog.service;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.print.attribute.standard.Media;
 
-import org.apache.tomcat.util.http.parser.MediaType;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.IdDto;
-import com._blog._blog.dto.PostsDto;
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.exception.CustomException;
 import com._blog._blog.model.entity.AuthEntity;
@@ -38,9 +30,10 @@ import com._blog._blog.model.repository.NotificationRepo;
 import com._blog._blog.model.repository.PostMediaRepo;
 import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.util.NotificationType;
+import com._blog._blog.util.utils.Postutil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aj.org.objectweb.asm.TypeReference;
+
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
 
@@ -70,6 +63,8 @@ public class PostsService {
     @Autowired
     private ObjectMapper objectMapper;
 
+   
+
     @Transactional
     public PostsEntity savePost(
             String title,
@@ -80,6 +75,13 @@ public class PostsService {
         title = title.trim();
         content = content.trim();
 
+        if (title.isBlank()) {
+            throw new CustomException("title", "Title cannot be blank");
+        }
+        if (content.isBlank()) {
+            throw new CustomException("content", "Content cannot be blank");
+        }
+
         PostsEntity post = PostsEntity.builder()
                 .title(title)
                 .content(content)
@@ -89,8 +91,9 @@ public class PostsService {
 
         if (images != null && images.length > 0) {
             for (MultipartFile img : images) {
-                com._blog._blog.util.MediaType mediaType = getMediaType(img);
-                String url = uploadImage(img);
+                Postutil.validateMedia(img);
+                com._blog._blog.util.MediaType mediaType = Postutil.getMediaType(img);
+                String url = Postutil.uploadImage(img);
 
                 PostMediaEntity media = PostMediaEntity.builder()
                         .mediaUrl(url)
@@ -153,7 +156,7 @@ public class PostsService {
         while (iterator.hasNext()) {
             PostMediaEntity media = iterator.next();
             if (!mediaIds.contains(media.getId())) {
-                deleteFile(media.getMediaUrl());
+                Postutil.deleteFile(media.getMediaUrl());
                 iterator.remove();
                 postMediaRepo.delete(media);
             }
@@ -162,16 +165,15 @@ public class PostsService {
         // ADD NEW MEDIA
         if (image != null && !image.isEmpty()) {
             for (MultipartFile img : image) {
-                String url = uploadImage(img);
+                String url = Postutil.uploadImage(img);
                 PostMediaEntity media = PostMediaEntity.builder()
                         .mediaUrl(url)
-                        .mediaType(getMediaType(img))
+                        .mediaType(Postutil.getMediaType(img))
                         .post(post)
                         .build();
                 post.getMedia().add(media);
             }
         }
-
         return postsRepo.save(post);
 
     }
@@ -213,68 +215,6 @@ public class PostsService {
                 .collect(Collectors.toList());
 
     }
-
-    public String uploadImage(MultipartFile image) throws IOException, java.io.IOException {
-
-        if (image == null || image.isEmpty()) {
-            return null;
-        }
-
-        long maxSize = 5 * 1024 * 1024;
-        if (image.getSize() > maxSize) {
-            throw new CustomException("image", "Image size must be less than 5MB");
-        }
-
-        Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();// normalize for rm . and ..
-        Files.createDirectories(uploadDir);
-        System.out.println("------------->" + image.getSize());
-
-        String originalFileName = Paths.get(image.getOriginalFilename()).getFileName().toString();
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-        String fileName = UUID.randomUUID() + extension;
-        Path targetLocation = uploadDir.resolve(fileName);
-
-        Files.copy(image.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-        return "/uploads/" + fileName;
-    }
-
-    public com._blog._blog.util.MediaType getMediaType(MultipartFile image) {
-        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "video/mp4");
-        if (!allowedTypes.contains(image.getContentType())) {
-            throw new CustomException("mediaType", "Invalid media type: " + image.getContentType());
-        }
-
-        if (image.getContentType().startsWith("image/")) {
-            return com._blog._blog.util.MediaType.IMAGE; // or other image types based on actual content type
-        } else if (image.getContentType().equals("video/mp4")) {
-            return com._blog._blog.util.MediaType.VIDEO;
-        } else {
-            throw new CustomException("mediaType", "Unsupported media type: " + image.getContentType());
-        }
-    }
-
-
-    private void deleteFile(String mediaUrl) {
-    try {
-        if (mediaUrl == null || mediaUrl.isBlank()) {
-            return;
-        }
-
-        String filePathStr = mediaUrl.replaceFirst("^/", "");
-
-        Path filePath = Paths.get(filePathStr)
-                .toAbsolutePath()
-                .normalize();
-
-        Files.deleteIfExists(filePath);
-
-    } catch (Exception e) {
-        System.out.println("Failed to delete file: " + mediaUrl);
-        e.printStackTrace();
-    }
-}
 
 
 }

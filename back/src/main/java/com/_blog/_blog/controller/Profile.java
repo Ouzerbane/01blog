@@ -61,18 +61,7 @@ public class Profile {
         AuthEntity user = (AuthEntity) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-        String uploadDir = "uploads/";
-        File dir = new File(uploadDir);
-        if (!dir.exists())
-            dir.mkdirs();
-
-        String fileName = user.getId() + "_" + System.currentTimeMillis() + "_" + image.getOriginalFilename();
-        Path dest = Paths.get(uploadDir + fileName);
-        Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-
-        String imageUrl = "/uploads/" + fileName;
-
-        profileService.updateProfileImage(user.getId(), imageUrl);
+        String imageUrl = profileService.updateProfileImage(user, image);
 
         return ResponseEntity.ok(new ApiResponse<>(true, null, imageUrl));
     }

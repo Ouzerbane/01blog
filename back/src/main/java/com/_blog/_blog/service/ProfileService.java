@@ -1,11 +1,17 @@
 package com._blog._blog.service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.dto.UserDto;
@@ -39,7 +45,7 @@ public class ProfileService {
         AuthEntity user = authRepo.findById(userId)
                 .orElseThrow(() -> new CustomException("user", "user not found"));
                 
-        List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId);
+        List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId,"Hide");
         return posts.stream().map(post -> {
             Long countLikes = likesRepo.countByPostId(post.getId());
             Long countComments = commentsRepo.countByPostId(post.getId());
@@ -58,10 +64,24 @@ public class ProfileService {
 
     }
 
-     public void  updateProfileImage(UUID userId , String urile) {
-        AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
-        userinfo.setImageUrl(urile);
+     public String updateProfileImage(AuthEntity user , MultipartFile image) throws java.io.IOException {
+
+        String uploadDir = "uploads/";
+        File dir = new File(uploadDir);
+        if (!dir.exists())
+            dir.mkdirs();
+
+        String fileName = user.getId() + "_" + System.currentTimeMillis() + "_" + image.getOriginalFilename();
+        Path dest = Paths.get(uploadDir + fileName);
+        Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+        String imageUrl = "/uploads/" + fileName;
+
+        AuthEntity userinfo = authRepo.findById(user.getId()).orElseThrow(() -> new CustomException("user", "user not found"));
+        userinfo.setImageUrl(imageUrl);
         authRepo.save(userinfo);
+        return imageUrl;
     }
+ 
 
 }
