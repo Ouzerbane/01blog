@@ -32,7 +32,9 @@
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/UserDto.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/dto/UserFollowDto.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/exception/CustomException.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/exception/ForbiddenException.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/exception/GlobalExceptionHandler.java
+/home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/exception/NotFoundException.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/AuthEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/CommentsEntity.java
 /home/oyoussef/Desktop/01blog/back/src/main/java/com/_blog/_blog/model/entity/FollowerEntity.java
