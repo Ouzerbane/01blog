@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.UserFollowDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.FollowerEntity;
 import com._blog._blog.model.entity.NotificationEntity;
@@ -37,7 +38,7 @@ public class FollowerService {
     public UserFollowDto followUser(IdDto followId, AuthEntity currentUser) {
 
         AuthEntity otherUser = authRepo.findById(followId.getId())
-                .orElseThrow(() -> new CustomException("user", "User not found"));
+                .orElseThrow(() -> new NotFoundException("user", "User not found"));
 
         if (otherUser.getId().equals(currentUser.getId())) {
             throw new CustomException("follow", "You cannot follow yourself");
@@ -135,7 +136,7 @@ public class FollowerService {
 
     public List<UserFollowDto> getFollowersService(UUID profileUserId, AuthEntity loginUser) {
         authRepo.findById(profileUserId)
-                .orElseThrow(() -> new CustomException("user", "User not found"));
+                .orElseThrow(() -> new NotFoundException("user", "User not found"));
 
         List<FollowerEntity> followers = followerRepo.findAllByFollowingId(profileUserId);
 
@@ -154,7 +155,7 @@ public class FollowerService {
 
     public List<UserFollowDto> getFollowingService(UUID profileUserId, AuthEntity loginUser) {
         authRepo.findById(profileUserId)
-                .orElseThrow(() -> new CustomException("user", "User not found"));
+                .orElseThrow(() -> new NotFoundException("user", "User not found"));
 
         List<FollowerEntity> followingList = followerRepo.findAllByFollowerId(profileUserId);
 

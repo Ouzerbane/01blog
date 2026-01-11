@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.ForbiddenException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.FollowerEntity;
 import com._blog._blog.model.entity.NotificationEntity;
@@ -136,10 +138,10 @@ public class PostsService {
             AuthEntity currentUser, String oldMediaIds)
             throws IOException, java.io.IOException {
         PostsEntity post = postsRepo.findById(id)
-                .orElseThrow(() -> new CustomException("post", "Post not found"));
+                .orElseThrow(() -> new NotFoundException("post", "Post not found"));
 
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
-            throw new CustomException("authorization", "You are not the author of this post");
+            throw new ForbiddenException("authorization", "You are not the author of this post");
         }
         title = title.trim();
         content = content.trim();
@@ -180,14 +182,14 @@ public class PostsService {
 
     public void deletePost(IdDto idDto, AuthEntity currentUser) {
         PostsEntity post = postsRepo.findById(idDto.getId())
-                .orElseThrow(() -> new CustomException("post", "Post not found"));
+                .orElseThrow(() -> new NotFoundException("post", "Post not found"));
         if (currentUser.getType().toLowerCase().equals("admin")) {
             postsRepo.delete(post);
             return;
         }
 
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
-            throw new CustomException("authorization", "You are not the author of this post");
+            throw new ForbiddenException("authorization", "You are not the author of this post");
         }
         postsRepo.delete(post);
     }

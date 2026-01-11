@@ -12,6 +12,8 @@ import com._blog._blog.dto.PostMediaDto;
 import com._blog._blog.dto.ReportDataDto;
 import com._blog._blog.dto.UserAdminDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.ForbiddenException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.entity.ReportEntity;
@@ -33,10 +35,10 @@ public class AdminService {
 
     public String removeUserService(IdDto id, AuthEntity currentUser) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         AuthEntity user = authRepo.findById(id.getId())
-                .orElseThrow(() -> new CustomException("user", "User not found"));
+                .orElseThrow(() -> new NotFoundException("user", "User not found"));
         ;
         authRepo.delete(user);
         return "User with ID " + id.getId() + " has been removed successfully.";
@@ -44,10 +46,10 @@ public class AdminService {
 
     public String removeReportService(IdDto id, AuthEntity currentUser) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         ReportEntity user = reportRepo.findById(id.getId())
-                .orElseThrow(() -> new CustomException("post", "post not found"));
+                .orElseThrow(() -> new NotFoundException("post", "post not found"));
         ;
         reportRepo.delete(user);
         return "post has been removed successfully.";
@@ -55,7 +57,7 @@ public class AdminService {
 
     public List<ReportDataDto> getReportService(AuthEntity currentUser) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         List<ReportDataDto> reports = reportRepo.findAllOrderByTime().stream()
                 .map(repo ->{
@@ -84,7 +86,7 @@ public class AdminService {
 
     public String BanService(AuthEntity currentUser, IdDto id) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         AuthEntity banUser = authRepo.findById(id.getId())
                 .orElseThrow(() -> new CustomException("user", "User not found"));
@@ -99,7 +101,7 @@ public class AdminService {
 
     public String ChangeStatusService(AuthEntity currentUser, IdDto id) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         PostsEntity post = postRepo.findById(id.getId())
                 .orElseThrow(() -> new CustomException("post", "post not found"));
@@ -114,7 +116,7 @@ public class AdminService {
 
     public List<UserAdminDto> getUsersService(AuthEntity currentUser) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
         List<AuthEntity> users = authRepo.findAllExcept(currentUser.getId());
 
@@ -126,7 +128,7 @@ public class AdminService {
 
     public List<PostAdminDto> getPostsService(AuthEntity currentUser) {
         if (!"ADMIN".equals(currentUser.getType())) {
-            throw new CustomException("ACCESS_DENIED", "You are not allowed to access statistics");
+            throw new ForbiddenException("ACCESS_DENIED", "You are not allowed to access statistics");
         }
 
         List<PostsEntity> Posts = postRepo.findAllByOrderByCreatedAtDesc();

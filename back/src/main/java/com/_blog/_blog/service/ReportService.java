@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com._blog._blog.dto.ReportDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.entity.ReportEntity;
@@ -27,7 +28,7 @@ public class ReportService {
     public void reportUserService(ReportDto reportDto, AuthEntity currentUser) {
         reportDto.setReason(CheckReason(reportDto.getReason()));
         AuthEntity targetUser = authRepo.findById(reportDto.getTargetUserId())
-                .orElseThrow(() -> new CustomException("user", "User not found"));
+                .orElseThrow(() -> new NotFoundException("user", "User not found"));
         ReportEntity report = ReportEntity.builder()
                 .reporter(currentUser)
                 .targetUser(targetUser)
@@ -40,7 +41,7 @@ public class ReportService {
     public void reportPostService(ReportDto reportDto, AuthEntity currentUser) {
         reportDto.setReason(CheckReason(reportDto.getReason()));
         PostsEntity targetPost = postsRepo.findById(reportDto.getTargetPostId())
-                .orElseThrow(() -> new CustomException("post", "Post not found"));
+                .orElseThrow(() -> new NotFoundException("post", "Post not found"));
 
         ReportEntity report = ReportEntity.builder()
                 .reporter(currentUser)

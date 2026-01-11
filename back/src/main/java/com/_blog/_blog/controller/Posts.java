@@ -1,18 +1,15 @@
 package com._blog._blog.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,12 +31,10 @@ import com._blog._blog.dto.CommentsDto;
 import com._blog._blog.dto.DeletCpmmentDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.LikeDto;
-import com._blog._blog.dto.PostsDto;
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.dto.ResponsCommetDto;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
-import com._blog._blog.model.repository.AuthRepo;
 import com._blog._blog.service.CommentsService;
 import com._blog._blog.service.LikesService;
 import com._blog._blog.service.PostsService;

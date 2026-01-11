@@ -12,6 +12,8 @@ import com._blog._blog.dto.DeletCpmmentDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.ResponsCommetDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.ForbiddenException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.CommentsEntity;
 import com._blog._blog.model.entity.NotificationEntity;
@@ -35,7 +37,7 @@ public class CommentsService {
 
         public ResponsCommetDto addComment(CommentsDto commentsDto, AuthEntity authEntity) {
                 PostsEntity post = postsRepo.findById(commentsDto.getId())
-                                .orElseThrow(() -> new CustomException("post", "Post not found"));
+                                .orElseThrow(() -> new NotFoundException("post", "Post not found"));
 
                 CommentsEntity savedComment = commentsRepo.save(
                                 CommentsEntity.builder()
@@ -46,7 +48,7 @@ public class CommentsService {
                 if (!Objects.equals(authEntity.getId(), post.getAuthor().getId())) {
 
                         NotificationEntity notification = NotificationEntity.builder()
-                                        .message(authEntity.getUsername() + " created add comment to post "
+                                        .message(authEntity.getUsername() + "add comment to post "
                                                         + post.getTitle())
                                         .user(post.getAuthor())
                                         .read(false)
@@ -81,17 +83,16 @@ public class CommentsService {
 
         public Long deleteComment(DeletCpmmentDto commentId, AuthEntity currentUser) {
                 CommentsEntity comment = commentsRepo.findById(commentId.getId())
-                                .orElseThrow(() -> new CustomException("comment", "Comment not found"));
+                                .orElseThrow(() -> new NotFoundException("comment", "Comment not found"));
 
                 PostsEntity post = postsRepo.findById(commentId.getPostId())
-                                .orElseThrow(() -> new CustomException("post", "Post not found"));
+                                .orElseThrow(() -> new NotFoundException("post", "Post not found"));
 
                 if (!comment.getUser().getId().equals(currentUser.getId())) {
-                        throw new CustomException("comment", "You are not authorized to delete this comment");
+                        throw new ForbiddenException("comment", "You are not authorized to delete this comment");
                 }
                 commentsRepo.delete(comment);
                 Long count = commentsRepo.countByPostId(post.getId());
-                System.out.println("count after delete: " + count);
                 return count;
         }
 }

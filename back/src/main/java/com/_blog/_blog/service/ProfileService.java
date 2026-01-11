@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com._blog._blog.dto.PostsResponseDto;
 import com._blog._blog.dto.UserDto;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.entity.PostsEntity;
 import com._blog._blog.model.repository.AuthRepo;
@@ -43,7 +44,7 @@ public class ProfileService {
 
     public List<PostsResponseDto> getPostsByUserId(UUID userId, UUID currentUserId) {
         AuthEntity user = authRepo.findById(userId)
-                .orElseThrow(() -> new CustomException("user", "user not found"));
+                .orElseThrow(() -> new NotFoundException("user", "user not found"));
                 
         List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId,"Hide");
         return posts.stream().map(post -> {
@@ -56,7 +57,7 @@ public class ProfileService {
     }
 
     public UserDto UserInfo(UUID userId) {
-        AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new CustomException("user", "user not found"));
+        AuthEntity userinfo = authRepo.findById(userId).orElseThrow(() -> new NotFoundException("user", "user not found"));
         Long followers = followerRepo.countByFollowingId(userId);
         Long fllowing = followerRepo.countByFollowerId(userId);
         System.out.println(userinfo.getImageUrl());

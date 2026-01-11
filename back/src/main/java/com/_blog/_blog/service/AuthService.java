@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com._blog._blog.dto.RegisterRequest;
 import com._blog._blog.exception.CustomException;
+import com._blog._blog.exception.ForbiddenException;
 import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
 import com._blog._blog.util.jwt.JwtUtil;
@@ -36,7 +37,7 @@ public class AuthService {
         }
         if (!user.getType().equals("ADMIN")) {
             if (user.getAction().equals("BAN")) {
-                throw new CustomException("User", "User is ban");
+                throw new ForbiddenException("User", "User is ban");
             }
         }
         return jwtUtil.generateToken(user.getId(), user.getUsername());

@@ -54,7 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = extractTokenFromCookie(request);
 
         if (token == null || !jwtUtil.isTokenValid(token) || jwtRepo.existsByJwt(token)) {
-            sendError(response, "token", "Invalid or missing token", HttpServletResponse.SC_FORBIDDEN);
+            sendError(response, "token", "Invalid or missing token", HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
