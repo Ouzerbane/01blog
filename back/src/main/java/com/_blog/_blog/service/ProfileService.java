@@ -1,10 +1,5 @@
 package com._blog._blog.service;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,6 +19,8 @@ import com._blog._blog.model.repository.CommentsRepo;
 import com._blog._blog.model.repository.FollowerRepo;
 import com._blog._blog.model.repository.LikesRepo;
 import com._blog._blog.model.repository.PostsRepo;
+import com._blog._blog.util.MediaType;
+import com._blog._blog.util.utils.Postutil;
 
 @Service
 public class ProfileService {
@@ -45,8 +42,8 @@ public class ProfileService {
     public List<PostsResponseDto> getPostsByUserId(UUID userId, UUID currentUserId) {
         AuthEntity user = authRepo.findById(userId)
                 .orElseThrow(() -> new NotFoundException("user", "user not found"));
-                
-        List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId,"Hide");
+
+        List<PostsEntity> posts = postsRepo.findByAuthorIdWithMedia(userId, "Hide");
         return posts.stream().map(post -> {
             Long countLikes = likesRepo.countByPostId(post.getId());
             Long countComments = commentsRepo.countByPostId(post.getId());
@@ -65,24 +62,35 @@ public class ProfileService {
 
     }
 
-     public String updateProfileImage(AuthEntity user , MultipartFile image) throws java.io.IOException {
+    public String updateProfileImage(AuthEntity user, MultipartFile image) throws java.io.IOException {
 
-        String uploadDir = "uploads/";
-        File dir = new File(uploadDir);
-        if (!dir.exists())
-            dir.mkdirs();
+        MediaType type = Postutil.getMediaType(image);
+        if (!type.toString().equals("IMAGE")){
+            throw new CustomException("profile","profile moset be just image");
+        }
 
-        String fileName = user.getId() + "_" + System.currentTimeMillis() + "_" + image.getOriginalFilename();
-        Path dest = Paths.get(uploadDir + fileName);
-        Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
 
-        String imageUrl = "/uploads/" + fileName;
+
+        // String uploadDir = "uploads/";
+        // File dir = new File(uploadDir);
+        // if (!dir.exists()) {
+        //     dir.mkdirs();
+        // }
+
+        // String fileName = user.getId() + "_" + System.currentTimeMillis() + "_" + image.getOriginalFilename();
+        // Path dest = Paths.get(uploadDir + fileName);
+        // Files.copy(image.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+        String imageUrl = Postutil.uploadImage(image);
+        // if (){
+            Postutil.deleteFile(user.getImageUrl());
+
+        // }
 
         AuthEntity userinfo = authRepo.findById(user.getId()).orElseThrow(() -> new CustomException("user", "user not found"));
         userinfo.setImageUrl(imageUrl);
         authRepo.save(userinfo);
         return imageUrl;
     }
- 
 
 }
