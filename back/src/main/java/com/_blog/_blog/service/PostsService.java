@@ -3,15 +3,10 @@ package com._blog._blog.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +29,6 @@ import com._blog._blog.model.repository.PostsRepo;
 import com._blog._blog.util.NotificationType;
 import com._blog._blog.util.utils.Postutil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
@@ -64,8 +58,6 @@ public class PostsService {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-   
 
     @Transactional
     public PostsEntity savePost(
@@ -119,13 +111,13 @@ public class PostsService {
         if (!followers.isEmpty()) {
             List<NotificationEntity> notifications = followers.stream()
                     .map(f -> NotificationEntity.builder()
-                            .message(currentUser.getUsername()
-                                    + " created a post " + savedPost.getTitle())
-                            .user(f.getFollower())
-                            .read(false)
-                            .postId(savedPost.getId())
-                            .type(NotificationType.POST_CREATED)
-                            .build())
+                    .message(currentUser.getUsername()
+                            + " created a post " + savedPost.getTitle())
+                    .user(f.getFollower())
+                    .read(false)
+                    .postId(savedPost.getId())
+                    .type(NotificationType.POST_CREATED)
+                    .build())
                     .toList();
 
             notificationRepo.saveAll(notifications);
@@ -140,6 +132,10 @@ public class PostsService {
         PostsEntity post = postsRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("post", "Post not found"));
 
+        if (post.getStatus().equals("Hide")) {
+            throw new ForbiddenException("authorization", "you are not authorization to edit this post");
+        }
+
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new ForbiddenException("authorization", "You are not the author of this post");
         }
@@ -151,7 +147,7 @@ public class PostsService {
         List<UUID> mediaIds = objectMapper.readValue(
                 oldMediaIds,
                 new com.fasterxml.jackson.core.type.TypeReference<List<UUID>>() {
-                });
+        });
 
         // DELETE OLD MEDIA
         Iterator<PostMediaEntity> iterator = post.getMedia().iterator();
@@ -188,6 +184,10 @@ public class PostsService {
             return;
         }
 
+        if (post.getStatus().equals("Hide")) {
+            throw new ForbiddenException("authorization", "you are not authorization to delet this post");
+        }
+
         if (!post.getAuthor().getId().equals(currentUser.getId())) {
             throw new ForbiddenException("authorization", "You are not the author of this post");
         }
@@ -211,12 +211,11 @@ public class PostsService {
 
         return posts.stream()
                 .map(post -> PostsResponseDto.toPostsResponseDto(post, currentUser.getId(),
-                        likesRepo.countByPostId(post.getId()),
-                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                        commentsRepo.countByPostId(post.getId())))
+                likesRepo.countByPostId(post.getId()),
+                likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                commentsRepo.countByPostId(post.getId())))
                 .collect(Collectors.toList());
 
     }
-
 
 }
