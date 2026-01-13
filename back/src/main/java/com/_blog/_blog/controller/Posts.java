@@ -42,6 +42,7 @@ import com._blog._blog.service.PostsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Validated
 @RestController
@@ -61,8 +62,8 @@ public class Posts {
     // ADD POST
     @PostMapping(value = "/add-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> addPost(
-            @RequestParam("title") @NotBlank(message = "title is required") String title,
-            @RequestParam("content") @NotBlank(message = "content is required") String content,
+            @RequestParam("title") @NotBlank(message = "title is required") @Size(min = 1, max = 100, message = "title must be between 1 and 100 characters") String title,
+            @RequestParam("content") @NotBlank(message = "content is required") @Size(min = 1, max = 500, message = "title must be between 1 and 500 characters") String content,
             @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
 
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext()
@@ -100,8 +101,8 @@ public class Posts {
     @PutMapping(value = "/edit-post", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<?>> editPost(
             @RequestParam("id") @NotNull(message = "id is required") UUID id,
-            @RequestParam("title") @NotBlank(message = "title is required") String title,
-            @RequestParam("content") @NotBlank(message = "content is required") String content,
+            @RequestParam("title") @NotBlank(message = "title is required") @Size(min = 1, max = 100, message = "title must be between 1 and 100 characters") String title,
+            @RequestParam("content") @NotBlank(message = "content is required") @Size(min = 1, max = 100, message = "content must be between 1 and 500 characters") String content,
             @RequestParam(required = false) List<MultipartFile> image,
             @RequestParam("oldMediaIds") String oldMediaIds) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

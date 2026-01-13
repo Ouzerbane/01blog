@@ -111,13 +111,13 @@ public class PostsService {
         if (!followers.isEmpty()) {
             List<NotificationEntity> notifications = followers.stream()
                     .map(f -> NotificationEntity.builder()
-                    .message(currentUser.getUsername()
-                            + " created a post " + savedPost.getTitle())
-                    .user(f.getFollower())
-                    .read(false)
-                    .postId(savedPost.getId())
-                    .type(NotificationType.POST_CREATED)
-                    .build())
+                            .message(currentUser.getUsername()
+                                    + " created a post " + savedPost.getTitle())
+                            .user(f.getFollower())
+                            .read(false)
+                            .postId(savedPost.getId())
+                            .type(NotificationType.POST_CREATED)
+                            .build())
                     .toList();
 
             notificationRepo.saveAll(notifications);
@@ -147,7 +147,7 @@ public class PostsService {
         List<UUID> mediaIds = objectMapper.readValue(
                 oldMediaIds,
                 new com.fasterxml.jackson.core.type.TypeReference<List<UUID>>() {
-        });
+                });
 
         // DELETE OLD MEDIA
         Iterator<PostMediaEntity> iterator = post.getMedia().iterator();
@@ -211,9 +211,9 @@ public class PostsService {
 
         return posts.stream()
                 .map(post -> PostsResponseDto.toPostsResponseDto(post, currentUser.getId(),
-                likesRepo.countByPostId(post.getId()),
-                likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
-                commentsRepo.countByPostId(post.getId())))
+                        likesRepo.countByPostId(post.getId()),
+                        likesRepo.existsByUserIdAndPostId(currentUser.getId(), post.getId()),
+                        commentsRepo.countByPostId(post.getId())))
                 .collect(Collectors.toList());
 
     }
