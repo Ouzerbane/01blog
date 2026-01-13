@@ -46,7 +46,7 @@ import jakarta.validation.constraints.NotNull;
 @Validated
 @RestController
 @RequestMapping("/post")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+
 public class Posts {
 
     @Autowired

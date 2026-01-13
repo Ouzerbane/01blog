@@ -11,7 +11,6 @@ import com._blog._blog.dto.CommentsDto;
 import com._blog._blog.dto.DeletCpmmentDto;
 import com._blog._blog.dto.IdDto;
 import com._blog._blog.dto.ResponsCommetDto;
-import com._blog._blog.exception.CustomException;
 import com._blog._blog.exception.ForbiddenException;
 import com._blog._blog.exception.NotFoundException;
 import com._blog._blog.model.entity.AuthEntity;

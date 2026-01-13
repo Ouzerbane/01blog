@@ -12,8 +12,6 @@ import com._blog._blog.model.entity.AuthEntity;
 import com._blog._blog.model.repository.AuthRepo;
 import com._blog._blog.util.jwt.JwtUtil;
 
-import jakarta.validation.Valid;
-
 @Service
 public class AuthService {
 
@@ -28,9 +26,7 @@ public class AuthService {
     }
 
     public String login(String usernameOrEmail, String rawPassword) {
-        //// for login
-
-        AuthEntity user = empRepo.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        AuthEntity user = empRepo.findByUsernameOrEmail(usernameOrEmail.trim().toLowerCase(), usernameOrEmail.trim().toLowerCase())
                 .orElseThrow(() -> new CustomException("user", "User not found"));
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new CustomException("password", "Invalid password");

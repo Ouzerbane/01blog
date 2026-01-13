@@ -10,10 +10,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Setter
 public class RegisterRequest {
 
     @NotBlank(message = "Username is required")
@@ -49,8 +51,12 @@ public class RegisterRequest {
         }
 
         if (email != null) {
-            email = email.trim();
+            setEmail(email.trim().toLowerCase());
         }
+        if (username != null) {
+            setUsername(username.trim().toLowerCase());
+        }
+
     }
 
 }
