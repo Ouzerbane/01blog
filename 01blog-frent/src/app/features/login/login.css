@@ -1,0 +1,169 @@
+/* ================= CONTAINER ================= */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
+  padding: 20px;
+}
+
+/* ================= BOX ================= */
+.register-box {
+  width: 100%;
+  max-width: 420px;
+  background: #121212;
+  border-radius: 22px;
+  padding: 40px 36px 36px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 51, 102, 0.15);
+  text-align: center;
+  animation: fadeScale 0.4s ease;
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ================= LOGO ================= */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 28px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.logo .icon-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff3366;
+}
+
+.logo .part-01 {
+  color: #ff3366;
+}
+
+.logo .part-blog {
+  color: #ffffff;
+}
+
+/* ================= TITLE ================= */
+.register-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 28px;
+  color: #ffffff;
+}
+
+/* ================= FORM ================= */
+form {
+  text-align: left;
+}
+
+/* ================= FORM GROUP ================= */
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #bbbbbb;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.form-group input::placeholder {
+  color: #777;
+}
+
+.form-group input:focus {
+  border-color: #ff3366;
+  box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.25);
+  background: #1f1f1f;
+}
+
+/* ================= ERROR ================= */
+.text-danger {
+  margin: 6px 0 16px;
+  font-size: 0.9rem;
+  color: #ff4d6d;
+  text-align: center;
+}
+
+/* ================= BUTTON ================= */
+.register-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #ff3366, #ff1744);
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 51, 102, 0.55);
+}
+
+/* ================= FOOTER TEXT ================= */
+.login-text {
+  margin-top: 26px;
+  font-size: 0.9rem;
+  color: #aaaaaa;
+}
+
+.login-link {
+  color: #ff3366;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: color 0.25s ease;
+}
+
+.login-link:hover {
+  color: #ff6688;
+  text-decoration: underline;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .register-box {
+    padding: 32px 26px;
+    border-radius: 18px;
+  }
+
+  .register-title {
+    font-size: 1.7rem;
+  }
+}

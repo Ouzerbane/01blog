@@ -1,0 +1,128 @@
+<form [formGroup]="postForm">
+
+  <mat-form-field appearance="outline">
+    <mat-label>title</mat-label>
+    <input matInput type="text" formControlName="title" required minlength="1" maxlength="100">
+    @if (postForm.get('title')?.invalid) {
+    <mat-error>
+      title must be at least 6 characters long
+    </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>content</mat-label>
+    <textarea matInput rows="4" formControlName="content" required minlength="1" maxlength="500"></textarea>
+    @if (postForm.get('content')?.invalid) {
+    <mat-error>
+      content must be at least 6 characters long
+    </mat-error>
+    }
+  </mat-form-field>
+  <input type="file" (change)="onFileSelect($event)" multiple accept="image/*,video/*">
+  <!-- <mat-icon>upload</mat-icon> -->
+
+  <div class="preview">
+    @for (file of previews; track $index) {
+    <ng-container>
+      @if (file.type === 'image') {
+      <img [src]="file.url" width="100">
+      }
+      @if (file.type === 'video') {
+      <video [src]="file.url" width="200" controls></video>
+      }
+    </ng-container>
+    }
+  </div>
+
+  <button mat-raised-button color="primary" [disabled]="postForm.invalid" (click)="submit()">
+    Submit
+  </button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <form [formGroup]="postForm" class="post-form"> -->
+
+<!-- TITLE -->
+<!-- <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field> -->
+
+<!-- CONTENT -->
+<!-- <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Content</mat-label>
+    <textarea matInput rows="4" formControlName="content"></textarea>
+  </mat-form-field> -->
+
+<!-- FILE INPUT -->
+<!-- <input type="file" hidden #fileInput multiple accept="image/*,video/*"  (change)="onFileSelect($event)"/>
+
+  <button mat-raised-button color="primary" (click)="fileInput.click()">
+    Select Media (max 4)
+  </button> -->
+
+<!-- PREVIEW -->
+<!-- <div class="preview">
+    <ng-container *ngFor="let file of previews">
+      <img *ngIf="file.type === 'image'" [src]="file.url" />
+      <video
+        *ngIf="file.type === 'video'"
+        [src]="file.url"
+        controls
+      ></video>
+    </ng-container>
+  </div> -->
+
+<!-- SUBMIT -->
+<!-- <button
+    mat-raised-button
+    color="accent"
+    [disabled]="postForm.invalid"
+    (click)="submit()"
+  >
+    Submit
+  </button>
+
+</form> -->

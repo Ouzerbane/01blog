@@ -1,0 +1,101 @@
+<mat-card class="edit-post-card">
+
+    <!-- Header -->
+    <mat-card-header class="edit-header">
+        <mat-icon class="edit-icon">edit</mat-icon>
+        <mat-card-title>Edit Post</mat-card-title>
+        <mat-card-subtitle>Update your post content</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <!-- Form Content -->
+    <mat-card-content class="edit-content">
+
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput [value]="postTitle" (input)="postTitle = $any($event.target).value"
+                placeholder="Enter post title" minlength="1" maxlength="100">
+        </mat-form-field>
+
+        <!-- Content -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Content</mat-label>
+            <textarea matInput rows="6" [value]="postContent" (input)="postContent = $any($event.target).value"
+                placeholder="What's on your mind?" minlength="1" maxlength="500"></textarea>
+        </mat-form-field>
+
+        <!-- Media Preview -->
+        @if (currentMedia && currentMedia.length > 0) {
+        <div class="current-media">
+            <p class="media-label">Current media:</p>
+            <div class="media-grid">
+                @for (media of currentMedia; track $index) {
+                <div class="media-item-preview">
+                    @if (media.type === 'IMAGE') {
+                    <img [src]="media.url" alt="current media">
+                    }
+                    @if (media.type === 'VIDEO') {
+                    <video [src]="media.url" controls></video>
+                    }
+                    <button mat-icon-button class="remove-media" (click)="removeNewMedia(media.id)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+        <div class="upload-section-new">
+            <p class="media-label">add videos or images</p>
+
+            <button type="button" class="minimal-upload-btn" (click)="fileInput.click()">
+                <mat-icon class="upload-icon-minimal">cloud_upload</mat-icon>
+                <span class="upload-text">Choose files or drag them here</span>
+                <span class="upload-hint">Images or videos • up to 4 files</span>
+            </button>
+
+           
+            <input #fileInput type="file" hidden multiple accept="image/*,video/*" (change)="onFileSelect($event)" />
+        </div>
+        <!-- New Media Preview -->
+        @if (prevewes && prevewes.length > 0) {
+        <div class="new-media-preview">
+            <p>New media:</p>
+            <div class="media-grid">
+                @for (preview of prevewes; track $index) {
+                <div class="media-item-preview">
+                    @if (preview.type === 'image') {
+                    <img [src]="preview.url">
+                    }
+                    @if (preview.type === 'video') {
+                    <video [src]="preview.url" controls></video>
+                    }
+                    <button mat-icon-button class="remove-media" (click)="removePreview(preview.file?.name || '')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+    </mat-card-content>
+
+
+    <!-- <mat-divider></mat-divider> -->
+
+    <!-- Actions -->
+    <mat-card-actions align="end" class="edit-actions">
+        <button mat-button class="cancel-btn" (click)="cancelEdit()">
+            Cancel
+        </button>
+        <button mat-raised-button color="primary" class="save-btn" (click)="saveEdit()">
+            <mat-icon>save</mat-icon>
+            Save Changes
+        </button>
+    </mat-card-actions>
+
+</mat-card>

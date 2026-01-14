@@ -1,0 +1,38 @@
+@if (hasComment()) {
+<mat-card class="comment-card" appearance="outlined">
+  <mat-card-header class="comment-header">
+
+    @if ( comment.url ) {
+    <img mat-card-avatar class="comment-avatar" src="{{ comment.url }}" alt="avatar"
+      (click)="getProfile(comment.userId)" />
+    }@else {
+    <div mat-card-avatar class="avatar-letter">
+      {{ comment.username.charAt(0) | uppercase }}
+    </div>
+    }
+    <mat-card-title class="comment-username" (click)="getProfile(comment.userId)">
+      {{ comment.username }}
+    </mat-card-title>
+
+    <mat-card-subtitle class="comment-date">
+      {{ comment.createdAt | date:'short' }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="comment-content">
+    <p class="comment-text">
+      {{ comment.content }}
+    </p>
+  </mat-card-content>
+  @if (showConfirm()) {
+  <app-confirm (Confirm)="confirmDelete($event)"></app-confirm>
+  }
+
+  @if (comment.candelet) {
+  <button mat-button class="delete-button" (click)="openConfirm()">
+    <mat-icon class="delete-icon">delete</mat-icon>
+    Supprimer
+  </button>
+  }
+</mat-card>
+}

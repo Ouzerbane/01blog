@@ -1,0 +1,246 @@
+/* ============================================= */
+/*                Navbar - Al Had Party           */
+/* ============================================= */
+
+mat-toolbar.toolbar {
+  position: fixed;              /* تبقى ثابتة فوق دايماً */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  background: linear-gradient(135deg, #1a0033 0%, #0f0f0f 70%);
+  border-bottom: 1px solid #333;
+  box-shadow: 0 4px 20px rgba(255, 51, 102, 0.3);
+  padding: 0 20px;
+  height: 70px;
+  backdrop-filter: blur(10px);
+}
+
+/* Logo */
+.logo-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.logo-header:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 15px #ff3366;
+}
+
+.logo-header mat-icon {
+  font-size: 2rem;
+  color: #ff3366;
+  margin-right: 8px;
+}
+
+.zero-one {
+  font-size: 1.8rem;
+  color: #ff3366;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 10px #ff3366;
+}
+
+.blog {
+  font-size: 1.6rem;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+/* Spacer */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Buttons عامة */
+mat-toolbar button {
+  color: #e0e0e0 !important;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  margin: 0 6px;
+}
+
+mat-toolbar button:hover {
+  color: #ff3366 !important;
+  transform: translateY(-2px);
+  text-shadow: 0 0 10px rgba(255, 51, 102, 0.6);
+}
+
+mat-toolbar button mat-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Admin Button */
+.color mat-icon {
+  color: #ff3366;
+}
+
+/* Create Post Button */
+button[routerlink="/creat-post"] {
+  background-color: #ff3366;
+  border-radius: 12px;
+  padding: 8px 16px !important;
+}
+
+button[routerlink="/creat-post"]:hover {
+  background-color: #ff1744;
+  box-shadow: 0 0 15px rgba(255, 51, 102, 0.5);
+}
+
+/* Notifications Button */
+mat-icon-button[matBadge] {
+  position: relative;
+}
+
+.mat-badge-content {
+  background-color: #ff3366 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+/* Profile Menu */
+button[matMenuTriggerFor] {
+  font-weight: 600;
+}
+
+/* Mat Menu Panel */
+::ng-deep .profile-menu-panel {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+  margin-top: 10px;
+}
+
+::ng-deep .profile-menu-panel .mat-mdc-menu-item {
+  color: #e0e0e0 !important;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .profile-menu-panel .mat-mdc-menu-item:hover {
+  background-color: #ff336633 !important;
+  color: #ff3366 !important;
+}
+
+.button-profile mat-icon {
+  color: #ff3366;
+  margin-right: 12px;
+}
+
+/* Notifications Popup */
+.notification-popup {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  width: 360px;
+  max-height: 500px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  animation: popupSlide 0.3s ease-out;
+}
+
+@keyframes popupSlide {
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.popup-header {
+  background: linear-gradient(135deg, #222, #1a1a1a);
+  padding: 16px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: #ff3366;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.popup-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 14px 20px;
+  border-bottom: 1px solid #282828;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #cccccc;
+}
+
+.notification-item:hover {
+  background-color: #222;
+}
+
+.notif-unread {
+  background-color: #ff336620;
+  font-weight: 600;
+  color: #ffffff;
+  border-left: 4px solid #ff3366;
+}
+
+.notif-read {
+  color: #888;
+}
+
+.close-popup {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff3366;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-popup:hover {
+  background-color: #ff1744;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  mat-toolbar.toolbar {
+    height: 60px;
+    padding: 0 10px;
+  }
+
+  .logo-header mat-icon {
+    font-size: 1.8rem;
+  }
+
+  .zero-one { font-size: 1.5rem; }
+  .blog { font-size: 1.4rem; }
+
+  mat-toolbar button span {
+    display: none; /* نخبيو النصوص فالموبايل */
+  }
+
+  .notification-popup {
+    width: 92vw;
+    right: 4vw;
+    left: 4vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo-header span {
+    display: none;
+  }
+
+  .logo-header mat-icon {
+    font-size: 2rem;
+    margin-right: 0;
+  }
+}

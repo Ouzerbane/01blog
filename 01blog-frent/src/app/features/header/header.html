@@ -1,0 +1,65 @@
+<mat-toolbar color="primary" class="toolbar">
+  <!-- Logo -->
+  <div class="logo-header" routerLink="/">
+    <mat-icon>code</mat-icon>
+    <span class="zero-one">01</span>
+    <span class="blog">BLOG</span>
+  </div>
+
+  <!-- Spacer -->
+  <span class="spacer"></span>
+
+  <!-- Navigation -->
+   @if (userType()) {
+  <button mat-button class="color" routerLink="/admin">
+    <mat-icon>admin_panel_settings</mat-icon>
+    Admin
+  </button>
+    }
+  <button mat-button routerLink="/creat-post">
+    <mat-icon>post_add</mat-icon>
+    Create Post
+  </button>
+
+  <button mat-icon-button [matBadge]="notificationCount()" matBadgeColor="warn" (click)="OpenNotifination()">
+    <mat-icon>notifications</mat-icon>
+  </button> 
+
+  <!-- Profile Menu -->
+  <button mat-button [matMenuTriggerFor]="profileMenu">
+    <mat-icon>account_circle</mat-icon>
+    Profile
+  </button>
+  <mat-menu #profileMenu="matMenu" panelClass="profile-menu-panel">
+    <button mat-menu-item class="button-profile" [routerLink]="['/profile',globalInfo.idUser]">
+      <mat-icon>person</mat-icon>
+      My Profile
+    </button>
+    <button mat-menu-item (click)="logout()" class="button-profile">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </mat-menu>
+
+  <!-- Notifications Popup -->
+  @if (showNotifacation()) {
+  <div class="notification-popup">
+    <div class="popup-header">
+      <h3>Notifications</h3>
+    </div>
+
+    <ul class="popup-list">
+      @for (item of notifications(); track $index) {
+      <li class="notification-item" [ngClass]="{
+            'notif-read': item.status === true,
+            'notif-unread': item.status === false
+          }" (click)="NotificationRead(item.id)">
+        {{ item.message }}
+      </li>
+      }
+    </ul>
+
+    <button class="close-popup" (click)="OpenNotifination()">Close</button>
+  </div>
+  }
+</mat-toolbar>

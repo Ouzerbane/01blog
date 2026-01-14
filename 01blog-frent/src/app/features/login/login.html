@@ -1,0 +1,66 @@
+<div class="register-container">
+  <div class="register-box">
+
+    <!-- Logo -->
+    <div class="logo logo-style-1">
+      <span class="icon-code">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" class="lucide lucide-code">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      </span>
+      <span class="part-01">01</span><span class="part-blog">Blog</span>
+    </div>
+
+    <h2 class="register-title">Log In</h2>
+
+    <!-- FORM -->
+    <form (submit)="onLogin(); $event.preventDefault()">
+
+      <!-- Email / Username -->
+      <div class="form-group">
+        <label for="usernameOrEmail">Email address</label>
+        <input
+          type="text"
+          id="usernameOrEmail"
+          placeholder="Enter your email"
+          [value]="usernameOrEmail()"
+          (input)="usernameOrEmail.set($any($event.target).value)"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          [value]="password()"
+          (input)="password.set($any($event.target).value)"
+        />
+      </div>
+
+      <!-- Error -->
+       @if (err()){
+           <p class="text-danger">
+             {{ err() }}
+           </p>
+       }
+
+      <!-- Button -->
+      <button type="submit" class="register-btn">
+        Login
+      </button>
+
+    </form>
+
+    <p class="login-text">
+      Don't have an account?
+      <span class="login-link" (click)="goToregester()">Sign Up</span>
+    </p>
+
+  </div>
+</div>

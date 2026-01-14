@@ -1,0 +1,76 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.4s ease-out;
+  backdrop-filter: blur(12px);
+}
+
+.confirm-modal {
+  background-color: #1a1a1a;
+  border: 2px solid #ff3366;
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
+  animation: modalScale 0.4s ease-out;
+}
+
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.confirm-modal h3 {
+  color: #ff6666;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.confirm-modal p {
+  color: #e0e0e0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.modal-actions button {
+  min-width: 140px;
+  padding: 14px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.modal-actions button[mat-button] {
+  background-color: #333;
+  color: #cccccc;
+}
+
+.modal-actions button[mat-button]:hover {
+  background-color: #444;
+}
+
+.modal-actions button[mat-raised-button] {
+  background-color: #ff3366;
+  color: white;
+}
+
+.modal-actions button[mat-raised-button]:hover {
+  background-color: #ff1744;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+}

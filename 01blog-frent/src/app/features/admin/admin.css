@@ -1,0 +1,443 @@
+/* ============================================= */
+/*         Admin Dashboard - Al Had Party Style   */
+/* ============================================= */
+
+.admin-dashboard {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  padding: 40px 20px;
+  color: #e0e0e0;
+}
+
+.title {
+  text-align: center;
+  font-size: 3.2rem;
+  margin-top: 100px;
+  font-weight: 800;
+  color: #ff3366;
+  margin-bottom: 60px;
+  text-shadow: 0 0 25px rgba(255, 51, 102, 0.7);
+  letter-spacing: 2px;
+}
+
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  gap: 32px;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+.admin-section {
+  background-color: #1a1a1a;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.admin-section:hover {
+  border-color: #ff3366;
+  box-shadow: 0 15px 45px rgba(255, 51, 102, 0.25);
+}
+
+.admin-section h2 {
+  color: #ff3366;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(255, 51, 102, 0.5);
+}
+
+/* =============== USERS TABLE =============== */
+mat-card {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+table.mat-mdc-table {
+  width: 100%;
+  background-color: transparent;
+}
+
+.mat-mdc-header-cell {
+  color: #ff3366 !important;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #ff3366;
+  padding: 16px 12px;
+}
+
+.mat-mdc-cell {
+  padding: 16px 12px;
+  border-bottom: 1px solid #282828;
+  color: #e0e0e0;
+}
+
+.mat-mdc-row:hover {
+  background-color: #222222;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+.status {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status.active {
+  background-color: rgba(0, 204, 102, 0.2);
+  color: #00cc66;
+}
+
+/* Buttons في الجدول */
+.mat-mdc-cell button {
+  margin: 0 6px;
+  border-radius: 12px;
+  font-weight: 600;
+  min-width: 90px;
+}
+
+.mat-mdc-cell button[color="warn"] {
+  background-color: #ff3366;
+}
+
+.mat-mdc-cell button[color="accent"] {
+  background-color: #9933ff;
+}
+
+/* =============== POSTS =============== */
+.posts-grid {
+  display: grid;
+  gap: 28px;
+}
+
+.post-card {
+  background-color: #161616;
+  border-radius: 18px;
+  overflow: hidden;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-10px);
+  border: 1px solid #ff3366;
+  box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+  color: #aaaaaa;
+  font-size: 0.95rem;
+}
+
+mat-card-title {
+  color: #ff3366;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 20px 24px 8px;
+  margin: 0;
+}
+
+mat-card-content p {
+  padding: 0 24px;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  margin: 16px 0;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.post-actions {
+  padding: 16px 24px 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.post-actions button {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* =============== REPORTS =============== */
+.report-card {
+  background-color: #161616;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  border-left: 5px solid #ff3366;
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 10px 30px rgba(255, 51, 102, 0.2);
+}
+
+.report-card p {
+  margin: 12px 0;
+  color: #cccccc;
+}
+
+.report-card strong {
+  color: #ff3366;
+}
+
+.report-actions {
+  text-align: right;
+  margin-top: 16px;
+}
+
+/* =============== CONFIRMATION MODAL =============== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.4s ease-out;
+  backdrop-filter: blur(12px);
+}
+
+.confirm-modal {
+  background-color: #1a1a1a;
+  border: 2px solid #ff3366;
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
+  animation: modalScale 0.4s ease-out;
+}
+
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.confirm-modal h3 {
+  color: #ff6666;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.confirm-modal p {
+  color: #e0e0e0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.modal-actions button {
+  min-width: 140px;
+  padding: 14px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.modal-actions button[mat-button] {
+  background-color: #333;
+  color: #cccccc;
+}
+
+.modal-actions button[mat-button]:hover {
+  background-color: #444;
+}
+
+.modal-actions button[mat-raised-button] {
+  background-color: #ff3366;
+  color: white;
+}
+
+.modal-actions button[mat-raised-button]:hover {
+  background-color: #ff1744;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+}
+
+/* =============== RESPONSIVE =============== */
+@media (max-width: 1200px) {
+  .admin-grid {
+    grid-template-columns: 1fr 1.3fr 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .title {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-section {
+    padding: 24px;
+    border-radius: 18px;
+  }
+
+  .post-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .post-actions button {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* ===== MEDIA GRID (Images & Videos) ===== */
+.media-grid {
+  display: grid;
+  gap: 12px;
+  margin: 16px 24px;
+}
+
+/* صورة وحدة */
+.media-count-1 {
+  grid-template-columns: 1fr;
+}
+
+.media-count-1 .media-content {
+  max-height: 280px;
+}
+
+/* جوج صور */
+.media-count-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.media-count-2 .media-content {
+  max-height: 220px;
+}
+
+/* 3 ولا أكثر */
+.media-count-3,
+.media-count-4,
+.media-count-5 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.media-count-3 .media-content,
+.media-count-4 .media-content,
+.media-count-5 .media-content {
+  max-height: 180px;
+}
+
+/* MEDIA ITEM */
+.media-item {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* IMAGE & VIDEO */
+.media-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  background-color: #000;
+}
+
+
+
+
+
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Image avatar */
+.user-avatar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.4);
+}
+
+/* ===== AVATAR LETTER (Fallback) ===== */
+.user-avatar.avatar-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  color: #ffffff;
+
+  background: linear-gradient(135deg, #ff3366, #9933ff);
+
+  border: 2px solid #ff3366;
+  box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.25);
+}
+
+/* Hover letter */
+.user-avatar.avatar-letter:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 5px rgba(255, 51, 102, 0.4);
+}
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+
+.post-content1, .post-title1 {
+  word-break: break-word;
+  
+}

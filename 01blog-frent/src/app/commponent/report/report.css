@@ -1,0 +1,204 @@
+/* ============================================= */
+/*           Report Popup - Medium Size & Clean    */
+/* ============================================= */
+
+/* Overlay داكن + blur */
+.report-popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.4s ease-out;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* الكارد - حجم معقول مشي كبير بزاف */
+.report-card {
+  width: 90%;
+  max-width: 520px;           /* عرض معقول، مشي كبير */
+  max-height: 90vh;           /* ارتفاع ما يتجاوزش الشاشة */
+  background-color: #1a1a1a;
+  border: 2px solid #ff3366;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+              0 0 40px rgba(255, 51, 102, 0.25);
+  overflow-y: auto;
+  animation: popupEnter 0.5s ease-out;
+}
+
+@keyframes popupEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Header */
+.report-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 32px 32px;
+  background: linear-gradient(135deg, #330000 0%, #1a0000 100%);
+  text-align: center;
+}
+
+/* الأيقونة كبيرة ولكن معقولة */
+.big-report-icon {
+  font-size: 90px !important;
+  width: 90px !important;
+  height: 90px !important;
+  color: #ff6666 !important;
+  margin-bottom: 24px;
+  animation: gentlePulse 2.5s infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.report-header mat-card-title {
+  color: #ff6666 !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 12px 0 !important;
+}
+
+.report-header mat-card-subtitle {
+  color: #ff9999 !important;
+  font-size: 1.1rem !important;
+  margin: 0 !important;
+}
+
+/* Divider */
+mat-divider {
+  border-top-color: #ff3366 !important;
+  opacity: 0.7;
+}
+
+/* Content */
+.report-content {
+  padding: 32px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .full-width .mat-mdc-form-field-outline {
+  background-color: #161616;
+  border-radius: 16px;
+}
+
+::ng-deep .full-width .mat-mdc-input-element {
+  color: #ffffff !important;
+  font-size: 1.05rem;
+}
+
+::ng-deep .full-width .mat-mdc-form-field-label {
+  color: #ff9999 !important;
+}
+
+::ng-deep .full-width.mat-focused .mat-mdc-form-field-label,
+::ng-deep .full-width.mat-focused .mat-mdc-form-field-outline-thick {
+  color: #ff3366 !important;
+}
+
+::ng-deep .full-width textarea {
+  min-height: 140px;
+  line-height: 1.6;
+}
+
+/* Actions */
+.report-actions {
+  padding: 24px 32px;
+  background-color: #161616;
+  border-radius: 0 0 24px 24px;
+}
+
+.cancel-btn {
+  color: #cccccc !important;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 14px;
+  min-width: 130px;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #333 !important;
+  color: #ffffff !important;
+  transform: translateY(-3px);
+}
+
+.submit-btn {
+  background-color: #ff3366 !important;
+  color: white !important;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 14px;
+  min-width: 160px;
+  box-shadow: 0 8px 25px rgba(255, 51, 102, 0.5);
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #ff1744 !important;
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(255, 23, 68, 0.7);
+}
+
+.submit-btn mat-icon {
+  margin-right: 8px;
+  font-size: 20px !important;
+  vertical-align: middle;
+}
+
+/* Responsive - فالموبايل يبقى حجم معقول */
+@media (max-width: 600px) {
+  .report-card {
+    width: 95%;
+    max-width: none;
+    border-radius: 20px;
+  }
+
+  .big-report-icon {
+    font-size: 80px !important;
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .report-header {
+    padding: 36px 20px 28px;
+  }
+
+  .report-header mat-card-title {
+    font-size: 1.8rem !important;
+  }
+
+  .report-content, .report-actions {
+    padding: 24px 20px;
+  }
+
+  .report-actions {
+    flex-direction: column-reverse;
+    gap: 16px;
+  }
+
+  .cancel-btn, .submit-btn {
+    width: 100%;
+  }
+}

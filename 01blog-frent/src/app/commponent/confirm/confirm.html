@@ -1,0 +1,26 @@
+<div class="confirm-dialog">
+
+    <mat-icon class="confirm-icon" color="warn">
+        warning
+    </mat-icon>
+
+    <h2 class="confirm-title">
+        Confirmation
+    </h2>
+
+    <p class="confirm-message">
+        Are you sure you want to proceed?
+        <br />
+        <span class="irreversible">This action cannot be undone.</span>
+    </p>
+
+    <div class="confirm-actions">
+        <button mat-stroked-button color="primary" (click)="cancel()">
+            Cancel
+        </button>
+        <button mat-flat-button color="warn" (click)="confirm()">
+            Confirm
+        </button>
+    </div>
+
+</div>

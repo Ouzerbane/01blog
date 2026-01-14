@@ -1,0 +1,111 @@
+<!-- post-card.component.html -->
+<mat-card class="post-card">
+  <!-- Header -->
+  <mat-card-header (click)="getProfile(post.author.id)" class="post-header">
+    @if (post.author.imagUrl) {
+    <img mat-card-avatar src="{{ post.author.imagUrl }}" [alt]="post.author.username" />
+    }@else {
+    <div mat-card-avatar class="avatar-letter">
+      {{ post.author.username.charAt(0) | uppercase }}
+    </div>
+    }
+    <mat-card-title>{{ post.author.username }}</mat-card-title>
+    <mat-card-subtitle>{{ post.createdAt | date:'short' }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <button mat-icon-button [matMenuTriggerFor]="postMenu" class="post-menu-button">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+
+  <mat-menu #postMenu="matMenu" panelClass="post-menu-panel">
+    @if (post.canEditAndDelet) {
+    <button mat-menu-item (click)="openEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit Post
+    </button>
+
+    <button mat-menu-item class="danger" (click)="openConfirm()">
+      <mat-icon>delete</mat-icon>
+      Delete Post
+    </button>
+    }
+    @if (!post.canEditAndDelet) {
+
+      <button mat-menu-item class="report" (click)="openReportModal()">
+        <mat-icon>report</mat-icon>
+        Report Post
+      </button>
+    }
+  </mat-menu>
+
+
+  @if (showConfirm()) {
+  <app-confirm (Confirm)="confirmDelete($event)"></app-confirm>
+  }
+
+  @if (showEdit()) {
+  <app-edit-post [postTitle]="post.title" [postContent]="post.content" [currentMedia]="post.media || []"
+    (cancelEditEvent)="closeEdit()" (saveEditEvent)="onSaveEdit($event)"></app-edit-post>
+  }
+
+
+
+  <!-- Content -->
+  <mat-card-content>
+    <h2 class="post-title">{{ post.title }}</h2>
+    <p class="post-content">{{ post.content }}</p>
+    <!-- Media Gallery -->
+    @if (post.media && post.media.length > 0) {
+    <div [ngClass]="'media-grid media-count-' + post.media.length">
+      @for (item of post.media; track $index) {
+      <div class="media-item">
+        @if (item.type === 'IMAGE') {
+        <img [src]="item.url" [alt]="post.title" class="media-content">
+        }
+        @if (item.type === 'VIDEO') {
+        <video [src]="item.url" controls class="media-content"></video>
+        }
+      </div>
+      }
+    </div>
+    }
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+
+  <!-- Actions -->
+  <mat-card-actions>
+    <button mat-button [ngClass]="{ liked: post.like }" (click)="likePost(post)">
+      <mat-icon>{{ post.like ? 'favorite' : 'favorite_border' }}</mat-icon>
+      {{ post.countLike }}
+    </button>
+    <button mat-button (click)="toggleComments()">
+      <mat-icon>comment</mat-icon>
+      {{ post.countCommets }}
+    </button>
+  </mat-card-actions>
+
+  @if (showComments()) {
+  <mat-form-field class="comment-input" appearance="outline">
+    <input matInput [value]="newComment()" (input)="newComment.set($any($event.target).value)"
+      placeholder="Write a comment..." class="input-Comment"/>
+    <button mat-icon-button matSuffix (click)="addComment(newComment(), post.id, post)">
+      <mat-icon>send</mat-icon>
+    </button>
+  </mat-form-field>
+  }
+
+  @if (showComments() && post.comment && post.comment.length > 0) {
+  @for (item of post.comment; track $index) {
+  <app-comment [comment]="item" [post]="post" (commentDeleted)="onCommentDeleted($event)">
+  </app-comment>
+
+  }
+  }
+  <mat-divider></mat-divider>
+</mat-card>
+
+@if (showReportModal()) {
+<app-report (reportSubmitted)="RepoprtPost($event)"></app-report>
+}

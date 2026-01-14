@@ -1,0 +1,69 @@
+<div class="posts-container">
+  
+  <!-- ====================== -->
+  <!-- Suggested Users Card -->
+  <mat-card class="suggest-users-card">
+    <mat-card-header>
+      <mat-card-title class="suggest">Suggested Users</mat-card-title>
+    </mat-card-header>
+
+    <!-- Search Field -->
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search users</mat-label>
+      <input matInput type="text" [value]="recherchSugestion()"
+        (input)="recherchSugestion.set($any($event.target).value)" placeholder="Type a username" class="recherchuser" />
+      <button mat-icon-button matSuffix aria-label="Search" (click)="recherchUsers()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Users List -->
+    <mat-card-content>
+      @for (user of suggestedUsers(); track user.id) {
+      <div class="user-item">
+        @if (user.imageUrl) {
+        <img [src]="user.imageUrl" alt="{{ user.username }}" class="user-avatar" (click)="getProfile(user.id)" />
+        }@else {
+        <div class="avatar-letter user-avatar" (click)="getProfile(user.id)">
+          {{ user.username.charAt(0) | uppercase }}
+        </div>
+        }
+        <span class="username" id="username" (click)="getProfile(user.id)">{{ user.username }}</span>
+
+        @if (!user.followed) {
+        <button mat-button color="primary" (click)="followUser(user.id)">
+          <mat-icon>person_add</mat-icon> Follow
+        </button>
+        }
+
+        @if (user.followed) {
+        <button mat-button color="primary" (click)="followUser(user.id)" class="checke">
+          <mat-icon>check</mat-icon> Following
+        </button>
+        }
+      </div>
+      }
+
+      @empty {
+      <p style="text-align: center; color: #888; padding: 20px;">No suggested users</p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- ====================== -->
+  <!-- Posts List - Center -->
+  <!-- ====================== -->
+  <div class="posts-list">
+    @for (post of allPosts(); track post.id) {
+    <app-post [post]="post" (postDeleted)="onDeletPost($event)"></app-post>
+    }
+
+    @empty {
+    <mat-card class="post-card" style="text-align: center; padding: 40px;">
+      <p style="color: #aaa; font-size: 1.2rem;">No posts yet 😴</p>
+    </mat-card>
+    }
+  </div>
+
+</div>

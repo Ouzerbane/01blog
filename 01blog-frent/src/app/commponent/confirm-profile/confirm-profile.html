@@ -1,0 +1,12 @@
+<div class="modal-overlay">
+    <mat-card class="confirm-modal">
+        <h3>Confirmation</h3>
+        <p>{{message}}</p>
+        <div class="modal-actions">
+            <button mat-button (click)="cancel()">Cancel</button>
+            <button mat-raised-button color="warn" (click)="confirm()">
+                Confirm
+            </button>
+        </div>
+    </mat-card>
+</div>

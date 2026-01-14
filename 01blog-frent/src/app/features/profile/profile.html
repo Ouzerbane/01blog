@@ -1,0 +1,138 @@
+@if (userNotFund()){
+
+<div class="profile-container">
+
+    <!-- Header Section -->
+    <div class="profile-header">
+        <!-- Cover Photo -->
+        <div class="cover-photo"></div>
+
+        <!-- Profile Info -->
+        <div class="profile-info">
+            <div class="avatar-wrapper">
+                @if (user().imageUrl) {
+                <img [src]="user().imageUrl" alt="profile avatar" class="profile-avatar" />
+                } @else if (user().username) {
+                <div class="avatar-letter profile-avatar">
+                    {{ user().username.charAt(0) | uppercase }}
+                </div>
+                }
+            </div>
+
+            <div class="profile-details">
+                <h1 class="profile-name">{{ user().username }}</h1>
+
+                <div class="profile-stats">
+                    <div class="stat-item" (click)="openFollowers('Followers')">
+                        <span class="stat-value">{{ user().followers }}</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item" (click)="openFollowers('Following')">
+                        <span class="stat-value">{{ user().following }}</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                </div>
+                <!-- Report Button -->
+                @if (userId != localUserid()) {
+                <div class="profile-actions">
+                    <button mat-icon-button class="report-btn" aria-label="Report profile" (click)="openReportModal()">
+                        <mat-icon>flag</mat-icon>
+                    </button>
+                </div>
+                }
+                @if (userId == localUserid()) {
+                <div class="uploadProfile">
+                    <button mat-raised-button color="primary" (click)="fileInput.click()">upload</button>
+                    <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelectProfile($event)" />
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (showReportModal()) {
+    <app-report (reportSubmitted)="RepoprtUser($event)"></app-report>
+    }
+
+    <!-- User Info Card -->
+    <mat-card class="info-card">
+        <mat-card-title>Informations</mat-card-title>
+        <mat-card-content>
+            <div class="info-row">
+                <mat-icon>email</mat-icon>
+                <span>{{ user().email }}</span>
+            </div>
+            <div class="info-row">
+                <mat-icon>person</mat-icon>
+                <span>@{{ user().username }}</span>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Posts Section -->
+    <div class="posts-section">
+        @for (item of postsList(); track $index) {
+        <app-post [post]="item" (postDeleted)="onDeletPost($event)"></app-post>
+        }
+    </div>
+
+
+    @if (showFollow()) {
+    <div class="overlay">
+        <mat-card class="following-dialog">
+
+            <!-- Header -->
+            <mat-card-header>
+                <mat-card-title>{{typeFollow()}}</mat-card-title>
+                <span class="spacer"></span>
+                <button mat-icon-button (click)="closeFollowers()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-card-header>
+
+            <!-- Content -->
+            <mat-card-content class="following-list">
+
+                @for (user of followersList(); track user.id) {
+                <div class="user-row">
+
+                    <!-- User info -->
+                    <div class="user-info" (click)="getProfile(user.id)">
+                        <div class="avatar">
+
+                            @if (user.imageUrl) {
+                            <img [src]="user.imageUrl" [alt]="user.username" />
+                            } @else {
+                            <div class="avatar-letter">
+                                {{ user.username.charAt(0) | uppercase }}
+                            </div>
+                            }
+
+                        </div>
+
+                        <span class="username">{{ user.username }}</span>
+                    </div>
+
+                    <!-- Follow button -->
+                    <button mat-stroked-button color="primary" [class.following]="user.followed"
+                        (click)="toggleFollow(user.id); $event.stopPropagation()">
+                        {{ user.followed ? 'Following' : 'Follow' }}
+
+                    </button>
+                </div>
+                }
+
+            </mat-card-content>
+
+        </mat-card>
+
+    </div>
+    }
+
+</div>
+}@else {
+<mat-card class="userNotfund">
+    <mat-icon>person_off</mat-icon>
+    <mat-card-title>user not found</mat-card-title>
+</mat-card>
+
+}

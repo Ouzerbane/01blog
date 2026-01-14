@@ -1,0 +1,40 @@
+<!-- Report Popup Overlay -->
+<div class="report-popup-overlay" (click)="cancelReport()">
+  <mat-card class="report-card" (click)="$event.stopPropagation()">
+    <!-- Header مع أيقونة كبيرة فوق -->
+    <mat-card-header class="report-header">
+      <mat-icon class="big-report-icon">report_problem</mat-icon>
+      
+      <mat-card-title>Report</mat-card-title>
+      <mat-card-subtitle>Explain the problem</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <!-- Content -->
+    <mat-card-content class="report-content">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Why are you reporting?</mat-label>
+        <textarea matInput 
+                  rows="5" 
+                  placeholder="Describe the issue in detail..." 
+                  [value]="reasons()"
+                  (input)="reasons.set($any($event.target).value)">
+        </textarea>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <!-- Actions -->
+    <mat-card-actions align="end" class="report-actions">
+      <button mat-button class="cancel-btn" (click)="cancelReport()">
+        Cancel
+      </button>
+      <button mat-raised-button class="submit-btn" (click)="submitReport()">
+        <mat-icon>send</mat-icon>
+        Send Report
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

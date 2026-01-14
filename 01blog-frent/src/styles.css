@@ -1,0 +1,248 @@
+
+
+body {
+  /* background-color: darkgrey; */
+  background-color: #0f0f0f;
+  
+}
+
+
+
+
+/* ============================================= */
+/*        Fix Mat-Icon Visibility & Size          */
+/* ============================================= */
+
+/* 1. كبر الـ icons شوية باش ما يتقطعوش */
+mat-icon {
+  font-size: 24px !important;     /* الحجم الرسمي ديال Material */
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;   /* مهم بزاف باش يتسنتر عمودياً */
+  vertical-align: middle;
+}
+
+/* 2. خاصة فالـ Toolbar (الـ navbar ديالك) */
+mat-toolbar mat-icon {
+  font-size: 26px !important;     /* نزيد شوية فالـ navbar باش يبرز */
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* 3. فالـ buttons اللي فيها text + icon */
+mat-toolbar button mat-icon {
+  margin-right: 8px;              /* مسافة بين الـ icon والنص */
+  margin-bottom: 2px;             /* تصحيح صغير باش يتسنتر مزيان */
+}
+
+/* 4. mat-icon-button (الدائريين زي notifications) */
+mat-icon-button mat-icon {
+  font-size: 28px !important;     /* أكبر شوية باش يملأ الدائرة */
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* 5. فالـ menu items */
+.button-profile mat-icon {
+  font-size: 22px !important;
+  margin-right: 12px;
+}
+
+/* 6. إلا بقا المشكل فبعض الأماكن → force display */
+mat-icon {
+  display: inline-block !important;
+  overflow: visible !important;   /* مهم إلا كان الـ icon كبير ومخفي */
+  text-align: center;
+}
+
+/* 7. حل إضافي إلا كان الـ icon مقطوع من الجنب */
+.mat-mdc-button, .mat-mdc-icon-button {
+  min-width: 48px !important;     /* أدنى عرض للـ button */
+  padding: 0 12px !important;     /* padding أكبر */
+}
+
+/* 8. خاصة بالـ badge ديال الـ notifications */
+.mat-badge-content {
+  font-size: 12px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+}
+
+
+
+
+
+/* ============================================= */
+/*        Notification Popup - Fix Full Style     */
+/* ============================================= */
+
+.notification-popup {
+  position: fixed;              /* بدل absolute → fixed باش يبقى مرئي حتى لو سكروليتي */
+  top: 80px;                    /* تحت الـ navbar مباشرة */
+  right: 20px;
+  width: 380px;                 /* عرض أكبر شوية باش يبان مزيان */
+  max-height: 80vh;             /* أقصى ارتفاع: 80% ديال الشاشة */
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+  overflow: hidden;             /* نخفيو الكونتنت اللي خارج */
+  display: flex;
+  flex-direction: column;       /* مهم بزاف باش الـ scroll يخدم داخل الـ list */
+  animation: popupSlide 0.35s ease-out;
+  z-index: 3000;                /* فوق كولشي حتى الـ navbar */
+}
+
+@keyframes popupSlide {
+  from { transform: translateY(-30px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Header */
+.popup-header {
+  background: linear-gradient(135deg, #222, #1a1a1a);
+  padding: 16px 20px;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;               /* ما يتصغرش */
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: #ff3366;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+/* List ديال الـ notifications - هادي اللي خاصها scroll */
+.popup-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;                      /* تاخد باقي المساحة كاملة */
+  overflow-y: auto;             /* scroll داخلي فقط */
+  max-height: calc(80vh - 140px); /* نحسبو الـ header والـ button */
+}
+
+/* كل notification */
+.notification-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid #282828;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: #cccccc;
+  word-wrap: break-word;        /* إلا كان الـ message طويل */
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: #252525;
+  padding-left: 24px;
+}
+
+.notif-unread {
+  background-color: #ff336620;
+  font-weight: 600;
+  color: #ffffff;
+  border-left: 5px solid #ff3366;
+}
+
+.notif-read {
+  color: #888888;
+}
+
+/* Close Button */
+.close-popup {
+  flex-shrink: 0;               /* ما يتصغرش */
+  width: 100%;
+  padding: 14px;
+  background-color: #ff3366;
+  color: white;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-radius: 0 0 16px 16px;
+}
+
+.close-popup:hover {
+  background-color: #ff1744;
+  letter-spacing: 1px;
+}
+
+/* Scrollbar زوينة (خاصة بالـ webkit browsers) */
+.popup-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-list::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.popup-list::-webkit-scrollbar-thumb {
+  background: #ff3366;
+  border-radius: 4px;
+}
+
+.popup-list::-webkit-scrollbar-thumb:hover {
+  background: #ff1744;
+}
+
+/* Responsive - فالموبايل */
+@media (max-width: 900px) {
+  .notification-popup {
+    width: 92vw;
+    left: 4vw;
+    right: 4vw;
+    max-height: 85vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-popup {
+    top: 70px;
+    border-radius: 12px;
+  }
+  
+  .popup-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .notification-item {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+
+
+/* ============================================= */
+
+
+
+.error-snackbar {
+  background: #f44336; /* أحمر */
+  color: white;
+}
+
+
+
+/* الcontainer كامل */
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+/* النص */
+.success-snackbar .mdc-snackbar__label {
+  color: white !important;
+}
+
+/* زر Close */
+.success-snackbar .mdc-snackbar__action {
+  color: #fff !important;
+}

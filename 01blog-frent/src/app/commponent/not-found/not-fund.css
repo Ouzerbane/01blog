@@ -1,0 +1,79 @@
+/* =============================== */
+/*        NOT FOUND PAGE           */
+/* =============================== */
+
+.notfound-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.notfound-card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border-radius: 24px;
+  padding: 50px 40px;
+  text-align: center;
+  border: 1px solid #333;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  max-width: 420px;
+  width: 100%;
+}
+
+/* 404 BIG */
+.error-code {
+  font-size: 6rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #ff3366;
+  text-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+  margin-bottom: 20px;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1.05rem;
+  color: #aaaaaa;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* Button */
+button {
+  background: #ff3366 !important;
+  color: #fff !important;
+  border-radius: 30px;
+  padding: 10px 28px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button mat-icon {
+  margin-right: 6px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 51, 102, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .error-code {
+    font-size: 4.5rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+}
