@@ -5,6 +5,7 @@ com/_blog/_blog/controller/Follower.class
 com/_blog/_blog/dto/ErrorItem.class
 com/_blog/_blog/util/jwt/JwtAuthFilter.class
 com/_blog/_blog/model/entity/FollowerEntity$FollowerEntityBuilder.class
+com/_blog/_blog/service/PostsService.class
 com/_blog/_blog/util/MediaType$1.class
 com/_blog/_blog/dto/PostAdminDto$PostAdminDtoBuilder.class
 com/_blog/_blog/dto/PostAdminDto.class

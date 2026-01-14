@@ -1,5 +1,6 @@
 package com._blog._blog.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,6 @@ public class ReportDataDto {
     private String targetPost;
     private UUID targetPostId;
 
-    // private 
+    private LocalDateTime time;
 
 }

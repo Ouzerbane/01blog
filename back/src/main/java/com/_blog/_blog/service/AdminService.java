@@ -66,6 +66,7 @@ public class AdminService {
                     dto.setReason(repo.getReason());
                     dto.setReporter(repo.getReporter().getUsername());
                     dto.setReporterId(repo.getReporter().getId());
+                    dto.setTime(repo.getCreatedAt());
 
                     if (repo.getTargetUser() != null) {
                         dto.setTargetUser(repo.getTargetUser().getUsername());
