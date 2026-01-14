@@ -26,4 +26,6 @@ public class ReportDataDto {
     private String targetPost;
     private UUID targetPostId;
 
+    // private 
+
 }

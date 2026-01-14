@@ -102,7 +102,7 @@ public class Posts {
     public ResponseEntity<ApiResponse<?>> editPost(
             @RequestParam("id") @NotNull(message = "id is required") UUID id,
             @RequestParam("title") @NotBlank(message = "title is required") @Size(min = 1, max = 100, message = "title must be between 1 and 100 characters") String title,
-            @RequestParam("content") @NotBlank(message = "content is required") @Size(min = 1, max = 100, message = "content must be between 1 and 500 characters") String content,
+            @RequestParam("content") @NotBlank(message = "content is required") @Size(min = 1, max = 500, message = "content must be between 1 and 500 characters") String content,
             @RequestParam(required = false) List<MultipartFile> image,
             @RequestParam("oldMediaIds") String oldMediaIds) throws IOException {
         AuthEntity currentUser = (AuthEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
